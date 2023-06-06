@@ -1,5 +1,1 @@
-Before the creation of our team, the B-Team was responsible for assembling VMs containing required COTS and Microsoft product & OS patches.
-This involved manual installs of COTS, learning the ins and outs of the WSUS, packaging these VMs into ICOs and more.
-It was a heavy workload to do all this manually, so an idea came up to automate much of this process by having an additional team to work on a CI
-So our team started out as an effort to facilitate aid the B-Team.
-We developed a CI pipeline and took over the responsibility of creating, maintaining, and exporting VMs so now all the B-Team has to do is go over to our file share and download their newly updated and patched VM once a month.
+Our goal here is to share knowledge among other teams and discuss if what we do as a team can come in handy to your team through collaboration.
