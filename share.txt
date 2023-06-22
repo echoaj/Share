@@ -1,7 +1,1 @@
-Throughout this year, I have remained dedicated to not only completing my assigned tasks, but also achieving the four key goals I set for myself. These goals encompass immersing myself in NG culture, acquiring new skills, sharing my knowledge with others, and adopting a strategic mindset. Allow me to provide a specific example of how I have made progress in each of these areas.
-
-To immerse myself in NG culture, I have actively participated in NG happy hour events, fostering connections and building relationships within the organization. Additionally, I have been engaged in learning ASH and Sphinx tutorials, expanding my skill set and staying up-to-date with the latest technologies. Furthermore, I have developed a strategic plan for approaching the R-Team with regards to template patching, demonstrating my ability to think strategically and contribute to our team's success.
-
-For more detailed examples of how I have been working towards these goals, I invite you to visit the link provided at the bottom of this document. I am confident that I am on the right path and I eagerly anticipate achieving even more in the second half of the year.
-
-In addition to the aforementioned accomplishments, I would like to highlight some notable efforts I have made, as well as any awards I have received and my continuous pursuit of learning outside of work. Thank you for your time and support!
+1.	When I run docker run -it --net=host -v //c/:/mnt/c --name fortify 10.10.81.18:5000/devsecops/runners/fortify_mvn:latest /bin/bash it creates a docker container.  If I exit out of the docker container and run the command again, it says the container is already in use.  Is there a way I can reuse the container without having to delete it from docker desktop again?
