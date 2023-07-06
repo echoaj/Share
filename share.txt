@@ -1,1 +1,5 @@
-1.	When I run docker run -it --net=host -v //c/:/mnt/c --name fortify 10.10.81.18:5000/devsecops/runners/fortify_mvn:latest /bin/bash it creates a docker container.  If I exit out of the docker container and run the command again, it says the container is already in use.  Is there a way I can reuse the container without having to delete it from docker desktop again?
+
+sourceanalyzer.exe -b <build_name> -clean 
+sourceanalyzer.exe -b <build_name> "C:/Users/development/Documents/Fortify/<build_name>/**/*.py"
+sourceanalyzer.exe -b <build_name> -scan -f C:/Users/development/Documents/Fortify/<build_name>/<build_name>.fpr
+BIRTReportGenerator -template <template_name> -source C:/Users/development/Documents/Fortify/<build_name>/<build_name>.fpr --SecurityIssueDetails --IncludeDescOfKeyTerminology -format PDF -showSuppressed --Version <template_version> --UseFortifyPriorityOrder -output C:/Users/development/Documents/Fortify/<build_name>/<build_name>_OWASP_2021_Top10_Report.pdf
