@@ -1,27 +1,6 @@
 
-sourceanalyzer.exe -b <build_name> -clean 
-sourceanalyzer.exe -b <build_name> "C:/Users/development/Documents/Fortify/<build_name>/**/*.py"
-sourceanalyzer.exe -b <build_name> -scan -f C:/Users/development/Documents/Fortify/<build_name>/<build_name>.fpr
-BIRTReportGenerator -template <template_name> -source C:/Users/development/Documents/Fortify/<build_name>/<build_name>.fpr --SecurityIssueDetails --IncludeDescOfKeyTerminology -format PDF -showSuppressed --Version <template_version> --UseFortifyPriorityOrder -output C:/Users/development/Documents/Fortify/<build_name>/<build_name>_OWASP_2021_Top10_Report.pdf
+Microsoft Visual C++ 2017 redistributable is a package of components and libraries that are required to run applications developed using Visual C++ on a computer that doesn't have Visual C++ 2017 installed. It provides the necessary runtime components to ensure compatibility and proper functioning of applications built with Visual C++ 2017. These redistributable packages are often distributed alongside software installations to ensure the required dependencies are met for the application to run successfully.
 
-
-$build_name = "my_build"
-$template_name = "OWASP Top 10"
-$template_version = "OWASP Top 10 2021"
-$repo_parent_path = "C:/Users/development/Documents/Fortify"
-$project_name = "my_project"
-
-sourceanalyzer.exe -b $build_name -clean
-sourceanalyzer.exe -b $build_name $repo_parent_path/$project_name/**/*.py
-sourceanalyzer.exe -b $build_name -scan -f $repo_parent_path/$project_name/$project_name.fpr
-BIRTReportGenerator -template $template_name -source $repo_parent_path/$project_name/$project_name.fpr --SecurityIssueDetails --IncludeDescOfKeyTerminology -format PDF -showSuppressed --Version $template_version --UseFortifyPriorityOrder -output C:/Users/development/Documents/Fortify/$project_name/$project_name+_OWASP_2021_Top10_Report.pdf
-
-
-build_name="my_build"
-template_name="OWASP Top 10"
-template_version="OWASP Top 10 2021"
-repo_parent_path="C:/Users/development/Documents/Fortify"
-project_name="my_project"
 
 sourceanalyzer.exe -b "$build_name" -clean
 sourceanalyzer.exe -b "$build_name" "$repo_parent_path/$project_name/**/*.py"
