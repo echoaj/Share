@@ -1,14 +1,10 @@
+I went down a networking rabbit hole with the JumpServer but found out some interesting things.  So when you do ipconfig on the JumpServer there are two network interfaces associated with the domains nggn.local and lab.local.
 
-# **************************************   Description   **************************************
-# Run this script to force this client machine to send the status of its updated group policy to the WSUS.
-# This will cause the WSUS (when refreshed) to show those machines as connected within the GUI itself.
+Direct RDP access from an external machine is possible to nggn.local but not to lab.local.
+However, once connected to nggn.local, you can RDP into lab.local.
 
+At first I was confused wondering if nggn.local and lab.local are two different machines.  I didn’t understand why when you RDP into each domain, they both display the same network Interface Configuration yet the Desktops have different Icons, personal folders like documents, download folders had different items ect…. The core system resources like Local Disk (C:), CD Drive (D:), and Storage Volume (G:) appear identical. In the nggn.local environment, there are network-mapped drives labeled "All User Share (O:)" and "QFS Storage(X:)” but those don’t appear on lab.local.
 
-# **************************************   Important Note   **************************************
-# By default, the windows execution policy is set to "Restricted" so this script cannot run without setting the execution policy to "RemoteSigned".
-# Unfortunatly changing the execution policy to allows PowerShell scripts to run presents a security risk so this is not recommended.
+But after doing some research, I think what is happening is nggn.local and lab.local are the same machine (JumpServer).  However, I think these network domains are assigned different user profiles or contexts.  Even if you're logging in with the same username and password, there could be different profiles set up based on network location or domain (e.g., nggn.local vs. lab.local). 
 
-
-# **************************************   Copy command below & execute as administrator in PowerShell   **************************************
-
-gpupdate /force; $updateSession=new-object -com "Microsoft.Update.Session"; $updates=$updateSession.CreateupdateSearcher().Search($criteria).Updates; wuauclt /reportnow
+Then in addition one network domain my be configured to mount certain drives but that not the other.
