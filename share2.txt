@@ -1,14 +1,20 @@
-Report generated successfully.
-$ echo "Verify there are no Critical, High, or Medium issues"
-Verify there are no Critical, High, or Medium issues
-$ FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:critical" | grep "No issues matched search query."
-No issues matched search query.
-$ FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:high" | grep "No issues matched search query."
-Uploading artifacts for failed job
-00:01
-Uploading artifacts...
-WARNING: build.env: no matching files              
-ERROR: No files to upload                          
-Cleaning up project directory and file based variables
-00:00
-ERROR: Job failed: command terminated with exit code 1
+- CRITICAL_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:critical")
+    - HIGH_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:high")
+    - MEDIUM_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:medium")
+    - LOW_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:low")
+
+    # Convert the output to 0 if "No issues matched search query" else take the output as it is.
+    - CRITICAL_COUNT=$( [ "$CRITICAL_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $CRITICAL_OUTPUT )
+    - HIGH_COUNT=$( [ "$HIGH_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $HIGH_OUTPUT )
+    - MEDIUM_COUNT=$( [ "$MEDIUM_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $MEDIUM_OUTPUT )
+    - LOW_COUNT=$( [ "$LOW_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $LOW_OUTPUT )
+    
+    - echo "Critical vulnerabilities found: $CRITICAL_COUNT"
+    - echo "High vulnerabilities found: $HIGH_COUNT"
+    - echo "Medium vulnerabilities found: $MEDIUM_COUNT"
+    - echo "Low vulnerabilities found: $LOW_COUNT"
+    
+    - if [ $CRITICAL_COUNT -gt 0 ] || [ $HIGH_COUNT -gt 0 ] || [ $MEDIUM_COUNT -gt 0 ]; then
+        echo "Failing the pipeline due to detected vulnerabilities."
+        exit 1
+      fi
