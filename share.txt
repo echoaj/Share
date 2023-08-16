@@ -1,1 +1,14 @@
 zip -r -j artifacts/$ZIP_FILE $ARTIFACT_PATH_LOCATION
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
