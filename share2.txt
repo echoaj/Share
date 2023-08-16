@@ -1,0 +1,30 @@
+fortify-job:
+  image: $IMAGE_FORTIFY
+  stage: scan   
+  timeout: 10m
+  script:
+    - echo "Set up the Fortify license"
+    - echo $FORTIFY_SCA_LIC | base64 -d > /opt/Fortify/Fortify_SCA_and_Apps_22.1.0/fortify.license
+    - echo "Get rules from Fortify SSC"
+    - fortifyupdate -proxyhost $PROXY_HOST -proxyport $PROXY_PORT
+    - fortifyupdate -showInstalledRules
+    - mkdir -p $CI_PROJECT_DIR/target/fortify
+    - sourceanalyzer -b automation -clean
+    - sourceanalyzer -b automation $CI_PROJECT_DIR/**/*.java
+    - sourceanalyzer -b automation -scan -f $CI_PROJECT_DIR/target/fortify/${fcv_project_name}.fpr
+    - echo "Generate a human readable report"
+    - BIRTReportGenerator -template "OWASP Top 10" -source $CI_PROJECT_DIR/target/fortify/${fcv_project_name}.fpr --SecurityIssueDetails --IncludeDescOfKeyTerminology -format PDF -showSuppressed --Version "OWASP Top 10 2021" --UseFortifyPriorityOrder -output $CI_PROJECT_DIR/target/fortify/${fcv_project_name}_OWASP_2021_Top10_Report.pdf
+    - echo "Verify there are no Critical, High, or Medium issues"
+    - FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:critical" | grep "No issues matched search query."
+    - FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:high" | grep "No issues matched search query."
+    - FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:medium" | grep "No issues matched search query."
+    - FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:low"
+    - echo "Setup environment variables used later to create Fortify versions in SSC in order to upload the .fpr"
+    - echo "fcv_version_name=1.0-SNAPSHOT" >> build.env
+    - echo "fcv_artifact_path=$CI_PROJECT_DIR/target/fortify/*.fpr" >> build.env
+  artifacts:
+    expire_in: 3 weeks
+    reports:
+      dotenv: build.env
+    paths:
+      - $CI_PROJECT_DIR/target/fortify
