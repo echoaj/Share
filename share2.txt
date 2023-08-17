@@ -1,25 +1,24 @@
-fortify-check:
-  stage: some-stage
-  needs:
-    - job: previous-job
-  script:
-    - CRITICAL_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:critical")
-    - HIGH_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:high")
-    - MEDIUM_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:medium")
-    - LOW_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:low")
+String message = "<script>alert('Hello, world!')</script>";
 
-    # Extract the number of vulnerabilities or set to 0 if "No issues matched search query".
-    - CRITICAL_COUNT=$( [ "$CRITICAL_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $CRITICAL_OUTPUT | awk '{print $1}' )
-    - HIGH_COUNT=$( [ "$HIGH_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $HIGH_OUTPUT | awk '{print $1}' )
-    - MEDIUM_COUNT=$( [ "$MEDIUM_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $MEDIUM_OUTPUT | awk '{print $1}' )
-    - LOW_COUNT=$( [ "$LOW_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $LOW_OUTPUT | awk '{print $1}' )
-    
-    - echo "Critical vulnerabilities found: $CRITICAL_COUNT"
-    - echo "High vulnerabilities found: $HIGH_COUNT"
-    - echo "Medium vulnerabilities found: $MEDIUM_COUNT"
-    - echo "Low vulnerabilities found: $LOW_COUNT"
-    
-    - if [ $CRITICAL_COUNT -gt 0 ] || [ $HIGH_COUNT -gt 0 ] || [ $MEDIUM_COUNT -gt 0 ]; then
-        echo "Failing the pipeline due to detected vulnerabilities."
-        exit 1
-      fi
+String command = "echo 'Hello, world!'";
+Runtime.getRuntime().exec(command);
+
+int number = Integer.parseInt(input_number);
+if (number > 100) {
+  // Do something
+}
+
+char[] buffer = new char[10];
+String input = "Hello, world!";
+System.arraycopy(input, 0, buffer, 0, input.length());
+
+Object object = SerializationUtils.deserialize(input_data);
+
+File file = new File(input_file_path);
+file.delete();
+
+String redirect_url = input_redirect_url;
+response.sendRedirect(redirect_url);
+
+String action_url = "https://example.com/submit_form.php";
+<input type="submit" value="Submit" onclick="document.location = action_url;">
