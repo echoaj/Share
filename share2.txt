@@ -1,13 +1,18 @@
-- CRITICAL_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:critical")
+fortify-check:
+  stage: some-stage
+  needs:
+    - job: previous-job
+  script:
+    - CRITICAL_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:critical")
     - HIGH_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:high")
     - MEDIUM_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:medium")
     - LOW_OUTPUT=$(FPRUtility -information -project $CI_PROJECT_DIR/target/fortify/*.fpr -search -query "[fortify priority order]:low")
 
-    # Convert the output to 0 if "No issues matched search query" else take the output as it is.
-    - CRITICAL_COUNT=$( [ "$CRITICAL_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $CRITICAL_OUTPUT )
-    - HIGH_COUNT=$( [ "$HIGH_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $HIGH_OUTPUT )
-    - MEDIUM_COUNT=$( [ "$MEDIUM_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $MEDIUM_OUTPUT )
-    - LOW_COUNT=$( [ "$LOW_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $LOW_OUTPUT )
+    # Extract the number of vulnerabilities or set to 0 if "No issues matched search query".
+    - CRITICAL_COUNT=$( [ "$CRITICAL_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $CRITICAL_OUTPUT | awk '{print $1}' )
+    - HIGH_COUNT=$( [ "$HIGH_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $HIGH_OUTPUT | awk '{print $1}' )
+    - MEDIUM_COUNT=$( [ "$MEDIUM_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $MEDIUM_OUTPUT | awk '{print $1}' )
+    - LOW_COUNT=$( [ "$LOW_OUTPUT" == "No issues matched search query." ] && echo 0 || echo $LOW_OUTPUT | awk '{print $1}' )
     
     - echo "Critical vulnerabilities found: $CRITICAL_COUNT"
     - echo "High vulnerabilities found: $HIGH_COUNT"
