@@ -1,11 +1,1 @@
-public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
-		File destFile = new File(destinationDir, zipEntry.getName());
-		String destDirPath = destinationDir.getCanonicalPath();
-		String destFilePath = destFile.getCanonicalPath();
-		String normalizedPath = FilenameUtils.normalize(destDirPath + File.separator);
-		if (!destFilePath.startsWith(normalizedPath)) {
-			throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
-		}
-		return destFile;
-	}
 
