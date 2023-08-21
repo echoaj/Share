@@ -1,24 +1,11 @@
-String message = "<script>alert('Hello, world!')</script>";
+public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
+		File destFile = new File(destinationDir, zipEntry.getName());
+		String destDirPath = destinationDir.getCanonicalPath();
+		String destFilePath = destFile.getCanonicalPath();
+		String normalizedPath = FilenameUtils.normalize(destDirPath + File.separator);
+		if (!destFilePath.startsWith(normalizedPath)) {
+			throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+		}
+		return destFile;
+	}
 
-String command = "echo 'Hello, world!'";
-Runtime.getRuntime().exec(command);
-
-int number = Integer.parseInt(input_number);
-if (number > 100) {
-  // Do something
-}
-
-char[] buffer = new char[10];
-String input = "Hello, world!";
-System.arraycopy(input, 0, buffer, 0, input.length());
-
-Object object = SerializationUtils.deserialize(input_data);
-
-File file = new File(input_file_path);
-file.delete();
-
-String redirect_url = input_redirect_url;
-response.sendRedirect(redirect_url);
-
-String action_url = "https://example.com/submit_form.php";
-<input type="submit" value="Submit" onclick="document.location = action_url;">
