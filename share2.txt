@@ -1,15 +1,3 @@
- public UdpTest build() throws SocketException, IOException
-        {
-            NetworkInterface.getByName(incomingNetworkInterface).getInetAddresses().asIterator().next();
-            UdpTest udpTest = new UdpTest();
-            udpTest.name = name;
-            udpTest.incoming = new DatagramSocket(0, getLocalAddressForNic(incomingNetworkInterface));
-            udpTest.outgoingAddress = InetAddress.getByName(outgoingAddress);
-            udpTest.incomingAddress = InetAddress.getByName(incomingAddress);
-            udpTest.incomingPort = incomingPort;
-            udpTest.outgoing = new MulticastSocket (outgoingPort);
-            udpTest.outgoing.joinGroup(new InetSocketAddress(udpTest.outgoingAddress, 0), NetworkInterface.getByName(outgoingNetworkInterface));
-            LOGGER.info("building test to send unicast to {}:{} receiving multicast on {}:{}", incomingAddress, incomingPort, outgoingAddress, outgoingPort);
-            return udpTest;
-        }
-
+I: -input-charset not specified, using utf-8 (detected in locale settings)
+File /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline/artifacts/EXPORT-Test-Dev-WS19/EXPORT-Test-Dev-WS19-disk-0.vmdk is larger than 4GiB-1.
+-allow-limited-size was not specified. There is no way do represent this file size. Aborting.
