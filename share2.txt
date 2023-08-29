@@ -1,3 +1,2 @@
-I: -input-charset not specified, using utf-8 (detected in locale settings)
-File /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline/artifacts/EXPORT-Test-Dev-WS19/EXPORT-Test-Dev-WS19-disk-0.vmdk is larger than 4GiB-1.
--allow-limited-size was not specified. There is no way do represent this file size. Aborting.
+On my RHEL machine I entered "mc alias set local https://titan.as.northgrum.com/minio xadmin Pass123"
+I got an error message that reads "<ERROR> Invalid URL "https://titan.as.northgrum.com/minio xadmin Pass123" for MinIO client should be of the form scheme://host[:port] without resource component.
