@@ -1,1 +1,12 @@
 Test
+provisioner "powershell" {
+    inline = [
+      "$SecurePassword = ConvertTo-SecureString 'Your_vCenter_Password' -AsPlainText -Force",
+      "$Credential = New-Object System.Management.Automation.PSCredential('Your_vCenter_Username', $SecurePassword)",
+      "Connect-VIServer -Server 'dso-ssb-vcenter.devops.northgrum.com' -Credential $Credential -Force",
+      "$vm = Get-VM -Name '${var.cloned_vm_name}'",
+      "$networkAdapter = Get-NetworkAdapter -VM $vm",
+      "Remove-NetworkAdapter -NetworkAdapter $networkAdapter -Confirm:$false",
+      "Disconnect-VIServer -Server 'dso-ssb-vcenter.devops.northgrum.com' -Confirm:$false"
+    ]
+  }
