@@ -1,12 +1,28 @@
-Test
-provisioner "powershell" {
-    inline = [
-      "$SecurePassword = ConvertTo-SecureString 'Your_vCenter_Password' -AsPlainText -Force",
-      "$Credential = New-Object System.Management.Automation.PSCredential('Your_vCenter_Username', $SecurePassword)",
-      "Connect-VIServer -Server 'dso-ssb-vcenter.devops.northgrum.com' -Credential $Credential -Force",
-      "$vm = Get-VM -Name '${var.cloned_vm_name}'",
-      "$networkAdapter = Get-NetworkAdapter -VM $vm",
-      "Remove-NetworkAdapter -NetworkAdapter $networkAdapter -Confirm:$false",
-      "Disconnect-VIServer -Server 'dso-ssb-vcenter.devops.northgrum.com' -Confirm:$false"
-    ]
-  }
+docker run -it --name mongo bitnami/mongodb:6.0.8-debian-11-r0
+mongodb 17:03:46.28
+mongodb 17:03:46.28 Welcome to the Bitnami mongodb container
+mongodb 17:03:46.28 Subscribe to project updates by watching https://github.com/bitnami/containers
+mongodb 17:03:46.28 Submit issues and feature requests at https://github.com/bitnami/containers/issues
+mongodb 17:03:46.29
+mongodb 17:03:46.29 INFO  ==> ** Starting MongoDB setup **
+mongodb 17:03:46.30 INFO  ==> Validating settings in MONGODB_* env vars...
+mongodb 17:03:46.34 INFO  ==> Initializing MongoDB...
+mongodb 17:03:46.36 INFO  ==> Deploying MongoDB from scratch...
+MongoNetworkError: connect ECONNREFUSED 172.17.0.2:27017
+mongodb 17:03:47.27 INFO  ==> Creating users...
+mongodb 17:03:47.27 INFO  ==> Users created
+mongodb 17:03:47.28 INFO  ==> Stopping MongoDB...
+mongodb 17:03:48.30 INFO  ==> ** MongoDB setup finished! **
+
+mongodb 17:03:48.31 INFO  ==> ** Starting MongoDB **
+{"t":{"$date":"2023-11-02T17:03:48.331Z"},"s":"I",  "c":"CONTROL",  "id":5760901, "ctx":"-","msg":"Applied --setParameter options","attr":{"serverParameters":{"enableLocalhostAuthBypass":{"default":true,"value":true}}}}
+
+{"t":{"$date":"2023-11-02T17:03:48.331+00:00"},"s":"I",  "c":"CONTROL",  "id":20698,   "ctx":"-","msg":"***** SERVER RESTARTED *****"}
+{"t":{"$date":"2023-11-02T17:03:48.332+00:00"},"s":"I",  "c":"CONTROL",  "id":23285,   "ctx":"-","msg":"Automatically disabling TLS 1.0, to force-enable TLS 1.0 specify --sslDisabledProtocols 'none'"}
+{"t":{"$date":"2023-11-02T17:03:48.333+00:00"},"s":"I",  "c":"NETWORK",  "id":4915701, "ctx":"main","msg":"Initialized wire specification","attr":{"spec":{"incomingExternalClient":{"minWireVersion":0,"maxWireVersion":17},"incomingInternalClient":{"minWireVersion":0,"maxWireVersion":17},"outgoing":{"minWireVersion":6,"maxWireVersion":17},"isInternalClient":true}}}
+{"t":{"$date":"2023-11-02T17:03:48.333+00:00"},"s":"I",  "c":"NETWORK",  "id":4648601, "ctx":"main","msg":"Implicit TCP FastOpen unavailable. If TCP FastOpen is required, set tcpFastOpenServer, tcpFastOpenClient, and tcpFastOpenQueueSize."}
+{"t":{"$date":"2023-11-02T17:03:48.334+00:00"},"s":"I",  "c":"REPL",     "id":5123008, "ctx":"main","msg":"Successfully registered PrimaryOnlyService","attr":{"service":"TenantMigrationDonorService","namespace":"config.tenantMigrationDonors"}}
+{"t":{"$date":"2023-11-02T17:03:48.334+00:00"},"s":"I",  "c":"REPL",     "id":5123008, "ctx":"main","msg":"Successfully registered PrimaryOnlyService","attr":{"service":"TenantMigrationRecipientService","namespace":"config.tenantMigrationRecipients"}}
+{"t":{"$date":"2023-11-02T17:03:48.334+00:00"},"s":"I",  "c":"REPL",     "id":5123008, "ctx":"main","msg":"Successfully registered PrimaryOnlyService","attr":{"service":"ShardSplitDonorService","namespace":"config.tenantSplitDonors"}}
+{"t":{"$date":"2023-11-02T17:03:48.334+00:00"},"s":"I",  "c":"CONTROL",  "id":5945603, "ctx":"main","msg":"Multi threading initialized"}
+{"t":{"$date":"2023-11-02T17:03:48.334+00:00"},"s":"I",  "c":"CONTROL",  "id":4615611, "ctx":"initandlisten","msg":"MongoDB starting","attr":{"pid":1,"port":27017,"dbPath":"/bitnami/mongodb/data/db","architecture":"64-bit","host":"2a1190775f49"}}
