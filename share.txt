@@ -1,8 +1,13 @@
-ENV PGDATA=/opt/bitnami/postgresql/conf
-ENV PG_PATH=${PGDATA}/pg_hba.conf
-
-# Copy custom pg_hba.conf
-COPY ./pg_hba.conf ${PG_PATH}
-
-# Set owner and access permission
-RUN chown postgres:postgres ${PG_PATH} && chmod 664 ${PG_PATH}
+ => ERROR [4/4] RUN chown postgres:postgres /opt/bitnami/postgresql/conf/pg_hba.conf && chmod 600 /opt/bitnami/postgresql/conf/pg_hba.conf                                                                          0.3s 
+------
+ > [4/4] RUN chown postgres:postgres /opt/bitnami/postgresql/conf/pg_hba.conf && chmod 600 /opt/bitnami/postgresql/conf/pg_hba.conf:
+0.312 chown: invalid user: ‘postgres:postgres’
+------
+Dockerfile:28
+--------------------
+  26 |
+  27 |     # Set owner and access permission
+  28 | >>> RUN chown postgres:postgres ${PG_PATH} && chmod 600 ${PG_PATH}
+  29 |
+--------------------
+ERROR: failed to solve: process "/bin/sh -c chown postgres:postgres ${PG_PATH} && chmod 600 ${PG_PATH}" did not complete successfully: exit code: 1
