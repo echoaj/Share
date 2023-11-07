@@ -1,13 +1,8 @@
-I am tasked with implementing stigs within a dockerfile. This docker file pulls from a bitnami/postgresql:14.2.0 image.
+ENV PGDATA=/opt/bitnami/postgresql/conf
+ENV PG_PATH=${PGDATA}/pg_hba.conf
 
-The STIG I am implementing is V-214056.  Here is the Fix Test:
+# Copy custom pg_hba.conf
+COPY ./pg_hba.conf ${PG_PATH}
 
-Note: The following instructions use the PGDATA environment variable. See supplementary content APPENDIX-F for instructions on configuring PGDATA.
-
-As the database administrator (shown here as "postgres"), edit pg_hba.conf authentication file and change all entries of "password" to "md5":
-
-$ sudo su - postgres
-$ vi ${PGDATA?}/pg_hba.conf
-host all all .example.com md5
-
-What would I put in my dockerfile to implement this stig?
+# Set owner and access permission
+RUN chown postgres:postgres ${PG_PATH} && chmod 664 ${PG_PATH}
