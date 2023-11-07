@@ -1,5 +1,13 @@
-I got his error, how do I fix it
+I am tasked with implementing stigs within a dockerfile. This docker file pulls from a bitnami/postgresql:14.2.0 image.
 
-postgres@7585a6d22a50:/$ psql
-psql: error: connection to server on socket "/tmp/.s.PGSQL.5432" failed: No such file or directory
-        Is the server running locally and accepting connections on that socket?
+The STIG I am implementing is V-214056.  Here is the Fix Test:
+
+Note: The following instructions use the PGDATA environment variable. See supplementary content APPENDIX-F for instructions on configuring PGDATA.
+
+As the database administrator (shown here as "postgres"), edit pg_hba.conf authentication file and change all entries of "password" to "md5":
+
+$ sudo su - postgres
+$ vi ${PGDATA?}/pg_hba.conf
+host all all .example.com md5
+
+What would I put in my dockerfile to implement this stig?
