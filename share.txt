@@ -1,13 +1,5 @@
- => ERROR [4/4] RUN chown postgres:postgres /opt/bitnami/postgresql/conf/pg_hba.conf && chmod 600 /opt/bitnami/postgresql/conf/pg_hba.conf                                                                          0.3s 
-------
- > [4/4] RUN chown postgres:postgres /opt/bitnami/postgresql/conf/pg_hba.conf && chmod 600 /opt/bitnami/postgresql/conf/pg_hba.conf:
-0.312 chown: invalid user: ‘postgres:postgres’
-------
-Dockerfile:28
---------------------
-  26 |
-  27 |     # Set owner and access permission
-  28 | >>> RUN chown postgres:postgres ${PG_PATH} && chmod 600 ${PG_PATH}
-  29 |
---------------------
-ERROR: failed to solve: process "/bin/sh -c chown postgres:postgres ${PG_PATH} && chmod 600 ${PG_PATH}" did not complete successfully: exit code: 1
+I am stigging a bitnami/postgres image by adding commands in a dockerfile that refers to the image. Then I build it, run it and verify my changes.
+
+How would I implement the following stig?
+STIG ID: V-214075
+FIX TEXT: Develop, document, and implement procedures to restrict and track use of the PostgreSQL software installation account.
