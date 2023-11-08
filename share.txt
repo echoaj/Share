@@ -16,3 +16,4 @@ $ vi ${PGDATA?}/pg_hba.conf
 
 For each PostgreSQL-managed account that is not documented and approved, either transfer it to management by the external mechanism, or document the need for it and obtain approval, as appropriate.
 
+Implementation is only possible if it's known what organization-level authentication such as (LDAP, Kerbos, Active Directory) PostgreSQL will integreate with.
