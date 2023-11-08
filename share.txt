@@ -2,4 +2,13 @@ I am stigging a bitnami/postgres image by adding commands in a dockerfile that r
 
 How would I implement the following stig?
 STIG ID: V-214075
-FIX TEXT: Develop, document, and implement procedures to restrict and track use of the PostgreSQL software installation account.
+RULE Title: PostgreSQL must implement NIST FIPS 140-2 or 140-3 validated cryptographic modules to generate and validate cryptographic hashes.
+FIX TEXT: 
+"If fips_enabled = 0, configure OpenSSL to be FIPS compliant.
+
+Configure per operating system documentation: 
+RedHat: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/chap-federal_standards_and_regulations
+Ubuntu: https://security-certs.docs.ubuntu.com/en/fips
+
+For information on configuring PostgreSQL to use SSL, see supplementary content APPENDIX-G."
+
