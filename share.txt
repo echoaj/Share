@@ -1,19 +1,18 @@
 I am stigging a bitnami/postgres image by adding commands in a dockerfile that refers to the image. Then I build it, run it and verify my changes.
 
 How would I implement the following stig?
-STIG ID: V-214148
-RULE Title: PostgreSQL must prevent non-privileged users from executing privileged functions, to include disabling, circumventing, or altering implemented security safeguards/countermeasures.
+STIG ID: V-214052
+RULE Title: PostgreSQL must integrate with an organization-level authentication/access mechanism providing account management and automation for all users, groups, roles, and any other principals.
 
 FIX TEXT: 
-"Configure PostgreSQL security to protect all privileged functionality. 
+Note: The following instructions use the PGDATA environment variable. See supplementary content APPENDIX-F for instructions on configuring PGDATA.
 
-If pl/R and pl/Python are used, document their intended use, document users that have access to pl/R and pl/Python, as well as their business use case, such as data-analytics or data-mining. Because of the risks associated with using pl/R and pl/Python, their use must have AO risk acceptance.
+Integrate PostgreSQL security with an organization-level authentication/access mechanism providing account management for all users, groups, roles, and any other principals.
 
-To remove unwanted extensions, use:
+As the database administrator (shown here as "postgres"), edit pg_hba.conf authentication file:
 
-DROP EXTENSION <extension_name>
+$ sudo su - postgres
+$ vi ${PGDATA?}/pg_hba.conf
 
-To remove unwanted privileges from a role, use the REVOKE command. 
-
-See the PostgreSQL documentation for more details: http://www.postgresql.org/docs/current/static/sql-revoke.html"
+For each PostgreSQL-managed account that is not documented and approved, either transfer it to management by the external mechanism, or document the need for it and obtain approval, as appropriate.
 
