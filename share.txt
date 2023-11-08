@@ -1,14 +1,19 @@
 I am stigging a bitnami/postgres image by adding commands in a dockerfile that refers to the image. Then I build it, run it and verify my changes.
 
 How would I implement the following stig?
-STIG ID: V-214075
-RULE Title: PostgreSQL must implement NIST FIPS 140-2 or 140-3 validated cryptographic modules to generate and validate cryptographic hashes.
+STIG ID: V-214148
+RULE Title: PostgreSQL must prevent non-privileged users from executing privileged functions, to include disabling, circumventing, or altering implemented security safeguards/countermeasures.
+
 FIX TEXT: 
-"If fips_enabled = 0, configure OpenSSL to be FIPS compliant.
+"Configure PostgreSQL security to protect all privileged functionality. 
 
-Configure per operating system documentation: 
-RedHat: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/chap-federal_standards_and_regulations
-Ubuntu: https://security-certs.docs.ubuntu.com/en/fips
+If pl/R and pl/Python are used, document their intended use, document users that have access to pl/R and pl/Python, as well as their business use case, such as data-analytics or data-mining. Because of the risks associated with using pl/R and pl/Python, their use must have AO risk acceptance.
 
-For information on configuring PostgreSQL to use SSL, see supplementary content APPENDIX-G."
+To remove unwanted extensions, use:
+
+DROP EXTENSION <extension_name>
+
+To remove unwanted privileges from a role, use the REVOKE command. 
+
+See the PostgreSQL documentation for more details: http://www.postgresql.org/docs/current/static/sql-revoke.html"
 
