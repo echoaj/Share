@@ -1,19 +1,5 @@
-I am stigging a bitnami/postgres image by adding commands in a dockerfile that refers to the image. Then I build it, run it and verify my changes.
+I have a windowws server 2022 that servers as a gitlab runner.  In that machine I mapped a network drive to Z:\
+When I open up PowerShell I am able to execute the command "dir Z:\" and I can see all the contents
 
-How would I implement the following stig?
-STIG ID: V-214052
-RULE Title: PostgreSQL must integrate with an organization-level authentication/access mechanism providing account management and automation for all users, groups, roles, and any other principals.
-
-FIX TEXT: 
-Note: The following instructions use the PGDATA environment variable. See supplementary content APPENDIX-F for instructions on configuring PGDATA.
-
-Integrate PostgreSQL security with an organization-level authentication/access mechanism providing account management for all users, groups, roles, and any other principals.
-
-As the database administrator (shown here as "postgres"), edit pg_hba.conf authentication file:
-
-$ sudo su - postgres
-$ vi ${PGDATA?}/pg_hba.conf
-
-For each PostgreSQL-managed account that is not documented and approved, either transfer it to management by the external mechanism, or document the need for it and obtain approval, as appropriate.
-
-Implementation is only possible if it's known what organization-level authentication such as (LDAP, Kerbos, Active Directory) PostgreSQL will integreate with.
+Now I have that same command in my .gitlab-ci.yml file but when the pipeline runs it, it says "Cannot find drive. A drive with the name 'Z' does nto exist."
+What is happening here?
