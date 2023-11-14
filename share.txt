@@ -1,5 +1,29 @@
-I have a windowws server 2022 that servers as a gitlab runner.  In that machine I mapped a network drive to Z:\
-When I open up PowerShell I am able to execute the command "dir Z:\" and I can see all the contents
+Write-Host "=========== MOUNTING ISO ===========" 
+Write-Host $ISO_PATH
+Mount-DiskImage -ImagePath $ISO_PATH | out-null
 
-Now I have that same command in my .gitlab-ci.yml file but when the pipeline runs it, it says "Cannot find drive. A drive with the name 'Z' does nto exist."
-What is happening here?
+Write-Host "=========== CONVERTING VMDK TO VHD ==========="
+$vmdk = Get-ChildItem "D:\" -Filter *.vmdk | Select-Object -First 1
+$vhd = "$($vmdk.BaseName).vhd"
+$vhd_path = "$ISO_PATH_PARENT$vhd"
+
+Write-Host "$($vmdk.name) --> $vhd"
+qemu-img convert -f vmdk -O vpc $vmdk.FullName $vhd_path
+
+Write-Host "=========== MOUNTING VHD ==========="
+$vhd_mount_path = "C:\vhdmount"
+Write-Host "Mounting $vhd to $vhd_mount_path"
+New-Item -ItemType Directory -Path $vhd_mount_path -Force
+Mount-WindowsImage -ImagePath $vhd_path -Path $vhd_mount_path -Index 1 | out-null
+
+Write-Host "=========== CAPTURING VHD TO WIM ==========="
+$wim = "$($vmdk.BaseName).wim"
+$wim_path = "$ISO_PATH_PARENT$wim"
+dism /Capture-Image /ImageFile:$wim_path /CaptureDir:C:\vhdmount /Name:"$($vmdk.name)" /Description:"Windows Server 2022 Standard"
+
+Write-Host "=========== DISMOUNTING ISO ==========="
+Dismount-DiskImage -ImagePath $ISO_PATH | out-null
+Write-Host "Complete"
+
+Write-Host "=========== CONVERSION COMPLETE ==========="
+dir $ISO_PATH_PARENT
