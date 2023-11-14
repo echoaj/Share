@@ -1,29 +1,3 @@
-Write-Host "=========== MOUNTING ISO ===========" 
-Write-Host $ISO_PATH
-Mount-DiskImage -ImagePath $ISO_PATH | out-null
 
-Write-Host "=========== CONVERTING VMDK TO VHD ==========="
-$vmdk = Get-ChildItem "D:\" -Filter *.vmdk | Select-Object -First 1
-$vhd = "$($vmdk.BaseName).vhd"
-$vhd_path = "$ISO_PATH_PARENT$vhd"
+Get-ChildItem -Path "C:\Your\Directory\Path" -Exclude *.iso | Where-Object { $_.Name -like "*disk*" } | Remove-Item -Force
 
-Write-Host "$($vmdk.name) --> $vhd"
-qemu-img convert -f vmdk -O vpc $vmdk.FullName $vhd_path
-
-Write-Host "=========== MOUNTING VHD ==========="
-$vhd_mount_path = "C:\vhdmount"
-Write-Host "Mounting $vhd to $vhd_mount_path"
-New-Item -ItemType Directory -Path $vhd_mount_path -Force
-Mount-WindowsImage -ImagePath $vhd_path -Path $vhd_mount_path -Index 1 | out-null
-
-Write-Host "=========== CAPTURING VHD TO WIM ==========="
-$wim = "$($vmdk.BaseName).wim"
-$wim_path = "$ISO_PATH_PARENT$wim"
-dism /Capture-Image /ImageFile:$wim_path /CaptureDir:C:\vhdmount /Name:"$($vmdk.name)" /Description:"Windows Server 2022 Standard"
-
-Write-Host "=========== DISMOUNTING ISO ==========="
-Dismount-DiskImage -ImagePath $ISO_PATH | out-null
-Write-Host "Complete"
-
-Write-Host "=========== CONVERSION COMPLETE ==========="
-dir $ISO_PATH_PARENT
