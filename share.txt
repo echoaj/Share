@@ -1,6 +1,3 @@
 
 
-I want you to write powershell code that takes the variable ISO_PATH which is set to \\10.10.21.84\share\pipe\E-Team\Windows\Test-WS22\5.5.5\20231012-151433\EXPORT-Test-WS22-5.5.5-20231012-151433.iso and create a new variable called ISO_PARENT_PATH_SLASH and set that to \\10.10.21.84\share\pipe\E-Team\Windows\Test-WS22\5.5.5\20231012-151433\ by doing string manuplation with ISO_PATH.
-There will also be avariable created called ISO_PARENT_PATH which should be set to \\10.10.21.84\share\pipe\E-Team\Windows\Test-WS22\5.5.5\20231012-151433.
-
-How would the powershell code look like?
+I want you to write powershell code that takes the variable ISO_PATH which is set to \\10.10.21.84\share\pipe\E-Team\Windows\Test-WS22\5.5.5\20231012-151433\EXPORT-Test-WS22-5.5.5-20231012-151433.iso and create a new variable called WIN_DESC and set it equal to "Windows Server 2019 Standard" if ISO_PATH contains w19, W19, ws19 or WS19.
