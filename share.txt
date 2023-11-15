@@ -1,17 +1,6 @@
-Why is it that sometimes in my pipeline output, it shows the command used within the gitlab ci file and the output of that command.  and sometimes it only shows the output of the command
 
-$ C:\gitlab-runner\gitlab-runner.exe --version
-Version:      16.5.0
-Git revision: 853330f9
-Git branch:   16-5-stable
-GO version:   go1.20.10
-Built:        2023-10-20T15:57:25+0000
-OS/Arch:      windows/amd64
-$ Write-Host "=========== DIRECTORY CLEANUP ===========" # collapsed multi-line command
-=========== DIRECTORY CLEANUP ===========
-Complete
-$ Write-Host "=========== MOUNTING ISO ==========="  # collapsed multi-line command
-=========== MOUNTING ISO ===========
-\\10.10.21.84\share\ssb-wsus-pipeline\B-Team\Windows\Test-WS22\5.5.5\20231012-151433\EXPORT-Test-WS22-5.5.5-20231012-151433.iso
-=========== CONVERTING VMDK TO VHD ===========
-EXPORT-Test-WS22-disk-1.vmdk --> EXPORT-Test-WS22-disk-1.vhd
+
+I want you to write powershell code that takes the variable ISO_PATH which is set to \\10.10.21.84\share\pipe\E-Team\Windows\Test-WS22\5.5.5\20231012-151433\EXPORT-Test-WS22-5.5.5-20231012-151433.iso and create a new variable called ISO_PARENT_PATH_SLASH and set that to \\10.10.21.84\share\pipe\E-Team\Windows\Test-WS22\5.5.5\20231012-151433\ by doing string manuplation with ISO_PATH.
+There will also be avariable created called ISO_PARENT_PATH which should be set to \\10.10.21.84\share\pipe\E-Team\Windows\Test-WS22\5.5.5\20231012-151433.
+
+How would the powershell code look like?
