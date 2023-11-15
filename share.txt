@@ -1,3 +1,17 @@
+What is the issue here
 
-
-I want you to write powershell code that takes the variable ISO_PATH which is set to \\10.10.21.84\share\pipe\E-Team\Windows\Test-WS22\5.5.5\20231012-151433\EXPORT-Test-WS22-5.5.5-20231012-151433.iso and create a new variable called WIN_DESC and set it equal to "Windows Server 2019 Standard" if ISO_PATH contains w19, W19, ws19 or WS19.
+At line:324 char:9
++ curl -u $NEXUS_TOKEN_NAME:$NEXUS_TOKEN_PASS --upload-file $WIM_PATH $ ...
++         ~~~~~~~~~~~~~~~~~~
+Variable reference is not valid. ':' was not followed by a valid variable name character. Consider 
+using ${} to delimit the name.
+At line:1 char:3
++ & {
++   ~
+Missing closing '}' in statement block or type definition.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : InvalidVariableReferenceWithDrive
+ 
+At line:1 char:1
++ }
++ ~
