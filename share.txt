@@ -1,35 +1,29 @@
-I have a gitlab pipeline that has ci code to upload an artifact to nexus.  The artifact is around 5.1GB big. The code looks like this:
-
-nexus-upload-wim: 
-  stage: nexus-wim
+- name: "HIGH | WN10-CC-000330 | PATCH | The Windows Remote Management (WinRM) client must not use Basic authentication."
+  ansible.windows.win_regedit:
+    path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client
+    value: AllowBasic
+    state: present
+    data: 0
+    datatype: dword
   tags:
-    - win10gitlabrunner
+      - WN10-CC-000330
+      - CAT1
+      - CCI-000877
+      - SRG-OS-000125-GPOS-00065
+      - SV-220862r569187_rule
+      - V-220862
 
-  script: 
-    - |
-      $UPLOAD_URL = "$BASE_URL/$END_POINT"
-      Write-Host "Uploading Wim to Nexus"
-      Write-Host $UPLOAD_URL
-
-      $URI = New-Object System.Uri($UPLOAD_URL)
-      $PWD = ConvertTo-SecureString $NEXUS_TOKEN_PASS -AsPlainText -Force
-      $creds = New-Object System.Management.Automation.PSCredential ($NEXUS_TOKEN_NAME, $PWD)
-
-      Invoke-WebRequest -Uri $URI -InFile $WIM_PATH -Method Put -Credential $creds
-      Write-Host Complete
-
-
-The terminal output looks like this:
-
-==> vsphere-clone.windows: Waiting for IP...
-==> vsphere-clone.windows: IP address: 192.168.5.114
-==> vsphere-clone.windows: Using WinRM communicator to connect: 192.168.5.114
-==> vsphere-clone.windows: Waiting for WinRM to become available...
-
-The issue is it just hangs and doesn't ever complete.  I was able to get it to work on a RHEL gitlab runner using Curl but I've had no luck using Invoke-WebRequest or Invoke-RestMethod.  What could be the issue?
-
-
-curl.exe -u "$NEXUS_TOKEN_NAME:$NEXUS_TOKEN_PASS" --upload-file $WIM_ ...
-+              ~~~~~~~~~~~~~~~~~~
-Variable reference is not valid. ':' was not followed by a valid variable name character. Consider 
-using ${} to delimit the name.
+- name: "HIGH | WN10-CC-000345 | PATCH | The Windows Remote Management (WinRM) service must not use Basic authentication."
+  ansible.windows.win_regedit:
+    path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
+    value: AllowBasic
+    state: present
+    data: 0
+    datatype: dword
+  tags:
+      - WN10-CC-000345
+      - CAT1
+      - CCI-000877
+      - SRG-OS-000125-GPOS-00065
+      - SV-220865r654974_rule
+      - V-220865
