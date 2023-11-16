@@ -1,4 +1,12 @@
-W# Define the credentials
+
+curl -u ${NEXUS_TOKEN_NAME}:${NEXUS_TOKEN_PASS} --upload-file $WIM_PATH $UPLOAD_URL
+
+
+
+
+
+
+# Define the credentials
 $credential = New-Object System.Management.Automation.PSCredential -ArgumentList $NEXUS_TOKEN_NAME, (ConvertTo-SecureString $NEXUS_TOKEN_PASS -AsPlainText -Force)
 
 # Define the headers for the request
