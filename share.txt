@@ -1,3 +1,9 @@
+My supplier on the internal network is having networking issues when they try to install and run the provided hardened VM RHEL image:
+
+“We’re having a networking issue where we can ping servers on the same ESXi host but cannot ping anything else outside of ESXi host."
+
+What could be the possible problem with this. how should I respond
+
 
 curl -u ${NEXUS_TOKEN_NAME}:${NEXUS_TOKEN_PASS} --upload-file $WIM_PATH $UPLOAD_URL
 
