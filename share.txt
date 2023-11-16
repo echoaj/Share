@@ -1,3 +1,8 @@
+$Credential = New-Object System.Management.Automation.PSCredential ('NEXUS_TOKEN_NAME', (ConvertTo-SecureString $NEXUS_TOKEN_PASS -AsPlainText -Force))
+Invoke-RestMethod -Uri $UPLOAD_URL -Method Put -InFile $WIM_PATH -Credential $Credential
+
+
+
 My supplier on the internal network is having networking issues when they try to install and run the provided hardened VM RHEL image:
 
 “We’re having a networking issue where we can ping servers on the same ESXi host but cannot ping anything else outside of ESXi host."
