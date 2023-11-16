@@ -27,3 +27,9 @@ The terminal output looks like this:
 ==> vsphere-clone.windows: Waiting for WinRM to become available...
 
 The issue is it just hangs and doesn't ever complete.  I was able to get it to work on a RHEL gitlab runner using Curl but I've had no luck using Invoke-WebRequest or Invoke-RestMethod.  What could be the issue?
+
+
+curl.exe -u "$NEXUS_TOKEN_NAME:$NEXUS_TOKEN_PASS" --upload-file $WIM_ ...
++              ~~~~~~~~~~~~~~~~~~
+Variable reference is not valid. ':' was not followed by a valid variable name character. Consider 
+using ${} to delimit the name.
