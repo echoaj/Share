@@ -1,17 +1,14 @@
-What is the issue here
+W# Define the credentials
+$credential = New-Object System.Management.Automation.PSCredential -ArgumentList $NEXUS_TOKEN_NAME, (ConvertTo-SecureString $NEXUS_TOKEN_PASS -AsPlainText -Force)
 
-At line:324 char:9
-+ curl -u $NEXUS_TOKEN_NAME:$NEXUS_TOKEN_PASS --upload-file $WIM_PATH $ ...
-+         ~~~~~~~~~~~~~~~~~~
-Variable reference is not valid. ':' was not followed by a valid variable name character. Consider 
-using ${} to delimit the name.
-At line:1 char:3
-+ & {
-+   ~
-Missing closing '}' in statement block or type definition.
-    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
-    + FullyQualifiedErrorId : InvalidVariableReferenceWithDrive
- 
-At line:1 char:1
-+ }
-+ ~
+# Define the headers for the request
+$headers = @{
+    Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("${NEXUS_TOKEN_NAME}:${NEXUS_TOKEN_PASS}"))
+}
+
+# Define the URI and file path
+$uri = $NEXUS_URL
+$filePath = $WIM_PATH
+
+# Invoke the REST method
+Invoke-RestMethod -Method Put -Uri $uri -Headers $headers -InFile $filePath -ContentType 'multipart/form-data'
