@@ -1,33 +1,29 @@
-$Credential = New-Object System.Management.Automation.PSCredential ('NEXUS_TOKEN_NAME', (ConvertTo-SecureString $NEXUS_TOKEN_PASS -AsPlainText -Force))
-Invoke-RestMethod -Uri $UPLOAD_URL -Method Put -InFile $WIM_PATH -Credential $Credential
+I have a gitlab pipeline that has ci code to upload an artifact to nexus.  The artifact is around 5.1GB big. The code looks like this:
+
+nexus-upload-wim: 
+  stage: nexus-wim
+  tags:
+    - win10gitlabrunner
+
+  script: 
+    - |
+      $UPLOAD_URL = "$BASE_URL/$END_POINT"
+      Write-Host "Uploading Wim to Nexus"
+      Write-Host $UPLOAD_URL
+
+      $URI = New-Object System.Uri($UPLOAD_URL)
+      $PWD = ConvertTo-SecureString $NEXUS_TOKEN_PASS -AsPlainText -Force
+      $creds = New-Object System.Management.Automation.PSCredential ($NEXUS_TOKEN_NAME, $PWD)
+
+      Invoke-WebRequest -Uri $URI -InFile $WIM_PATH -Method Put -Credential $creds
+      Write-Host Complete
 
 
+The terminal output looks like this:
 
-My supplier on the internal network is having networking issues when they try to install and run the provided hardened VM RHEL image:
+==> vsphere-clone.windows: Waiting for IP...
+==> vsphere-clone.windows: IP address: 192.168.5.114
+==> vsphere-clone.windows: Using WinRM communicator to connect: 192.168.5.114
+==> vsphere-clone.windows: Waiting for WinRM to become available...
 
-“We’re having a networking issue where we can ping servers on the same ESXi host but cannot ping anything else outside of ESXi host."
-
-What could be the possible problem with this. how should I respond
-
-
-curl -u ${NEXUS_TOKEN_NAME}:${NEXUS_TOKEN_PASS} --upload-file $WIM_PATH $UPLOAD_URL
-
-
-
-
-
-
-# Define the credentials
-$credential = New-Object System.Management.Automation.PSCredential -ArgumentList $NEXUS_TOKEN_NAME, (ConvertTo-SecureString $NEXUS_TOKEN_PASS -AsPlainText -Force)
-
-# Define the headers for the request
-$headers = @{
-    Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("${NEXUS_TOKEN_NAME}:${NEXUS_TOKEN_PASS}"))
-}
-
-# Define the URI and file path
-$uri = $NEXUS_URL
-$filePath = $WIM_PATH
-
-# Invoke the REST method
-Invoke-RestMethod -Method Put -Uri $uri -Headers $headers -InFile $filePath -ContentType 'multipart/form-data'
+The issue is it just hangs and doesn't ever complete.  I was able to get it to work on a RHEL gitlab runner using Curl but I've had no luck using Invoke-WebRequest or Invoke-RestMethod.  What could be the issue?
