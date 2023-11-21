@@ -1,29 +1,8 @@
-- name: "HIGH | WN10-CC-000330 | PATCH | The Windows Remote Management (WinRM) client must not use Basic authentication."
-  ansible.windows.win_regedit:
-    path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client
-    value: AllowBasic
-    state: present
-    data: 0
-    datatype: dword
-  tags:
-      - WN10-CC-000330
-      - CAT1
-      - CCI-000877
-      - SRG-OS-000125-GPOS-00065
-      - SV-220862r569187_rule
-      - V-220862
+curl.exe -u "${env:NEXUS_TOKEN_NAME}:${env:NEXUS_TOKEN_PASS}" -X PUT -d $WIM_PATH_RHEL $UPLOAD_URL
 
-- name: "HIGH | WN10-CC-000345 | PATCH | The Windows Remote Management (WinRM) service must not use Basic authentication."
-  ansible.windows.win_regedit:
-    path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
-    value: AllowBasic
-    state: present
-    data: 0
-    datatype: dword
-  tags:
-      - WN10-CC-000345
-      - CAT1
-      - CCI-000877
-      - SRG-OS-000125-GPOS-00065
-      - SV-220865r654974_rule
-      - V-220865
+Uploading Wim to Nexus
+https://nexus.gc1.myngc.com/repository/ssb-wsus-pipeline/B-Team/Windows/Test-WS22/5.5.5/20231012-151433/
+[MASKED]
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   111    0     0  100   111      0    647 --:--:-- --:--:-- --:--:--   652
