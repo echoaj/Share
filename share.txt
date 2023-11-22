@@ -1,89 +1,33 @@
-before_script:
-  - C:\gitlab-runner\gitlab-runner.exe --version
+I want to create an ansible role that installs vmware workcenter pro on a windows 10 machine.
+In the ansible role task I create a temporary directory, download workcenter there, and I need help to then install it.
+This is what I have so far:
 
-variables:
-  BASE_URL: 'https://nexus.com/repository/ssb-wsus-pipeline'
-  ISO_PATH: '\\10.10.25.85\share\ssb-wsus-pipeline\G-Team\Win\Test-WS22\5.5.5\20231012-151433\EXPORT-Test-WS22-5.5.5-20231012-151466.iso'
-  WIM_PATH: '\\10.10.25.85\share\ssb-wsus-pipeline\G-Team\Win\Test-WS22\5.5.5\20231012-151433\EXPORT-Test-WS22-disk-1.wim'
-  END_POINT: 'B-Team/Windows/Test-WS22/5.5.5/20231012-151466/'
-  
-stages:
-  - wim
-  - nexus
+---
+- name: Create Temporary Directory
+  ansible.builtin.win_file:
+    path: "{{ windows_temp_directory }}"
+    state: directory
 
-wim-convert: 
-  stage: wim
-  tags:
-    - gitlabagent-w10
-
-  script: 
-    - $WIN_DESC = "Unkown Operating System"
-    
-    # Determine OS
-    - |
-      if($ISO_PATH -match 'w10|W10'){
-        $WIN_DESC = 'Windows 10 Enterprise'
-      } elseif($ISO_PATH -match 'w19|ws19|W19|WS19'){
-        $WIN_DESC = 'Windows Server 2019 Standard'
-      } elseif($ISO_PATH -match 'w22|ws22|W22|WS22'){
-        $WIN_DESC = 'Windows Server 2022 Standard'
-      } else {
-        Write-Host $WIN_DESC
-        exit 1
-      }
-      Write-Host "$WIN_DESC detected"
-      $ISO_PATH_PARENT = $ISO_PATH.Substring(0, $ISO_PATH.LastIndexOf('\') + 1).TrimEnd('\')
-      
-    # Delete any non iso files for clean conversion
-    - |
-      Write-Host "=========== DIRECTORY CLEANUP ==========="
-      Get-ChildItem -Path $ISO_PATH_PARENT -Exclude *.iso -Force | Where-Object { $_.Name -like "*disk*" } | Remove-Item -Force
-      Write-Host "Complete"
-    
-    # Perform conversion process
-    - |
-      Write-Host "=========== MOUNTING ISO ===========" 
-      Write-Host $ISO_PATH
-      Mount-DiskImage -ImagePath $ISO_PATH | out-null
-
-      Write-Host "=========== CONVERTING VMDK TO VHD ==========="
-      $vmdk = Get-ChildItem "D:\" -Filter *.vmdk | Select-Object -First 1
-      $vhd = "$($vmdk.BaseName).vhd"
-      $vhd_path = "$ISO_PATH_PARENT\$vhd"
-
-      Write-Host "$($vmdk.name) --> $vhd"
-      qemu-img convert -f vmdk -O vpc $vmdk.FullName $vhd_path
-
-      Write-Host "=========== MOUNTING VHD ==========="
-      $vhd_mount_path = "C:\vhdmount"
-      Write-Host "Mounting $vhd to $vhd_mount_path"
-      New-Item -ItemType Directory -Path $vhd_mount_path -Force | out-null
-      Mount-WindowsImage -ImagePath $vhd_path -Path $vhd_mount_path -Index 1 | out-null
-
-      Write-Host "=========== CAPTURING VHD TO WIM ==========="
-      $wim = "$($vmdk.BaseName).wim"
-      $wim_path = "$ISO_PATH_PARENT\$wim"
-      dism /Capture-Image /ImageFile:$wim_path /CaptureDir:C:\vhdmount /Name:"$($vmdk.name)" /Description:$WIN_DESC
-
-      Write-Host "=========== CLEANUP ==========="
-      Write-Host "Dismounting ISO"
-      Dismount-DiskImage -ImagePath $ISO_PATH | out-null
-      Write-Host "Dismounting vhdmount"
-      Remove-Item -Path C:\vhdmount\ -Force -Recurse
-
-      Write-Host "=========== CONVERSION COMPLETE ==========="
-      dir $ISO_PATH_PARENT
+- name: Download Workstation Installer
+  include_role:
+    name: devops-ansible-library
+    tasks_from: download_repo_file
+  vars: 
+    file_repository_file: '{{ windows_workstation_installer_exe }}'
+    file_repository_path: '{{ windows_workstation_url_path }}/'
+    file_repository_download_directory: "{{ windows_temp_directory }}"
 
 
-nexus-wim-upload: 
-  stage: nexus
-  tags:
-    - gitlabagent-w10
+- name: Install Workstation exe
+  ansible.builtin.win_shell: '{{ windows_temp_directory }}{{ windows_workstation_installer_exe }} /qn'
 
-  script: 
-    - |
-      $UPLOAD_URL = "$BASE_URL/$END_POINT"
-      Write-Host "Uploading Wim to Nexus: $UPLOAD_URL"
-      curl.exe -u "${env:NEXUS_TOKEN_NAME}:${env:NEXUS_TOKEN_PASS}" -X PUT --upload-file $WIM_PATH $UPLOAD_URL
-      # Write-HOST "Download: "
 
+# Pausing to allow the workstation to install, otherwise it won't delete the temp directory
+- name: Pause To Allow Install to Finish
+  ansible.builtin.pause:
+    seconds: 60
+
+What would the ansible code look like to install workcenter
+I want to accept the license agreement, check on enhanced keyboard driver, uncheck "check for product updates", uncheck "join vmware customer experience", leave create desktop shorcut turned on, leave start menu programs folder turned on, then press the install button, also I don't want the vm to restart after if finsihes downloading.  
+
+How would the ansible look like to complete this
