@@ -1,2 +1,15 @@
-  ISO_PATH: '\\10.10.20.34\share\ssb-wsus-pipeline\R-Team\Windows\r-cots-win10\2.0.3\20231130-134321\EXPORT-r-cots-win10-2.0.3-20231130-134321.iso'
-  END_POINT: 'R-Team/Windows/r-cots-win10/2.0.3/20231130-134321/'
+
+
+$ISO_PATH = '\\10.10.20.34\share\ssb-wsus-pipeline\R-Team\Windows\r-cots-win10\2.0.3\20231130-134321\EXPORT-r-cots-win10-2.0.3-20231130-134321.iso'
+
+# Step 1: Extract the path without the server and share part
+$extractedPath = $ISO_PATH -replace '^\\\\[^\\]+\\[^\\]+\\', ''
+
+# Step 2: Replace backslashes with forward slashes
+$forwardSlashPath = $extractedPath -replace '\\', '/'
+
+# Step 3: Remove the filename
+$END_POINT = $forwardSlashPath -replace '/[^/]+$', '/'
+
+# The END_POINT variable now should have the desired value
+$END_POINT
