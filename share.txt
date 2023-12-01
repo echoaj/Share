@@ -2,8 +2,8 @@
 
 $ISO_PATH = '\\10.10.20.34\share\ssb-wsus-pipeline\R-Team\Windows\r-cots-win10\2.0.3\20231130-134321\EXPORT-r-cots-win10-2.0.3-20231130-134321.iso'
 
-# Step 1: Extract the path without the server and share part
-$extractedPath = $ISO_PATH -replace '^\\\\[^\\]+\\[^\\]+\\', ''
+# Step 1: Extract the path from 'ssb-wsus-pipeline' onwards
+$extractedPath = $ISO_PATH -replace '^.*ssb-wsus-pipeline\\', ''
 
 # Step 2: Replace backslashes with forward slashes
 $forwardSlashPath = $extractedPath -replace '\\', '/'
