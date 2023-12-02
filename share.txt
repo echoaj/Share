@@ -1,15 +1,11 @@
+Write-Host "=========== MOUNTING ISO ===========" 
+    Write-Host $ISO_PATH
+    Mount-DiskImage -ImagePath $ISO_PATH | out-null
 
+    Write-Host "=========== CONVERTING VMDK TO VHD ==========="
+    $vmdk = Get-ChildItem "D:\" -Filter *.vmdk | Select-Object -First 1
+    $vhd = "$($vmdk.BaseName).vhd"
+    $vhd_path = "$ISO_PATH_PARENT\$vhd"
 
-$ISO_PATH = '\\10.10.20.34\share\ssb-wsus-pipeline\R-Team\Windows\r-cots-win10\2.0.3\20231130-134321\EXPORT-r-cots-win10-2.0.3-20231130-134321.iso'
-
-# Step 1: Extract the path from 'ssb-wsus-pipeline' onwards
-$extractedPath = $ISO_PATH -replace '^.*ssb-wsus-pipeline\\', ''
-
-# Step 2: Replace backslashes with forward slashes
-$forwardSlashPath = $extractedPath -replace '\\', '/'
-
-# Step 3: Remove the filename
-$END_POINT = $forwardSlashPath -replace '/[^/]+$', '/'
-
-# The END_POINT variable now should have the desired value
-$END_POINT
+    Write-Host "$($vmdk.name) --> $vhd"
+    qemu-img convert -f vmdk -O vpc $vmdk.FullName $vhd_path
