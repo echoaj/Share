@@ -1,19 +1,26 @@
-# Pipeline Convert
+## Pipeline Convert Tool
 
-A tool that converts a VMDK to a WIM and uploads it to Nexus.
+### Overview
+This tool is designed to convert VMDK files to WIM format and then upload them to Nexus.
 
-# Solving Common Pipeline Errors
-**Issue:** error while converting vpc: Could not create file: Permission denied\
-**Fix:** Restart gitlab runner (ST01)
+### Troubleshooting Common Issues in the Pipeline
 
-**Issue:** Mount-WindowsImage : The specified VHD has already been mounted.\
-**Fix:** Delete the VHD it is trying to mount
+1. **Error in VPC Conversion**
+   - **Issue:** Error while converting VPC: "Could not create file: Permission denied."
+   - **Solution:** Restart the GitLab runner (ST01).
 
-**Issue:** Mount-WindowsImage : The mount directory is already associated with another volume.\
-**Fix:** Restart gitlab runner (ST01)
+2. **VHD Mounting Error**
+   - **Issue:** "Mount-WindowsImage: The specified VHD has already been mounted."
+   - **Solution:** Delete the VHD that is being attempted to mount.
 
-**Issue:** Cannot remove item <...>: The process cannot access the file <...> because it is being used by another process.\
-**Fix:** Restart gitlab runner (ST01)
+3. **Mount Directory Conflict**
+   - **Issue:** "Mount-WindowsImage: The mount directory is already associated with another volume."
+   - **Solution:** Restart the GitLab runner (ST01).
 
-**Issue:** curl: Can't open '<...wim>'\
-**Fix:** Double check the name of the .wim
+4. **File Access Error**
+   - **Issue:** "Cannot remove item <...>: The process cannot access the file <...> because it is being used by another process."
+   - **Solution:** Restart the GitLab runner (ST01).
+
+5. **Curl Command Issue**
+   - **Issue:** "curl: Can't open '<...wim>'"
+   - **Solution:** Verify the correctness of the .wim file name.
