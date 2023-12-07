@@ -1,11 +1,19 @@
-Write-Host "=========== MOUNTING ISO ===========" 
-    Write-Host $ISO_PATH
-    Mount-DiskImage -ImagePath $ISO_PATH | out-null
+# Pipeline Convert
 
-    Write-Host "=========== CONVERTING VMDK TO VHD ==========="
-    $vmdk = Get-ChildItem "D:\" -Filter *.vmdk | Select-Object -First 1
-    $vhd = "$($vmdk.BaseName).vhd"
-    $vhd_path = "$ISO_PATH_PARENT\$vhd"
+A tool that converts a VMDK to a WIM and uploads it to Nexus.
 
-    Write-Host "$($vmdk.name) --> $vhd"
-    qemu-img convert -f vmdk -O vpc $vmdk.FullName $vhd_path
+# Solving Common Pipeline Errors
+**Issue:** error while converting vpc: Could not create file: Permission denied\
+**Fix:** Restart gitlab runner (ST01)
+
+**Issue:** Mount-WindowsImage : The specified VHD has already been mounted.\
+**Fix:** Delete the VHD it is trying to mount
+
+**Issue:** Mount-WindowsImage : The mount directory is already associated with another volume.\
+**Fix:** Restart gitlab runner (ST01)
+
+**Issue:** Cannot remove item <...>: The process cannot access the file <...> because it is being used by another process.\
+**Fix:** Restart gitlab runner (ST01)
+
+**Issue:** curl: Can't open '<...wim>'\
+**Fix:** Double check the name of the .wim
