@@ -3,3 +3,5 @@ Get-PSDrive -PSProvider FileSystem | Where-Object {
 } | ForEach-Object {
     Remove-PSDrive -Name $_.Name
 }
+
+curl.exe -u "${NEXUS_TOKEN_NAME}:${NEXUS_TOKEN_PASS}" -X PUT -T $WIM_PATH $UPLOAD_URL
