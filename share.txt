@@ -1,26 +1,5 @@
-## Pipeline Convert Tool
-
-### Overview
-This tool is designed to convert VMDK files to WIM format and then upload them to Nexus.
-
-### Troubleshooting Common Issues in the Pipeline
-
-1. **Error in VPC Conversion**
-   - **Issue:** Error while converting VPC: "Could not create file: Permission denied."
-   - **Solution:** Restart the GitLab runner (ST01).
-
-2. **VHD Mounting Error**
-   - **Issue:** "Mount-WindowsImage: The specified VHD has already been mounted."
-   - **Solution:** Delete the VHD that is being attempted to mount.
-
-3. **Mount Directory Conflict**
-   - **Issue:** "Mount-WindowsImage: The mount directory is already associated with another volume."
-   - **Solution:** Restart the GitLab runner (ST01).
-
-4. **File Access Error**
-   - **Issue:** "Cannot remove item <...>: The process cannot access the file <...> because it is being used by another process."
-   - **Solution:** Restart the GitLab runner (ST01).
-
-5. **Curl Command Issue**
-   - **Issue:** "curl: Can't open '<...wim>'"
-   - **Solution:** Verify the correctness of the .wim file name.
+Get-PSDrive -PSProvider FileSystem | Where-Object {
+    $_.Used -ne $null -and $_.Name -notin @('C')
+} | ForEach-Object {
+    Remove-PSDrive -Name $_.Name
+}
