@@ -1,7 +1,1 @@
-Greetings Lisa,
-
-Before we put our security layer on these latest windows ISOs, we need your team to apply their configuration to them.  Last time your team handed off these images to us, I believe Andrew added things like the bee wallpaper to the desktop, BGinfo utility, powershell scripts to configure ansible, D4.4 document configs ect...
-
-Once this is complete, we can add our configs, stigs, patches, and cots to it and release this new baseline every month to you all. 
-
-Here are the 2 locations of the windows images:
+I have a some CI code on gitlab that runs on a windows gitlab runner whos hostname is "win10runner".  My CI code installs software on a Windows 10 virtual machine whos hostname is "win10cots".  Everything was working until I implemented a STIG on win10cots that turns off basic authentication for WinRM on the win10cots machine.  Now my gitlab runner can't connect to the win10cots machine.  It just hangs.  I did some research and I generated a self-signed certificate on the win10cots machine and created an https listner for the WinRM service.  In terms of configuration for the win10cots, I think I am done.  Is that correct?  If so what do I need to do now?  Do I need to change my gitlab CI code or configure something with the gitlab runner?  Or add the same certificate to the gitlab runner?
