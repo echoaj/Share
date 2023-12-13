@@ -29,3 +29,29 @@ To comply with the STIG rule V-251226 for Redis Enterprise DBMS on a RHEL machin
    - Include details about the location of the certificates, the ownership, and the permissions set.
 
 Remember, these actions require administrative privileges. Always ensure you have proper authorization and backup necessary files before making changes to system configurations.
+
+# Next
+
+To comply with STIG rule V-251228 for Redis Enterprise DBMS, which concerns obscuring authentication information during the process, follow these steps:
+
+1. **Documentation and Approval**:
+   - **Document the Need**: Clearly outline why plain-text password usage in Redis CLI tools or other essential tools is necessary. Include details about the specific situations or functions that require this approach.
+   - **Identify Users**: List the individuals or roles that will use these tools with plain-text password capabilities.
+   - **Mitigation Strategies**: Describe any measures you're taking to minimize the risks associated with using plain-text passwords.
+   - **Obtain Approval**: Submit this documentation to the Authorizing Official (AO) for your organization for approval. This step is crucial for ensuring that the use of such tools is sanctioned and monitored.
+
+2. **Training for Users**:
+   - **Avoid Plain-Text Passwords**: Train all users of these tools on the importance of avoiding the use of plain-text password options whenever possible.
+   - **Password Obfuscation Method**: Instruct users on how to use the `--askpass` option with Redis CLI tools. This method prompts the user for a password, which is then obscured or hidden, enhancing security.
+   - **Reinforce Best Practices**: Ensure users understand the importance of safeguarding passwords and the potential risks of mishandling authentication information.
+
+3. **Example Command for Secure Authentication**:
+   - To authenticate securely using the Redis CLI, advise users to use a command structure like: 
+     ```
+     redis-cli -h <db_endpoint> -p <port> --askpass
+     ```
+   - In this command, `<db_endpoint>` should be replaced with the database endpoint, and `<port>` with the appropriate port number. The `--askpass` option will prompt for the password without displaying it on the screen or storing it in the command history.
+
+Implementing these steps ensures that authentication information is protected during the authentication process, reducing the risk of unauthorized access and potential exploitation.
+
+
