@@ -54,4 +54,30 @@ To comply with STIG rule V-251228 for Redis Enterprise DBMS, which concerns obsc
 
 Implementing these steps ensures that authentication information is protected during the authentication process, reducing the risk of unauthorized access and potential exploitation.
 
+# Next
 
+To comply with STIG rule V-251231 for Redis Enterprise DBMS on a RHEL machine, which requires the use of NSA-approved cryptography, you need to enable Federal Information Processing Standards (FIPS) mode. Here’s how to do it:
+
+1. **Enable FIPS Mode**:
+   - Run the command `sudo fips-mode-setup --enable`. This enables strict FIPS compliance, ensuring key generation uses FIPS-approved algorithms.
+
+2. **Modify the Kernel Command Line**:
+   - Open the `/etc/default/grub` file for editing.
+   - Add `fips=1` to the `GRUB_CMDLINE_LINUX` key. This ensures FIPS mode is activated at boot time.
+
+3. **Rebuild the GRUB Configuration**:
+   - Determine if your system is BIOS-based or UEFI-based.
+   - For BIOS-based systems, run `sudo grub2-mkconfig -o /boot/grub2/grub.cfg`.
+   - For UEFI-based systems, run `sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg`.
+
+4. **Handle Separate `/boot` or `/boot/efi` Partitions**:
+   - If `/boot` or `/boot/efi` is on a separate partition, you need to identify the partition.
+   - Run `sudo df /boot` or `sudo df /boot/efi` to identify the partition.
+   - To avoid issues with device naming changes, get the UUID of the partition using `sudo blkid /dev/sda1` (replace `/dev/sda1` with your partition).
+   - Append `boot=UUID=<your-UUID>` to the kernel command line in `/etc/default/grub`. Replace `<your-UUID>` with the actual UUID obtained.
+
+5. **Reboot the System**:
+   - After making these changes, reboot your system to apply them.
+   - Run `sudo reboot` to restart the system.
+
+Remember, these steps require root or administrative privileges. It's important to ensure you have proper authorization and backup necessary files before making changes to system configurations. Also, be aware that enabling FIPS mode might impact the performance of some cryptographic operations, and it’s recommended to test these settings in a non-production environment first to ensure they don't disrupt your operations.
