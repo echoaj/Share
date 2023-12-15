@@ -1,81 +1,29 @@
-I will be stigging a redis database that is installed on a RHEL machine.  I will give you stig rules with the fix text and I want you to guide me on how to fix these
+source "vsphere-clone" "windows" {
 
+  // vCenter Server Endpoint Settings and Credentials
+  vcenter_server      = "dso-va.com"
+  username            = var.VCENTER_ACCOUNT_USR
+  password            = var.VCENTER_ACCOUNT_PSW
+  insecure_connection = true
+  datacenter          = "ccv-DC"
+  cluster             = "dso-va.com"
+  datastore           = "ccv-dev.com"
+  folder              = var.vcenter_cloned_folder_location
 
-V-251185: Redis Enterprise DBMS must enforce approved authorizations for logical access to information and system resources in accordance with applicable access control policies.
+  // Communicator Settings and Credentials
+  communicator   = "winrm"
+  winrm_username = var.SERVICE_ACCOUNT_USR
+  winrm_password = var.SERVICE_ACCOUNT_PSW
+  winrm_port     = 5986
+  winrm_timeout  = "60m"
+  winrm_use_ssl  = true
+  winrm_insecure = true
 
-Fix Text:
-"To modify the commands or keys a user is able to access, perform the following steps:
+  // Virtual Machine Settings
+  template 	          = var.vm_to_clone_name
+  vm_name             = var.cloned_vm_name
+  network             = "v-22-sid-25202-ssb-horizon-isolated-switch"
+  notes               = "VM template created by pipeline"
+  convert_to_template = true
 
-1. Log in to Redis Enterprise.
-2. Navigate to the access controls tab.
-3. Ensure the appropriate role is configured by inspecting the Redis ACL rules and Roles in the Redis ACL and Role sub-tabs.
-4. If an appropriate role is not present, create the appropriate role.
-5. On the users tab, assign the appropriate role to the user in question."
-
-
-
-
-V-251226: Redis Enterprise DBMS must enforce authorized access to all PKI private keys stored/used by Redis Enterprise DBMS.
-Fix Text:
-Apply or modify access controls and permissions (in the file system/operating system) to tools used to view or modify where the certificates are stored. Tools must be accessible by authorized personnel only.
-
-/etc/opt/redislabs (or wherever the organizationally defined location for certificates are stored) should have an appropriate and documented admin user and group owner and the directory should not have permissions more than 700. 
-
-To update these permissions, run the following commands:
-chown redislabs:redislabs /etc/opt/redislabs
-chmod 700 /etc/opt/redislabs/proxy_cert.pem
-
-
-
-
-V-251228: Redis Enterprise DBMS must obscure feedback of authentication information during the authentication process to protect the information from possible exploitation/use by unauthorized individuals.
-Fix Text:
-For Redis CLI tools, which can accept a plain-text password, and any other essential tool with the same limitation:
-1. Document the need for it, who uses it, and any relevant mitigations, and obtain AO approval.
-2. Train all users of the tool in the importance of not using the plain-text password option and in how to keep the password hidden by using the "--askpass" without the password option. The user will then be prompted and the password obfuscated.
-
-Example command for authentication:
-redis-cli -h <db_endpoint> -p <port> --askpass
-
-
-
-
-
-V-251231: Redis Enterprise DBMS must use NSA-approved cryptography to protect classified information in accordance with the data owners requirements.
-Fix Text:
-Configure the operating system to implement DoD-approved encryption by following the steps below:
-
-To enable strict FIPS compliance, the fips=1 kernel option needs to be added to the kernel command line during system installation so key generation is done with FIPS-approved algorithms and continuous monitoring tests in place.
-
-Enable FIPS mode with the following command:
-# sudo fips-mode-setup --enable
-
-Modify the kernel command line of the current kernel in the "grub.cfg" file by adding the following option to the GRUB_CMDLINE_LINUX key in the "/etc/default/grub" file and then rebuild the "grub.cfg" file:
-fips=1
-
-Changes to "/etc/default/grub" require rebuilding the "grub.cfg" file as follows:
-
-On BIOS-based machines, use the following command:
-# sudo grub2-mkconfig -o /boot/grub2/grub.cfg
-
-On UEFI-based machines, use the following command:
-# sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
-
-If /boot or /boot/efi reside on separate partitions, the kernel parameter "boot=<partition of /boot or /boot/efi>" must be added to the kernel command line. Identify a partition by running the df /boot or df /boot/efi command:
-# sudo df /boot
-
-Filesystem 1K-blocks Used Available Use% Mounted on
-/dev/sda1 495844 53780 416464 12% /boot
-
-To ensure the "boot=" configuration option will work even if device naming changes occur between boots, identify the universally unique identifier (UUID) of the partition with the following command:
-# sudo blkid /dev/sda1
-/dev/sda1: UUID="05c000f1-a213-759e-c7a2-f11b7424c797" TYPE="ext4"
-
-For the example above, append the following string to the kernel command line:
-boot=UUID=05c000f1-a213-759e-c7a2-f11b7424c797
-
-Reboot the system for the changes to take effect.
-
-
-
-
+}
