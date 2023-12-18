@@ -1,4 +1,4 @@
-# STIGS
+# STIGS V-251226
 
 To comply with the STIG rule V-251226 for Redis Enterprise DBMS on a RHEL machine, you'll need to enforce authorized access to all PKI private keys used by Redis Enterprise. Here's how to do it:
 
@@ -30,7 +30,7 @@ To comply with the STIG rule V-251226 for Redis Enterprise DBMS on a RHEL machin
 
 Remember, these actions require administrative privileges. Always ensure you have proper authorization and backup necessary files before making changes to system configurations.
 
-# Next
+# Next V-251228
 
 To comply with STIG rule V-251228 for Redis Enterprise DBMS, which concerns obscuring authentication information during the process, follow these steps:
 
@@ -54,7 +54,7 @@ To comply with STIG rule V-251228 for Redis Enterprise DBMS, which concerns obsc
 
 Implementing these steps ensures that authentication information is protected during the authentication process, reducing the risk of unauthorized access and potential exploitation.
 
-# Next
+# Next V-251231
 
 To comply with STIG rule V-251231 for Redis Enterprise DBMS on a RHEL machine, which requires the use of NSA-approved cryptography, you need to enable Federal Information Processing Standards (FIPS) mode. Here’s how to do it:
 
