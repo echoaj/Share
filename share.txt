@@ -1,1 +1,40 @@
 curl -u $NEXUS_TOKEN_NAME:$NEXUS_TOKEN_PASS --upload-file /mnt/ssb-fileshare/ssb-wsus-pipeline/C-Team/** $NEXUS_BASE_REPO_URL/C-Team/
+
+
+
+
+#!/bin/bash
+
+# Your Nexus credentials and base URL
+NEXUS_TOKEN_NAME="your_nexus_token_name"
+NEXUS_TOKEN_PASS="your_nexus_token_password"
+NEXUS_BASE_REPO_URL="your_nexus_base_repo_url"
+
+# The root directory containing the files you want to upload
+ROOT_DIRECTORY="/mnt/fileshare/pipeline-export/C-Team"
+
+# Function to upload a file
+upload_file() {
+    local file_path="$1"
+    local nexus_url="$2"
+    echo "Uploading ${file_path} to ${nexus_url}"
+    curl -u $NEXUS_TOKEN_NAME:$NEXUS_TOKEN_PASS --upload-file "$file_path" "$nexus_url"
+}
+
+# Recursive function to loop through directories
+process_directory() {
+    local directory_path="$1"
+    for file in "$directory_path"/*; do
+        if [ -f "$file" ]; then
+            # It's a file, upload it
+            local file_relative_path="${file#$ROOT_DIRECTORY/}"
+            upload_file "$file" "$NEXUS_BASE_REPO_URL/$file_relative_path"
+        elif [ -d "$file" ]; then
+            # It's a directory, process it
+            process_directory "$file"
+        fi
+    done
+}
+
+# Start processing from the root directory
+process_directory "$ROOT_DIRECTORY"
