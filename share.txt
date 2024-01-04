@@ -38,3 +38,15 @@ process_directory() {
 
 # Start processing from the root directory
 process_directory "$ROOT_DIRECTORY"
+
+
+
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS app data, [no content] (0):
+Job's log exceeded limit of 4194304 bytes.
+Job execution will continue but no more output will be collected.
