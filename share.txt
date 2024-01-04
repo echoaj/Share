@@ -1,6 +1,6 @@
 curl -u $NEXUS_TOKEN_NAME:$NEXUS_TOKEN_PASS --upload-file /mnt/ssb-fileshare/ssb-wsus-pipeline/C-Team/** $NEXUS_BASE_REPO_URL/C-Team/
 
-
+curl -u $USDIN_NEXUS_TOKEN_NAME:$USDIN_NEXUS_TOKEN_PASS --upload-file /mnt/ssb-fileshare/ssb-wsus-pipeline/QRTC-Team/Windows/qrtc-cots-win10/1.0.1/20231214-184922/EXPORT-qrtc-cots-win10-1.0.1-20231214-184922.iso $NEXUS_BASE_REPO_URL2/TEST/ -m 3600
 
 
 #!/bin/bash
