@@ -1,1 +1,75 @@
-Configure the policy value for Computer Configuration >> Windows Settings >> Security Settings >> Advanced Audit Policy Configuration >> System Audit Policies >> Object Access >> "Audit Other Object Access Events" with "Failure" selected.
+
+TASK [windows : "MEDIUM | WN10-AU-000005 | PATCH | The system must be configured to audit Account Logon - Credential Validation failures."
+"MEDIUM | WN10-AU-000010 | PATCH | The system must be configured to audit Account Logon - Credential Validation successes."] ***
+ok: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000030 | PATCH | The system must be configured to audit Account Management - Security Group Management successes.] ************************************************
+changed: [192.168.4.41]
+
+TASK [windows : "MEDIUM | WN10-AU-000035 | PATCH | The system must be configured to audit Account Management - User Account Management failures."
+"MEDIUM | WN10-AU-000040 | PATCH | The system must be configured to audit Account Management - User Account Management successes."] ***
+changed: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000045 | PATCH | The system must be configured to audit Detailed Tracking - PNP Activity successes.] **************************************************************
+changed: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000050 | PATCH | The system must be configured to audit Detailed Tracking - Process Creation successes.] **********************************************************
+ok: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000054 | PATCH | The system must be configured to audit Logon/Logoff - Account Lockout failures.] *****************************************************************
+ok: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000060 | PATCH | The system must be configured to audit Logon/Logoff - Group Membership successes.] ***************************************************************
+ok: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000065 | PATCH | The system must be configured to audit Logon/Logoff - Logoff successes.] *************************************************************************
+changed: [192.168.4.41]
+
+TASK [windows : "MEDIUM | WN10-AU-000070 | PATCH | The system must be configured to audit Logon/Logoff - Logon failures."
+"MEDIUM | WN10-AU-000075 | PATCH | The system must be configured to audit Logon/Logoff - Logon successes."] ***
+changed: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000080 | PATCH | The system must be configured to audit Logon/Logoff - Special Logon successes.] ******************************************************************
+changed: [192.168.4.41]
+
+TASK [windows : "MEDIUM | WN10-AU-000081 | PATCH | Windows 10 must be configured to audit Object Access - File Share failures."
+"MEDIUM | WN10-AU-000082 | PATCH | Windows 10 must be configured to audit Object Access - File Share successes."] ***
+changed: [192.168.4.41]
+
+TASK [windows : "MEDIUM | WN10-AU-000083 | PATCH | Windows 10 must be configured to audit Object Access - Other Object Access Events successes."
+"MEDIUM | WN10-AU-000084 | PATCH | Windows 10 must be configured to audit Object Access - Other Object Access Events failures."] ***
+changed: [192.168.4.41]
+
+TASK [windows : "MEDIUM | WN10-AU-000085 | PATCH | The system must be configured to audit Object Access - Removable Storage failures."
+"MEDIUM | WN10-AU-000090 | PATCH | The system must be configured to audit Object Access - Removable Storage successes."] ***
+ok: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000100 | PATCH | The system must be configured to audit Policy Change - Audit Policy Change successes.] ***********************************************************
+changed: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000105 | PATCH | The system must be configured to audit Policy Change - Authentication Policy Change successes.] **************************************************
+changed: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000107 | PATCH | The system must be configured to audit Policy Change - Authorization Policy Change successes.] ***************************************************
+ok: [192.168.4.41]
+
+TASK [windows : "MEDIUM | WN10-AU-000110 | PATCH | The system must be configured to audit Privilege Use - Sensitive Privilege Use failures."
+"MEDIUM | WN10-AU-000115 | PATCH | The system must be configured to audit Privilege Use - Sensitive Privilege Use successes."] ***
+ok: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000120 | PATCH | The system must be configured to audit System - IPSec Driver failures.] **************************************************************************
+ok: [192.168.4.41]
+
+TASK [windows : "MEDIUM | WN10-AU-000130 | PATCH | The system must be configured to audit System - Other System Events successes."
+"MEDIUM | WN10-AU-000135 | PATCH | The system must be configured to audit System - Other System Events failures."] ***
+changed: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000140 | PATCH | The system must be configured to audit System - Security State Change successes.] ****************************************************************
+changed: [192.168.4.41]
+
+TASK [windows : MEDIUM | WN10-AU-000150 | PATCH | The system must be configured to audit System - Security System Extension successes.] ************************************************************
+ok: [192.168.4.41]
+
+TASK [windows : "MEDIUM | WN10-AU-000155 | PATCH | The system must be configured to audit System - System Integrity failures."
+"MEDIUM | WN10-AU-000160 | PATCH | The system must be configured to audit System - System Integrity successes."] ***
+changed: [192.168.4.41]
