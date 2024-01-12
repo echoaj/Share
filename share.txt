@@ -1,16 +1,1 @@
-The system must be configured to audit Account Management - Security Group Management successes.
-		The system must be configured to audit Account Management - User Account Management failures.
-		The system must be configured to audit Account Management - User Account Management successes.
-		The system must be configured to audit Detailed Tracking - PNP Activity successes.
-		The system must be configured to audit Logon/Logoff - Logon successes.
-		The system must be configured to audit Logon/Logoff - Special Logon successes.
-		Windows 10 must be configured to audit Object Access - File Share failures.
-		Windows 10 must be configured to audit Object Access - File Share successes.
-		Windows 10 must be configured to audit Object Access - Other Object Access Events successes.
-		Windows 10 must be configured to audit Object Access - Other Object Access Events failures.
-		The system must be configured to audit Policy Change - Audit Policy Change successes.
-		The system must be configured to audit Policy Change - Authentication Policy Change successes.
-		The system must be configured to audit System - Other System Events successes.
-		The system must be configured to audit System - Security State Change successes.
-		The system must be configured to audit System - System Integrity failures.
-		The system must be configured to audit System - System Integrity successes.
+https://www.tenforums.com/tutorials/72031-create-windows-10-iso-image-existing-installation.html
