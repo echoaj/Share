@@ -1,1 +1,4 @@
 https://www.tenforums.com/tutorials/72031-create-windows-10-iso-image-existing-installation.html
+
+
+vsphere-clone.windows: fatal: [default]: FAILED! => {"changed": false, "dest": "C:\\temp\\acroreader\\AdbeRdr2200320322_en_US.exe", "elapsed": 0.1250038, "msg": "Error downloading 'https://nexus.gc1.myngc.com/repository/devops-ansible/installers/adobe/windows/x64//AdbeRdr2200320322_en_US.exe' to 'C:\\temp\\acroreader\\AdbeRdr2200320322_en_US.exe': The request was aborted: Could not create SSL/TLS secure channel.", "status_code": null, "url": "https://nexus.gc1.myngc.com/repository/devops-ansible/installers/adobe/windows/x64//AdbeRdr2200320322_en_US.exe"}
