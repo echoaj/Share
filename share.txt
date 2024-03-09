@@ -1,25 +1,574 @@
+My 2023 Goals
+Adopt a strategic mindset.
+I want to be able to be a more strategic thinker. Want to carve out time to think about my tasks, future goals. 
 
-- name: Clear File Explorer history
-  hosts: windows_hosts
-  tasks:
-    - name: Clear Recent Docs
-      win_regedit:
-        path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs
-        name: ""
-        state: absent
+I have already scheduled 1 hour a month to take a step back and think of how I can modify my approach to technical and non-technical tasks to improve efficiency.
 
-    - name: Clear Run history in Start Menu
-      win_regedit:
-        path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU
-        name: ""
-        state: absent
+Immersing myself into NG culture
 
-    - name: Clear Address Bar history in File Explorer
-      win_regedit:
-        path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths
-        name: ""
-        state: absent
+Being supportive to my fellow engineers. Recognizing others for their contributions. Embracing communication with others. Challenging myself to be more social and reach out to folks.
 
-    - name: Notify Explorer to refresh
-      win_command: tsdiscon
-      ignore_errors: yes
+Learning new skills(s)
+
+Technical examples: Ansible, AWS EC2, Kubernetes, Docker
+
+Non-Technical examples: Creativity, Time Management, Communication
+
+Teach others what I have learned
+
+Put aside time each month to help others
+
+Whenever there are times where you feel you can help others even if they don't ask for helps, reach out to them and assist them with the topics they are learning and working on
+
+
+
+
+
+------------------------------------------------
+
+January
+1/1/23 - 1/4/23
+Worked with DI-27 (DTO) team finishing up my sprint, regarding aqua scan capabilities for managed pipeline.
+1/4/23 - 1/13/23
+Learned about VCenter, VSphere, ESXI
+Worked with Aaron to keep track of which VMs on VCenter need to be deleted, migrated to AWS, left alone ect..
+Contacting individuals to determine the state of hundreds of VMs.
+Created JADC2 Logo and learned Adobe Photoshop while doing it
+1/16/23 - 1/19/23
+On a new Team (Cyber under Strike)
+Catching up on the content JoyLynn had given me
+Studying and practicing WSUS
+Understanding the scope of the effort and my role
+1/23/23 - 1/27/23
+Collaborating a lot with Jason Duong to identify the point of failure of their WSUS
+Teaching Zaid about Jira
+Building a new WSUS from scratch
+Overcoming many roadblocks
+1/30/23 - 2/2/23
+1 on 1 meeting with Nathan F, James W
+Uploading WSUS tutorials I created to teams folder
+Deploying new WSUS template to Nexus
+Creating a base template PPT for demo on Feb 2nd
+Attended DevSecOps team social even happy hour hosted by Nathan Fuher
+Creating this "Weekly Achievements" page on confluence to keep track of my progress each week.
+Investigating KB3114833 WSUS update failure issue
+Documenting WSUS Test History
+February
+2/6/23 - 2/10/23
+Finished WSUS test documentation.
+Onboarding new team member (Tony Mattiello)
+Documenting high level overview of the Cyber Pipeline
+Working on the Phase 2 demo PowerPoint
+Bravo to our stars award for JADC-2 TAS support – February 2nd, 2023
+2/13/23 - 2/16/23
+Cleaned up vCenter test images.
+Documented Base Template Upload vCenter procedure.
+Clarified pipeline phases and VM naming conventions with Alex Vu
+Made FAQ page for cyber pipeline.
+Completed security training and submitted SF312 to ESSS
+Completed Phase 2 PowerPoint
+Completed Phase 2 Demo
+2/20/23 - 2/24/23
+Completed 3 hackthebox.com exercises to learn more about Cyber Security
+Completed Cyber Pipeline Detailed Documentation
+Completed WSUS Configuration Guide / Phase 2 documentation.
+Investigated Nexus Tagging for our export deliverables.
+Started implementing the automation of exporting the Phase 2 WSUS with the pipeline. 
+Had a meeting with our team where we discussed how we can approve the way we assign tasks and keep track of work.  I suggested to have Jira ticket planning meeting every Tuesday and I created a table in our Cyber Pipeline confluence folder where we can keep track of which tasks have been completed each week.
+Learned how to use Zenmap and NMap.
+2/27/23 - 3/3/23
+Completed Versioning implementation on our GitLab runner for our VM exports on Nexus.
+Completed integrating Phase 2 WSUS export automation with cyber pipeline.
+Figure out a better solution to the way we diagram our pipeline.  Using Gliffy instead
+Demonstrated to Zaid how Bitbucket integrates with CI/CD (Jenkins). How to clone Bitbucket repo and push code.
+March
+3/6/23 - 3/10/23
+Researching ACAS.  Connection with multiple people to figure out where to install it from.
+Redrew Cyber Pipeline Diagram with Gliffy
+Cyber Pipeline repository rework
+1 on 1 meeting with Nathan F
+3/13/23 - 3/16/23
+NGS-Workplace Violence Prevention training
+ACAS Installation
+ACAS Configuration
+Pipeline Test (Stage 1)
+Pipeline Test (Stage 2)
+Top Secret investigation interview
+NGS-Workplace Violence Prevention training
+3/20/23 - 3/24/23
+Pipeline Rework
+Created PowerPoint to help Zaid understand software process models / Agile / Scrum
+Jira Kanban board migration to Sprint workflow 
+Jira Scrum workflow setup
+3/27/23 - 3/30/23
+Finished Pipeline Rework
+Reinstalled ACAS
+Reconfigured ACAS
+Keep in contact meeting with DI-27
+April
+4/3/23 - 4/7/23
+Learning Python documentation tool called Sphinx
+Jira Planning
+Finished pipeline feature to match DSO file share structure to nexus file structure
+Finished pipeline feature to implement Testing mode
+Keith documentation tutorial.  Started learning about documentation with sphinx
+Learning about Postgress DB
+4/10/23 - 4/13/23
+Got access to vscode cloud account on titan
+--- Got fully set up with R-Team Sphinx repo and generated html / pdf documentation 
+--- Meeting with Suzy Hellman regarding Jenkins, Sphinx ect...
+Completed Test mode feature on cyber pipeline
+Sphinx Video Tutorials
+Pipeline export deliverables for 3.0.2
+--- Investigation of PostgreSQL DB for cyber security (Meeting with Nick Bishop)
+4/17/23 - 4/21/23
+ Microsoft Azure Stack Hub training all week
+4/24/23 - 4/27/23
+Finished Sphinx Tutorial Videos
+May
+5/1/23 - 5/4/23
+Introduced to Nexus Lifecycle
+COTS Management: Working Identifying what COTS are installed on templates and verifying correct version numbers.
+COTS Management: Working on identifying where COTS are installed form, the latest version, and vendor cadence. 
+5/8/23 - 5/12/23
+COTS Management: Finished Working on identifying where COTS are installed form, the latest version, and vendor cadence. 
+Pipeline export deliverables for 3.0.3
+Modified base templates to point to WSUS by default
+Modified base templates to contain WSUS GPO force reporting script
+--- Software Team meeting, talked about ASH, getting access
+--- Got Ash account/access
+5/15/23 - 5/18/23
+Updated workday career profile.
+--- Investigation uSDIN Scrub Program Information from Systems - DevSecOps Team
+--- Follow Up with Nick Bishop Regarding Investigation of PostgreSQL DB for cyber security
+5/22/23 - 5/25/23
+Learning Ash
+Ash ppt Creation
+B-Team support for templates
+Jean Marie All Hands Meeting (Awarded NG Coin)
+Formulating a plan on how to approach the R-Team regarding offering cyber pipeline service
+Received a Northrop Grumman Coin - at all hands meeting
+5/29/23 - 6/2/23
+Jira Planning, ticket preparation
+--- R-Team cyber pipeline show case preparation
+DevOps Happy Hour - Nathan F
+Charge Number Guidance Restructuring
+June
+6/5/23 - 6/8/23
+Jira Planning, created Jira stories on Software Team 
+Cyber Pipeline Show Case To R-Team presentation prep
+B-Team windows10 & server 2019 VMs with office13 installed for wsus patch verification.
+Learning Fortify
+Stood up a Windows Server 2022 machine at home, downloaded WSD & MDT to learn about those services
+6/12/23 - 6/16/23
+Met with Rodolfo Chen regarding fortify, got some good Insite from that meeting.
+Alex Vu provided me fortify account access
+Was able to copy the Win Server 2022 iso to the DSO file-share so it could be uploaded to vcenter
+Got access to vcenter67.lab.local through mars.as.northgrum.com with the help from Denise. (vcenter67 is where Brian Orr stores his virtual machines, so if we need to access those later on, now we can).
+Created 5 new tickets on R-Team Jira board:  Patch win 10, patch win srv 2022, deploy win 10, deploy win srv 2022, win src 2022 WSUS creation for R-TEAM
+Also updated my status for the Fortify ticket on the Software Team board.
+Investigated how to get Docker Installed on my machine to work with Fortify 
+R-Team sprint planning with Team & other discussions
+Worked with Aldo to identify the cause of Brian Orr's Win 10 failing to boot on vCenter
+Installed R-Team WSUS on Windows Server 2022
+Updated WSUS documentation
+Software & R-Team standups
+Jira Ticket refactoring
+Helped Tony configure the WSUS
+Keith OWASP Top 10 2021 discussion
+Completed Mid-Year Review
+Approved updates on WSUS
+exported winrm templates for b-team, they will configure some scripts on it
+WSUS setup completion
+WSUS Approvals, WSUS Setup complete
+Setting up PCS environment
+Exporting winrm template to B-Team so they can upload scripts.
+Fixed IP network switch issue with W10 *W2022 machines
+Helped Tony and Aldo with GPO configuration
+Finished setting up docker, vscode environment on dev machine
+Debugging QQ and ZZ cert account issues with onebadge, may need IT help on Monday
+6/19/23 - 6/22/23
+Modified cyber pipeline to accommodate R-Team VMs
+Exported R-Team Win 10 and Win Srv 2022 templates.
+Fixed OneBadge ZZ * QQ Certs issue
+Documented R-Team WSUS configuration on confluence
+Updated COTS changelog on confluence
+Delivered w10 and w2022 templates to Brian Orr
+Got ZZ credentials on local computer
+Installed WSL2 and Docker on local computer for fortify
+Trying to debug errors with pull foritfy image on local computer
+Solved issue with pulling fortify docker image.
+Got access to PCS repo and cloned it on my local machine.
+Debugging errors with building PCS Java Code for running fortify
+Spent time refining fortify rulepack investigation.
+Completed 2 code reviews regarding updated ansible COTS versions
+Investigating Rulepacks & fortify demo
+Fixing bug in cyber pipeline with DNS naming issue
+Patching Win10 and WinSrv2019 for B-Team release
+6/26/23 - 6/30/23
+Updating fortify documentation
+itrip vacation input for September 6th (Wed) - September 17th (Sun)
+Keith Fortify Walkthrough
+Updating Jira ticket statuses
+Researching Fortify Jira plug in for bug tracking
+Researching Fortify Automated Auditing and more
+Testing Fortify CI/CD yml/scripts from DevSecOps on private repo
+Debugging CI issues with Kyle Soto
+Investigating how SSC handles artifacts and reports.
+July
+7/3/23 - 7/6/23
+Fortify Investigation & Updating Documentation
+Red Hat Satellite tracking down POC
+Fortify Instigation
+R-Team ticket planning
+Generated scans and reports with Fotify on the following software team repos:
+payload-core-service-impls
+payload-core-service-apis
+Cameo CMDB Import tools
+pdf-generator
+pom-walker
+Note: still several more to scan
+Identified software team repos and identified the ones that don't need a scan. 
+7/10/23 - 7/14/23
+Scanned the following software team repos with fortify.
+izpack
+jms-spy
+multi-tenant
+observability
+pub-sub-client
+dcs-client
+dcs-server-stub
+dcs-sftp-service
+dcs-streaming-service
+cmbd-loader-main
+mpeg-ts-relay
+mpeg-ts-streamer
+There are still more repos to be scanned. (Around 6 or 7)
+Scanned the remaining software team repos with fortify.
+cmdb-regression-tests
+cmdb-service
+cmdb-tools
+cmdb-web
+footer-plugin
+automation
+cameo-runner
+Created new ticket for analyzing fortify reports and started working on it. 
+Analyzed software repos.
+Keeping track of findings on an excel spreadsheet.
+Worked with Aldo to determine best approach for updating cots on wsus
+Introduced the technical steps of the pipeline to Dom
+Approved updates on WSUS and connected client machines
+Patched client machines
+Continued working on fortify vulnerability investigation.
+Template patching and template patch office 2013 verification
+Identified developers for fortify scans to remediate vulnerabilities. 
+7/17/23 - 7/20/23
+Completed Fortify Scan Results Analysis & Developer Tracking
+Helped Tony work around issue with ACAS Nessus scanning.
+Approved MS patches on WS22 R-team WSUS
+Patched R-Team WS22
+Recreated R-Team WSUS with smaller disk size
+Exported R-Team WSUS
+Exported R-Team WS22
+Delivered B-Team templates.
+Found work around in regards to exporting wsus to minio
+delivered wsus and win srv 2022
+Scanned izpack-unpacker
+Created Jira tickets for remediating vulnerabilities on software repos
+Create Software Jira Tickets for vulnerability remediation
+Create DevSecOps Jira Tickets to improve cyber pipeline
+Documenting ACAS Installation
+7/24/23 - 7/28/23
+Acas Install documentation.
+Updating Jira tickets
+Software team Jira ticketing
+Debugging ACAS issues with Tony
+Completed ACAS Installation Documentation ticket.
+Scanned the new camel-routing-services repository with Fortify. (Only 1 low vulnerability found)
+Edited a couple Jira tickets on software team board for a more accurate description.
+Jira ticket planning for the R-Team
+Formulated a plan to make exporting more efficient using minio
+Began working on cyber pipeline feature to export to minio
+Cyber Pipeline feature to export to minio
+Researching a lot of networking stuff to mount minio with RHEL GitLab runner.
+Implementing minio export location for pipeline
+Implementing Fortify CI pipeline for automation repo.
+7/31/23 - 8/3/23
+Helped Micheal with vCenter and SCAP.
+Adding fortify CI pipeline to automation repo.
+Successfully integrated fortify CI with "automation" software repo.
+Investigating discrepancies between manual and automated scan results
+August
+8/7/23 - 8/11/23
+Completed download compare pluging for notepad++ and uploaded it to Nexus
+ACAS Configuration documentation
+Rescanned camel-router-service repo with Fortify 
+Created merge request for Fortify-ci work on automation repo
+ACAS Configuration Documentation
+Synchronizing and approving updates on WSUS
+Updated b-team templates
+Delivered b-team templates
+working on minio ticket
+Networking research & outreach
+Assisted Michael on scanning wsus
+Completed ACAS Configuration Documentation
+8/14/23 - 8/17/23
+R-Team WSUS Approvals
+Updated WS22 client machine with WSUS
+Started jms repo CI fortify automation
+Updated Jira ticket statuses
+Demoed automation CI to software team
+Investigating B-Team configuration ideas
+Added fortify automation code to jms repo
+Exported R-Team deliverables to nexus & dso file share (Not minio yet)
+Worked on exporting deliverables as iso ticket
+improved CI pipeline for jms-spy
+Investigated bug with pipeline failure with fortify quality gate
+Investigated fortify report and fortify ssc discrepancies
+Rescanned jms-spy and verified vulnerabilities have been remediated 
+Updated Rb software Jira tickets 
+Completed fortify-quality-gate CI
+Added new fortify CI to automation repo
+Verified that vulnerabilities have been remediated on cmdb-tools
+Code Reviews
+Independent scanning of cmdb-tools and automation repo
+Debugging discrepancies between local and automation scans.
+8/21/23 - 8/25/23
+Verified cmdb-service repo for remediation of vulnerabilities. 
+Verified automation repo for remediation of vulnerabilities. 
+Verified izpack-unpacker repo for remediation of vulnerabilities. 
+Added fortify CI Pipeline to automation repo
+Added fortify CI Pipeline to cmdb-tools repo
+Peer Reviewed all of Zack's merge requests
+Added CI automation to cmdb-tools
+Completed Documentation on remediated vulnerabilities.
+Jira ticket updates
+Working on minio ticket
+Jira Ticketing
+Completed Export artifacts as iso for cyber pipeline ticket
+Fixed bug with Fortify container causing all pipelines to fail
+Configuration on vm base templates
+Fixed fortify report naming bug in ci code
+finished template configuration
+8/28/23 - 8/31/23
+Software Team Demo / Sprint Planning
+Documenting new RB Software repos status for Fortify Scanning
+minio pipeline integration 
+had meeting with Tim for guidance on how to approach this
+Downloaded and Installed Minio API CLI tool
+Configuring gitlab runner to connect to minio using MC
+Analyzing R-Team COTS list
+Connecting gitlab runner to minio via API
+Jira Planning
+Investigating if possible to automate network adapter removal b-team deliverables
+Connection gitlab runner to minio via API
+Investigated how titan and samba server are hosted
+Fixed format issue with setting mc alias
+Added titan domain to trusted DNS hosts
+Tried to obtain SSL certificate for titain domain on gitlab runner using openSSL
+September
+9/4/23 - 9/8/23
+Documented some minio client api setup steps on confluence
+Completed Elevated Privilege Account Holder Training
+Completed Create script to Disable IPv6 on the templates
+Completed Modify Cyber Pipeline to CI Run Disable IPv6 script
+Completed Cybersecurity - Track COTS installers for WSUS, WS19, W10
+Completed Cybersecurity - Consolidate Windows COTS List
+Completed Prepare documentation, videos, links ect.. to onboard Tan Le with Fortify
+Completed Upload COTS Installers to Nexus
+RHEL/ Windows discussion 
+Minio api ticket 
+Onboarding Tan, getting him familiar with Fortify audit process
+Working through example of scanning repos
+Adding CI files
+Integrating CI files
+Documentation Process
+Demonstrating where to drop the report
+9/11/23 - 9/14/23
+9/18/23 - 9/22/23
+R-Team: Zipped up Cygwin Files (COTS) and uploaded to Nexus
+R-Team: Copied over new WS22 baseline to file share, verified hashes, uploaded new baseline to vCenter
+R-Team: Configured WS22 baseline, Create VM & base template
+R-Team: Synchronized and approved WSUS updates
+B-Team: Synchronized and approved WSUS updates
+B-Team: Ran ansible pipeline to install new COTS on templates and verified COTS versions
+B-Team: Patched W10 and WS19 templates with WSUS
+Stood up R-Team WSUS on new WS22 media
+Delivered B-Team WSUS, WS19, and W10
+Figuring out how to install Cygwin 
+Helping Tan with fortify CI bug
+Work on figuring out how to export the deliverables as a WIM
+R-Team Win 10:
+Patched with WSUS
+Exported
+Converted to wim
+R-Team Win Srv 2022:
+Patched with WSUS
+Exported
+R-Team WSUS:
+Patched
+9/25/23 - 9/28/23
+Helped Tan with fortify bugs
+Cleaned up vCenter and Nexus
+Worked on new pipeline feature to remove the network adapter before export
+Pipeline feature to remove network adapter from VM before exporting
+Pipeline feature to remove network adapter from VM before exporting
+Adding feature to remove network adapter from vm before exportation
+October
+10/2/23 - 2/6/23
+Completed pipeline feature to remove network adapter from vm templates
+Setting up Ansible Environment
+Fixed RHEL 8 vm logging in issue
+Create python virtual environment
+Downloaded ansible
+Created 3 test machines for w10, w19, w22
+Successfully test out simple playbook
+Learning ansible
+Creating stigs for windows server 22
+Assisted Jonathan wtih setting up ansible environment and esxi test image on vCenter
+Helped Tan with fortify questions
+Completed 22 windows 22 stigs
+Complete WS22 ansible STIGS
+Organized ansible structure for windows roles, adobe, and firefox
+created playbook
+added ansible conditions to detect OS
+Added descriptive tweaks
+10/9/23 - 10/12/23
+Setting up RHEL dev environment for stigs
+Configured RHEL to pull from Nexus, access to EPEL package repo
+Installed Redis
+Installed PostgreSQL on database vm
+Synchronized and Approved Updates on b-team wsus
+Patched templates
+Installed Mongodb ok RHEL test machine for stigs
+Updating tickets, charge numbers, other misc tasks
+Fixing credential issue with Brian Orr's DSO account
+Jira Planning, task ticket breakdown
+Changing B-Team export location on cyber pipeline
+10/16/23 - 10/20/23
+Connected ansible with DB Test VM
+Tested copying file
+Re-evaluated R-Team WSUS product updates, synchronized updates
+Mostly finished modifying cyber pipeline to export to r-team windows folder
+Helped Tony debug domain controller problem. Successfully connected windows machine to DC
+Created new windows 10 base line
+Patched win 10 baseline
+Patched win 22 and 19
+Debug issue with ansible pipeline regarding winrm
+Delivered W10 to R-Team with window media player fix
+Installed COTS on W22 and W10
+Patched W22
+[R-Team] Delivery of WS19
+[R-Team] Delivery of WS22
+[R-Team] Delivery of WSUS
+Helping Tan with some bugs
+Updating pipeline documentation
+
+Updating ws19/22 baseline configuration 
+
+10/23/23 - 10/26/23
+Updating confluence documentation
+Familiarizing with scap
+updating naming convention for vms on vsphere
+Scap scanning r-team windows 10
+Addressing Brian Orr's feedback
+Update Scap documentation on confluence
+meetings, getting clarification
+cyber pipeline documentation
+updating naming convention on vsphere
+10/30/23 - 11/3/23
+Fixed proxy bug on rhel sandbox
+cleaned out vms on vsphere
+implemented new naming convention for templates on vsphere
+Completed uploading all wims to nexus
+Created a new vm for the windows gitlab runner for wim automation
+installed quem
+connected to dso file-share
+Installed gitlab runner software on windows 10
+Added tls certificate, fixed bug with gitlab runner token
+Created new pipeline convert repo for wim conversion
+Updating naming convension for b-team templates and pipeline variables
+Mapped network drive to r-team windows gitlab runner
+Working with docker, getting familiar with docker commands
+Getting familiar with docker
+pulling images from nexus
+creating containers
+pulled mongodb image
+installed mongo compass, connected to container, added data
+attaching to containers in interactive mode
+Docker demo for Tony, Aldo, and Tan
+Getting familiar with docker files
+Docker file demo to Tony, Tan
+Helping Tony with ACAS issues
+November
+11/6/23 - 11/9/23
+Pulled postgresql docker image 14.2.0 from nexus
+Explored container, understanding how postgres docker container works
+Researched the stigs to be implemented
+Researched different approaches of implementation
+Implemented one approach, in the process of testing it out
+Installed PgAdmin (GUI tool to connect to postgress and create tables)
+Docker postgres database stig implementation and testing
+stigging postgress
+r-team connecting gitlab runner to convert pipeline
+r-team implementing wim automation functionality
+Worked in implementing wim automation on the pipeline converter repo
+11/13/23 - 11/17/23
+Standup Pipeline for WIM conversion-HW R. Sprint 10
+Implement VDMK to WIM conversion on Pipeline-HW R. Sprint 10
+Updating COTS for b-team
+Implement VDMK to WIM conversion on Pipeline-HW R. Sprint 10
+Fixing winrm connection issue with pipeline
+Implement VDMK to WIM conversion on Pipeline-HW R. Sprint 10
+Fixing ansible pipeline winrm issues
+Fixing ansible pipeline ssl/tls nexus issues
+Updating adobe cots
+11/20/23 - 11/22/23
+Deliver of Win10, Win19, WSUS templates to b-team
+Implement VMDK to WIM conversion automation pipeline
+Creating vmware workstation pro ansible role
+11/27/23 - 12/1/23
+Cygwin Ansible implementation
+Working on B-Team Template Delivery
+Working on R-Team Template Delivery
+Scanning b-team templates
+Remediating some vulnerabilities on windows 10 machine
+Making ansible roles for CAT II
+Scanning b-team templates
+Delivering b-team templates
+Pipeline Maintenace 
+Patching and Delivery of R-Team templates
+R-team win conversion for templates
+R-team upload templates to nexus
+December
+12/4/23 - 12/7/23
+Completed R-Team windows  template delivery
+Sprint panning 
+Tuning up Pipeline-Convert to support multiple jobs
+Investigating source of new windows templates
+Tune Up Pipeline-Convert to handle multiple jobs. DEC - Sprint 10
+Helping Aldo with docker container testing for VY
+
+Testing new Windows ISOs from Brian Orr
+
+pipeline-convert tune up to handle multiple jobs
+
+testing new windows server 2019 os
+
+12/11/23 - 12/15/23
+Completed pipeline-convert tuning
+Cyber RD1.0 Verify the STIGs Implementation of DB Redis. Sprint 10
+Cybersecurity - Investigate / Implement TLS Certificate-Based authentication between RHEL gitlab-runner and Windows templates - Dec - Sprint 10
+Some training on windows template process to Michael
+Investigate / Implement TLS Certificate-Based authentication between RHEL gitlab-runner and Windows templates - Dec - Sprint 10
+Helping Michael with delving QRTC template
+Cyber RD1.0 Verify the STIGs Implementation of DB Redis. Sprint 10
+Cybersecurity - Investigate a solution for CAT II STIGS reverting at boot time - Dec - Sprint 10
+Completed Investigate / Implement TLS Certificate-Based authentication between RHEL gitlab-runner and Windows templates - Dec - Sprint 10
+Tested with SCAP that the critical winrm stig is closed
+12/18/23 - 12/21/23
+Verifying stigs for redis with mark lee
+Delivery of b-team templates
+Delivery of r-team templates
+12/25/23 - 12/29/23
+Holiday Shutdown
