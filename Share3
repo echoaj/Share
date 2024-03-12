@@ -1,0 +1,30 @@
+Self-Evaluation: Alexander Joslin
+
+Summary:
+My role as a Cyber Security / DevSecOps Engineer has been instrumental in establishing a resilient cyber infrastructure. The work I’ve done this past year highlight a blend of tactical problem-solving, strategic foresight, and a strong communication effort with other teams. Ensuring our technologies remain safe from cyber threats, I've prioritized both immediate and long-term security solutions, integrating cybersecurity into our DevOps processes. 
+Key Accomplishments:
+•	Weeks of hard work spent in January and early February in regard to WSUS and Pipeline. 
+o	Standing up new WSUS for B-Team 
+o	Testing, documenting & identifying the issue causing the B-Team to not be able to update their systems properly.  
+o	Newly created documentation on the DevSecOps Cyber Pipeline 
+o	Conducted comprehensive tests, documentation, and identification of issues preventing the B-Team from updating their systems effectively.
+o	Authored detailed documentation on the DevSecOps Cyber Pipeline. Preparation and execution of the Feb 12 Pipeline demo 
+•	ACAS installation and configuration and setup documentation 
+•	Developed a process that the cyber team can use for maintaining COTS ourselves that include steps for updating COTS versions, scanning, tracking, and updating ansible roles. 
+•	Took on the effort to provide the R-Team with patching Win 10 & Win server 2022 machines 
+o	Currently taking on the R-Team Windows templates and COTS effort
+•	Established a formal process for auditing software repos that includes, scanning, documentation, and remediation.
+•	Onboarding and educating others
+Awards & Recognitions:
+Bravo to our starts Award for providing instrumental effort with the Tech Asset Store under JADC-2. – (received February 2nd) 
+Awarded with a $25 and $75 gift card for my work in creating the official logo for JADC-2.   
+Awarded with Northrop Grumman Coin – (received May 23rd) 
+
+
+
+
+Goals 
+Adopt a strategic mindset: I’ve demonstrated this goal by formulating a strategic approach to get the R-Team on board with adopting our Cyber Pipeline, developing a more efficient way to diagram our pipeline by using gliffy, and tracking my achievements on confluence.
+Immersing in NG culture: On several occasions I’ve attended various lunches and dinners outside of work. For example the NG Management Dinner, celebrations for new team member roles and extracurricular actives such as hikes with colleges. 
+Learning new skills: I’ve learned many tools on my own such as vCenter, Fortify, ASH, Sphinx, and more.
+Teaching others: I’ve helped various team members understand technical concepts such as git, Jira, Fortify, virtualization, and more.  In addition I’ve created many tutorial videos and PowerPoints to aid in others learning.
