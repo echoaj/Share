@@ -1,58 +1,35 @@
+# Create a COM object for the Windows Update Session
+$UpdateSession = New-Object -ComObject Microsoft.Update.Session
 
-- name: Map network drive and manage files
-  hosts: all
-  tasks:
-    - name: Map network drive
-      community.windows.win_smb_mount:
-        remote: '\\10.10.21.84\share'
-        username: 'dev\\service-account'
-        password: 'Pas32DE23#$d!'
-        state: mounted
+# Create an update searcher object from the session
+$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
 
-    - name: Define base path and set variables
-      set_fact:
-        path_base: "\\10.10.31.12\share\vm-templates\S-Team\Windows\test-win22\3.0.10\20240104-160034"
-        wsus_path: "C:\\WSUS\\WsusContent"
-        date: "{{ ansible_date_time.iso8601_basic_short }}"
+# Query the history, index starts from 0 and can retrieve up to the number of updates you specify
+$HistoryCount = $UpdateSearcher.GetTotalHistoryCount()
+$UpdateHistory = $UpdateSearcher.QueryHistory(0, $HistoryCount)
 
-    - name: Create folder for export
-      ansible.builtin.win_file:
-        path: "{{ path_base }}\\{{ 'EXPORT-' + path_base.split('\\')[8] + '-' + path_base.split('\\')[9] + '-patches' }}"
-        state: directory
-
-    - name: Export WSUS metadata and logs
-      ansible.windows.win_command:
-        cmd: 'wsusutil.exe export {{ path_base }}\\export_{{ date }}.xml.gz {{ path_base }}\\export_{{ date }}.log'
-        chdir: "{{ wsus_path }}"
-
-    - name: Copy WSUS content directory to new folder
-      ansible.windows.win_copy:
-        src: "{{ wsus_path }}"
-        dest: "{{ path_base }}\\{{ 'EXPORT-' + path_base.split('\\')[8] + '-' + path_base.split('\\')[9] + '-patches' }}"
-        remote_src: yes
-
-    - name: Compress the folder
-      ansible.windows.win_zip:
-        src: "{{ path_base }}\\{{ 'EXPORT-' + path_base.split('\\')[8] + '-' + path_base.split('\\')[9] + '-patches' }}"
-        dest: "{{ path_base }}\\{{ 'EXPORT-' + path_base.split('\\')[8] + '-' + path_base.split('\\')[9] + '-patches' }}.zip"
-        delete: yes
-
-    - name: Clean up exported files and logs
-      ansible.builtin.win_file:
-        path: "{{ item }}"
-        state: absent
-      loop:
-        - "{{ path_base }}\\export_{{ date }}.xml.gz"
-        - "{{ path_base }}\\export_{{ date }}.log"
-
-    - name: Show final directory listing
-      ansible.windows.win_command:
-        cmd: 'Get-ChildItem -Path {{ path_base }} | Select-Object Name, Length'
-      register: dir_listing
-
-    - debug:
-        var: dir_listing.stdout_lines
-
-    - name: Confirm completion
-      ansible.builtin.debug:
-        msg: "Operation completed successfully"
+# Filter and display the updates based on the category
+$UpdateHistory | Where-Object {
+    $_.Categories -match 'Critical Updates' -or
+    $_.Categories -match 'Definition Updates' -or
+    $_.Categories -match 'Security Updates'
+} | ForEach-Object {
+    [PSCustomObject]@{
+        Title = $_.Title
+        Description = $_.Description
+        Operation = switch ($_.Operation) {
+            1 {'Installation'}
+            2 {'Uninstallation'}
+            3 {'Other'}
+        }
+        Date = $_.Date
+        Categories = ($_.Categories | ForEach-Object { $_.Name }) -join ', '
+        ResultCode = switch ($_.ResultCode) {
+            1 {'In Progress'}
+            2 {'Succeeded'}
+            3 {'Succeeded With Errors'}
+            4 {'Failed'}
+            5 {'Aborted'}
+        }
+    }
+} | Format-Table -AutoSize
