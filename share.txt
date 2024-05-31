@@ -1,5 +1,6 @@
+Here is the problem I am running into
+I have this gitlab variable
 
-Gitlab CI File
 variables:
   EXPORT_LOCATION: '\\10.10.21.84\share\vm-templates\B-Team\Windows\b-cots-wsus-win19\4.1.2\20240529-133328'     # Change
 
@@ -20,94 +21,18 @@ export-patches:
     
     # Run ansible
     - |
-      ansible-playbook -i inventory playbook.yml --extra-vars "user=$DSO_SERVICE_ACCOUNT_USR pass=$DSO_SERVICE_ACCOUNT_PSW path=$EXPORT_LOCATION"
+      ansible-playbook -i inventory playbook.yml --extra-vars "user=$DSO_SERVICE_ACCOUNT_USR pass=$DSO_SERVICE_ACCOUNT_PSW path=${EXPORT_LOCATION}"
 
-ansilbe yaml file
-- name: "Execute the patch-export script"
-  win_shell: |
-    powershell.exe -ExecutionPolicy Bypass -File C:\scripts\patch-export.ps1 {{ user }} {{ pass }} {{ path }}
-  register: ps_output
+And I am passing EXPORT_LOCATION TO playbook.yml and inside playbook.yml I have
+- name: "variable"
+  vars:
+    export_location: "{{ path }}"
+  debug:
+    msg: "Export location {{ export_location }}"
 
-patch-export.ps1
-param(
-    [string]$usr,
-    [string]$psw,
-    [string]$pth
-)
+however the debug message in the console appears as:
+\\10.10.21.84\\share\u000bm-templates\\B-Team\\Windows\b-cots-wsus-win19\\4.1.2\\20240529-133328
+not
+\\10.10.21.84\share\vm-templates\B-Team\Windows\b-cots-wsus-win19\4.1.2\20240529-133328
 
-New-SmbMapping -RemotePath '\\10.10.21.84\share' -UserName $usr -Password $psw
-
-# Drop Location Target
-$path_base = $pth -replace '\\\\', '\'  # Replace any excaped backslashes with a single back slash
-$parsed = $path_base -split '\\'
-$vm_name = $parsed[7]
-$vm_version = $parsed[8]
-
-Write-Host "Path: $path_base"
-Write-Host "VM Name: $vm_name"
-Write-Host "VM Vers: $vm_version"
-
-The output of path_base is \\10.10.21.84\share
-The output of vm_name and vm_version is nothing
-What am I doing wrong here?
-
-Here is the error log
-
-TASK [windows : Execute the patch-export script] *******************************
-changed: [192.168.5.45]
-TASK [windows : Show output] ***************************************************
-ok: [192.168.5.45] => {
-    "msg": {
-        "changed": true,
-        "cmd": "powershell.exe -ExecutionPolicy Bypass -File C:\\scripts\\patch-export.ps1 devops\\cyber-service Cybsec4life! \\10.10.21.84\\share\u000bm-templates\\B-Team\\Windows\b-cots-wsus-win19\\4.1.2\\20240529-133328",
-        "delta": "0:00:10.484375",
-        "end": "2024-05-31 21:30:12.126171",
-        "failed": false,
-        "rc": 0,
-        "start": "2024-05-31 21:30:01.641796",
-        "stderr": "",
-        "stderr_lines": [],
-        "stdout": "\r\nPath: \\10.10.21.84\\share\nVM Name: \nVM Vers: \nStatus Local Path Remote Path        \r\n------ ---------- -----------        \r\nOK                \\\\10.10.21.84\\share\r\n\r\nPSPath            : Microsoft.PowerShell.Core\\FileSystem::C:\\10.10.21.84\\share\\EXPORT---patches\r\nPSParentPath      : Microsoft.PowerShell.Core\\FileSystem::C:\\10.10.21.84\\share\r\nPSChildName       : EXPORT---patches\r\nPSDrive           : C\r\nPSProvider        : Microsoft.PowerShell.Core\\FileSystem\r\nPSIsContainer     : True\r\nName              : EXPORT---patches\r\nFullName          : C:\\10.10.21.84\\share\\EXPORT---patches\r\nParent            : share\r\nExists            : True\r\nRoot              : C:\\\r\nExtension         : \r\nCreationTime      : 5/31/2024 2:30:02 PM\r\nCreationTimeUtc   : 5/31/2024 9:30:02 PM\r\nLastAccessTime    : 5/31/2024 2:30:02 PM\r\nLastAccessTimeUtc : 5/31/2024 9:30:02 PM\r\nLastWriteTime     : 5/31/2024 2:30:02 PM\r\nLastWriteTimeUtc  : 5/31/2024 9:30:02 PM\r\nAttributes        : Directory\r\nMode              : d-----\r\nBaseName          : EXPORT---patches\r\nTarget            : {}\r\nLinkType          : \r\n\r\n\r\nName   : EXPORT---patches\r\nLength : \r\n\r\nDone\n\r\n\r\n",
-        "stdout_lines": [
-            "",
-            "Path: \\10.10.21.84\\share",
-            "VM Name: ",
-            "VM Vers: ",
-            "Status Local Path Remote Path        ",
-            "------ ---------- -----------        ",
-            "OK                \\\\10.10.21.84\\share",
-            "",
-            "PSPath            : Microsoft.PowerShell.Core\\FileSystem::C:\\10.10.21.84\\share\\EXPORT---patches",
-            "PSParentPath      : Microsoft.PowerShell.Core\\FileSystem::C:\\10.10.21.84\\share",
-            "PSChildName       : EXPORT---patches",
-            "PSDrive           : C",
-            "PSProvider        : Microsoft.PowerShell.Core\\FileSystem",
-            "PSIsContainer     : True",
-            "Name              : EXPORT---patches",
-            "FullName          : C:\\10.10.21.84\\share\\EXPORT---patches",
-            "Parent            : share",
-            "Exists            : True",
-            "Root              : C:\\",
-            "Extension         : ",
-            "CreationTime      : 5/31/2024 2:30:02 PM",
-            "CreationTimeUtc   : 5/31/2024 9:30:02 PM",
-            "LastAccessTime    : 5/31/2024 2:30:02 PM",
-            "LastAccessTimeUtc : 5/31/2024 9:30:02 PM",
-            "LastWriteTime     : 5/31/2024 2:30:02 PM",
-            "LastWriteTimeUtc  : 5/31/2024 9:30:02 PM",
-            "Attributes        : Directory",
-            "Mode              : d-----",
-            "BaseName          : EXPORT---patches",
-            "Target            : {}",
-            "LinkType          : ",
-            "",
-            "",
-            "Name   : EXPORT---patches",
-            "Length : ",
-            "",
-            "Done",
-            "",
-            ""
-        ]
-    }
-}
+Why is this happening and how do I fix this!
