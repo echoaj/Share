@@ -1,3 +1,12 @@
+
+     ansible --version
+
+    # Replace backslashes in EXPORT_LOCATION with double backslashes
+    - |
+      ESCAPED_EXPORT_LOCATION=$(echo $EXPORT_LOCATION | sed 's/\\/\\\\/g')
+    
+
+
 Here is the problem I am running into
 I have this gitlab variable
 
