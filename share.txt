@@ -29,7 +29,16 @@ ansilbe yaml file
   register: ps_output
 
 patch-export.ps1
-$path_base = $args[2]
+param(
+    [string]$usr,
+    [string]$psw,
+    [string]$pth
+)
+
+New-SmbMapping -RemotePath '\\10.10.21.84\share' -UserName $usr -Password $psw
+
+# Drop Location Target
+$path_base = $pth -replace '\\\\', '\'  # Replace any excaped backslashes with a single back slash
 $parsed = $path_base -split '\\'
 $vm_name = $parsed[7]
 $vm_version = $parsed[8]
