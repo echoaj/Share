@@ -1,1 +1,52 @@
-None
+      DATE_WITH_TIME=$(date "+%Y%m%d-%H%M%S")
+      MONTH_YEAR=$(date "+%m-%y")
+      VM_EXPORT_NAME=EXPORT-$VM_TO_CLONE-$VERSION-$DATE_WITH_TIME
+      VCENTER_EXPORT_FOLDER=Cyber/Pipeline-Exports
+      END_POINT=$TARGET/Windows/$MONTH_YEAR/$VM_TO_CLONE/$VERSION/$DATE_WITH_TIME
+      FILESHARE_PATH=/mnt/ssb-fileshare/vm-templates/$END_POINT
+      RELEASE_FILE=release-notes.txt
+      VM_NAME_EXT=$VM_EXPORT_NAME.$EXPORT_FORMAT
+      ARTIFACT_DIR=$CI_PROJECT_DIR/artifacts
+      ARTIFACT_PATH=$ARTIFACT_DIR/$VM_EXPORT_NAME
+      ARTIFACT_PATH_EXT=$ARTIFACT_DIR/$VM_NAME_EXT
+      PATH_OVF=$ARTIFACT_PATH/$VM_EXPORT_NAME.ovf
+      PATH_VMDK=$ARTIFACT_PATH/$VM_EXPORT_NAME-disk-0.vmdk
+
+      echo VM_TO_CLONE = $VM_TO_CLONE
+      echo VERSION = $VERSION
+      echo VM_EXPORT_NAME = $VM_EXPORT_NAME
+      echo EXPORT_FORMAT = $EXPORT_FORMAT
+      echo VCENTER_EXPORT_FOLDER = $VCENTER_EXPORT_FOLDER
+      echo -e DATE_WITH_TIME = $DATE_WITH_TIME $END
+      echo VM_NAME_EXT = $VM_NAME_EXT                     # e.g: EXPORT-r-win22-21h2-2.1.3-20240624-200631.ova
+      echo CI_PROJECT_DIR = $CI_PROJECT_DIR               # e.g: /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline
+      echo ARTIFACT_DIR = $ARTIFACT_DIR                   # e.g: /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline/artifacts
+      echo ARTIFACT_PATH = $ARTIFACT_PATH                 # e.g: /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline/artifacts/EXPORT-r-win22-21h2-2.1.3-20240624-200631
+      echo ARTIFACT_PATH_EXT = $ARTIFACT_PATH_EXT         # e.g: /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline/artifacts/EXPORT-r-win22-21h2-2.1.3-20240624-200631.ova
+      echo PATH_OVF = $PATH_OVF                           # e.g: /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline/artifacts/EXPORT-r-win22-21h2-2.1.3-20240624-200631/EXPORT-r-win22-21h2-2.1.3-20240624-200631.ovf
+      echo PATH_VMDK = $PATH_VMDK                         # e.g: /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline/artifacts/EXPORT-r-win22-21h2-2.1.3-20240624-200631/EXPORT-r-win22-21h2-2.1.3-20240624-200631-disk-0.vmdk
+      
+
+    # Purpose: Clone target VM, remove network adapter, generate artifacts on gitlab runner
+    - | 
+      echo -e "$HEADER=========== CLONING VM ===========$END"
+      if [ ! -z "$(govc vm.info $VM_EXPORT_NAME)" ]; then
+        echo "Destroying existing $VM_EXPORT_NAME"
+        govc vm.destroy $VM_EXPORT_NAME
+      fi
+      govc vm.clone -vm=$VM_TO_CLONE -folder=/ssb-DC/vm/$VCENTER_EXPORT_FOLDER -on=false $VM_EXPORT_NAME
+      echo -e "$HEADER=========== REMOVING NETWORK ADAPTER ===========$END"
+      govc device.remove -vm=$VM_EXPORT_NAME ethernet-0
+      echo Complete
+      echo -e "$HEADER=========== GENERATING ARTIFACTS ===========$END"
+      mkdir -p $ARTIFACT_DIR
+      govc export.ovf -vm=$VM_EXPORT_NAME -name=$VM_EXPORT_NAME -k=true $ARTIFACT_DIR
+      echo $ARTIFACT_DIR
+      ls -l $ARTIFACT_DIR 
+      echo $ARTIFACT_PATH
+      ls -l $ARTIFACT_PATH                                # e.g: EXPORT-r-win22-21h2-2.1.3-20240624-200631-disk-0.vmdk, EXPORT-r-win22-21h2-2.1.3-20240624-200631.ovf
+      echo -e "$HEADER=========== DONE ===========$END"
+
+
+      tar -cvf artifacts/$VM_NAME_EXT $PATH_OVF $PATH_VMDK 
+
