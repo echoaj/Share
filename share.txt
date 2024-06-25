@@ -1,10 +1,48 @@
+variables:
+  VM_TO_CLONE: 'r-21h2'
+  TARGET: 'R-Team'                  # Options; [B-Team, R-Team]       Top level folder name of the export location on Nexus & DSO Fileshare
+  TEST: 'false'                     # Options; [false, true]          Change to false if exporting VM_TO_CLONE
+  EXPORT_FORMAT: 'ova'              # Options; ['iso', 'zip', 'ova']  Export Format
+  VERSION: $EXPORT_VERSION  
+  CYAN: '\033[0;96m'
+  YELLOW: '\033[0;93m'
+  END: '\033[0m'
+  HEADER: $CYAN
+
+stages:
+  - build
+
+build-job: 
+  stage: build
+  tags:
+    - strk-wsusgitlabagent01-rh84
+
+  script: 
+    
+    # Exit immediately if a bash command fails
+    - |
+      set -e
+    
+    # Output info about the VM to be exported
+    - |
+      echo -e "$HEADER=========== RUNNING PIPELINE-EXPORT ===========$END" 
+
+      if $TEST; then
+        echo -e "$YELLOW=========== TESTING ENABLED ==========="
+        VM_TO_CLONE=test-win22-21h2
+      else
+        echo -e "$HEADER=========== TESTING DISABLED ===========$END"
+      fi
+
+    # Variables
+    - |
       DATE_WITH_TIME=$(date "+%Y%m%d-%H%M%S")
       MONTH_YEAR=$(date "+%m-%y")
       VM_EXPORT_NAME=EXPORT-$VM_TO_CLONE-$VERSION-$DATE_WITH_TIME
       VCENTER_EXPORT_FOLDER=Cyber/Pipeline-Exports
       END_POINT=$TARGET/Windows/$MONTH_YEAR/$VM_TO_CLONE/$VERSION/$DATE_WITH_TIME
+      NEXUS_BASE_REPO_URL=https://nexus.gc7.com/repository/templates
       FILESHARE_PATH=/mnt/ssb-fileshare/vm-templates/$END_POINT
-      RELEASE_FILE=release-notes.txt
       VM_NAME_EXT=$VM_EXPORT_NAME.$EXPORT_FORMAT
       ARTIFACT_DIR=$CI_PROJECT_DIR/artifacts
       ARTIFACT_PATH=$ARTIFACT_DIR/$VM_EXPORT_NAME
@@ -25,7 +63,6 @@
       echo ARTIFACT_PATH_EXT = $ARTIFACT_PATH_EXT         # e.g: /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline/artifacts/EXPORT-r-win22-21h2-2.1.3-20240624-200631.ova
       echo PATH_OVF = $PATH_OVF                           # e.g: /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline/artifacts/EXPORT-r-win22-21h2-2.1.3-20240624-200631/EXPORT-r-win22-21h2-2.1.3-20240624-200631.ovf
       echo PATH_VMDK = $PATH_VMDK                         # e.g: /home/gitlab-runner/builds/HmdE1T7H/0/cyber/cyber-pipeline/wsus-pipeline/artifacts/EXPORT-r-win22-21h2-2.1.3-20240624-200631/EXPORT-r-win22-21h2-2.1.3-20240624-200631-disk-0.vmdk
-      
 
     # Purpose: Clone target VM, remove network adapter, generate artifacts on gitlab runner
     - | 
@@ -41,12 +78,47 @@
       echo -e "$HEADER=========== GENERATING ARTIFACTS ===========$END"
       mkdir -p $ARTIFACT_DIR
       govc export.ovf -vm=$VM_EXPORT_NAME -name=$VM_EXPORT_NAME -k=true $ARTIFACT_DIR
-      echo $ARTIFACT_DIR
-      ls -l $ARTIFACT_DIR 
-      echo $ARTIFACT_PATH
-      ls -l $ARTIFACT_PATH                                # e.g: EXPORT-r-win22-21h2-2.1.3-20240624-200631-disk-0.vmdk, EXPORT-r-win22-21h2-2.1.3-20240624-200631.ovf
       echo -e "$HEADER=========== DONE ===========$END"
 
+    # Purpose: Set zip file export artifact
+    - |
+      if [[ "$EXPORT_FORMAT" == "iso" ]]; then
+        echo "Exporting as iso"
+        mkisofs -quiet -input-charset utf-8 -allow-limited-size -iso-level 3 -o $ARTIFACT_PATH_EXT -J -r $ARTIFACT_PATH
+      elif [[ "$EXPORT_FORMAT" == "zip" ]]; then
+        echo "Exporting as zip"
+        zip -r -j $ARTIFACT_PATH_EXT $ARTIFACT_PATH
+      elif [[ "$EXPORT_FORMAT" == "ova" ]]; then
+        echo "Exporting as tar ova"
+        tar -cvf $ARTIFACT_PATH_EXT -C $ARTIFACT_PATH $VM_EXPORT_NAME.ovf $VM_EXPORT_NAME-disk-0.vmdk
+      else 
+        echo "Incorrect EXPORT_FORMAT type.  Must be 'iso' or 'zip'."
+        exit
+      fi
+      echo "Exporting complete"
 
-      tar -cvf artifacts/$VM_NAME_EXT $PATH_OVF $PATH_VMDK 
+    # Purpose Export artifact from BUILD AGENT to DSO FILESHARE
+    - |
+      mkdir -p $FILESHARE_PATH
+      cp $ARTIFACT_PATH_EXT $FILESHARE_PATH
 
+    # Purpose: Export artifacts from BUILD AGENT to Nexus. 
+    - |
+      echo -e "$HEADER=========== EXPORTING ZIP FILE TO NEXUS ===========$END"
+      UPLOAD_URL=$NEXUS_BASE_REPO_URL/$END_POINT/
+
+    # Purpose: Upload files to Nexus
+    # Command: curl
+    #           -v verbose flag, useful for logging curl errors
+    #           -u specify <user:password> account used must have privileges to upload files
+    #           -T file to upload
+    - |
+      curl -u $USDIN_NEXUS_TOKEN_NAME:$USDIN_NEXUS_TOKEN_PASS -T $ARTIFACT_PATH_EXT $UPLOAD_URL
+
+    # Summary
+    - |
+      echo -e "$HEADER=========== EXPORT SUMMARY ===========$END"
+      echo -e "$VM_TO_CLONE export complete"
+      echo -e "$VM_EXPORT_NAME exported to $FILESHARE_PATH"
+      echo -e "$VM_EXPORT_NAME exported to $UPLOAD_URL $END"
+      echo -e "$HEADER=========== DONE ===========$END"
