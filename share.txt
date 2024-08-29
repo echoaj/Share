@@ -1,1 +1,12 @@
 
+I have vcenter/vsphere.  There are two VM's one called rhel84runner (192.168.5.124) and another called windows10 (10.10.5.124).  I have a gitlab pipeline that uses rhel84runner as a gitlab runner and it executes an ansible role that is suppose to connect to windows10 using winrm and run some powershell commands.  However I get this error:
+
+PLAY [Calling Windows Role] ****************************************************
+TASK [Gathering Facts] *********************************************************
+fatal: [192.168.5.124]: UNREACHABLE! => {"changed": false, "msg": "ntlm: HTTPConnectionPool(host='10.10.81.82', port=3200): Read timed out. (read timeout=60)", "unreachable": true}
+PLAY RECAP *********************************************************************
+192.168.5.124              : ok=0    changed=0    unreachable=1    failed=0    skipped=0    rescued=0    ignored=0   
+
+So it looks like there is an issues with 10.10.81.82 which is a proxy server.  I don't know where that proxy lives because I can't find it as a VM on vsphere. I wonder if it is a container in another vm.  I checked all the settings within the rhel84runner and I can't find anything that indicates it is using a proxy.
+
+How do you think the network traffic is flowing?  How can I analyze where the traffic is flowing.  What do you think is going on here?
