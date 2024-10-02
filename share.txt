@@ -1,1 +1,2 @@
 
+Security policies on this computer are set to show info about the last interactive sign-in, but Windows couldn't retrive that info. Contact your network administrator for help
