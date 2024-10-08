@@ -1,2 +1,13 @@
+1. The Windows Operating System Workstation shall generate an event log for application initialization failure. 
+2. The Windows Operating System Workstation shall generate an event log when there is a failure to execute a reboot request.
+3. The Windows Operating System Workstation shall generate an event log when there is a failure to execute a shutdown request.
+4. The Windows Operating System Workstation shall generate an event log when there is success to execute a reboot request.
+5. The Windows Operating System Workstation shall generate an event log when there is success to execute a shutdown request.
 
-Security policies on this computer are set to show info about the last interactive sign-in, but Windows couldn't retrive that info. Contact your network administrator for help
+
+
+
+***Open the “Local Group Policy Editor”. Go to Computer Configuration >> Windows Settings >> Security Settings >> Local Policies >> Audit Policy. Ensure the Security Setting property for the “Audit processing tracking” policy is set to “Success, Failure”. Take a screenshot and attach it to this Jira. *** 
+
+
+***For Requirements 2-5, open the “Local Group Policy Editor”. Go to Computer Configuration >> Windows Settings >> Security Settings >> Local Policies >> Audit Policy. Ensure the “Security Setting” property for the “Audit system events” policy is set to “Success, Failure”. Take a screenshot and attach it to this Jira. ***
