@@ -1,13 +1,8 @@
-1. The Windows Operating System Workstation shall generate an event log for application initialization failure. 
-2. The Windows Operating System Workstation shall generate an event log when there is a failure to execute a reboot request.
-3. The Windows Operating System Workstation shall generate an event log when there is a failure to execute a shutdown request.
-4. The Windows Operating System Workstation shall generate an event log when there is success to execute a reboot request.
-5. The Windows Operating System Workstation shall generate an event log when there is success to execute a shutdown request.
-
-
-
-
-***Open the “Local Group Policy Editor”. Go to Computer Configuration >> Windows Settings >> Security Settings >> Local Policies >> Audit Policy. Ensure the Security Setting property for the “Audit processing tracking” policy is set to “Success, Failure”. Take a screenshot and attach it to this Jira. *** 
-
-
-***For Requirements 2-5, open the “Local Group Policy Editor”. Go to Computer Configuration >> Windows Settings >> Security Settings >> Local Policies >> Audit Policy. Ensure the “Security Setting” property for the “Audit system events” policy is set to “Success, Failure”. Take a screenshot and attach it to this Jira. ***
+1 The Windows Operating System Workstation shall implement role based access for privileged user accounts.
+2 The Windows Operating System Workstation shall implement role based access user accounts.
+3 The Windows Operating System Workstation shall implement local role based user accounts management.
+4 The Windows Operating System Workstation shall allow remote privileged users to execute authorized privileged commands.
+5 The Windows Operating System Workstation shall implement local role based privileged user accounts management.
+6 The Windows Operating System Workstation shall implement logical access restrictions to user accounts.
+7 The Windows Operating System Workstation shall restrict access to approved user accounts.
+8 The Windows Operating System Workstation shall prohibit privileged user accounts from granting privileged access to non-privileged users.
