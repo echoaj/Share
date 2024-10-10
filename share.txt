@@ -1,8 +1,15 @@
-1 The Windows Operating System Workstation shall implement role based access for privileged user accounts.
-2 The Windows Operating System Workstation shall implement role based access user accounts.
-3 The Windows Operating System Workstation shall implement local role based user accounts management.
-4 The Windows Operating System Workstation shall allow remote privileged users to execute authorized privileged commands.
-5 The Windows Operating System Workstation shall implement local role based privileged user accounts management.
-6 The Windows Operating System Workstation shall implement logical access restrictions to user accounts.
-7 The Windows Operating System Workstation shall restrict access to approved user accounts.
-8 The Windows Operating System Workstation shall prohibit privileged user accounts from granting privileged access to non-privileged users.
+
+I am working on a cybersecurity task.  The title of my ticket is:
+
+[Implementation] Auditing of User Accounts and Groups Role Based Access - Windows Operating System Workstation
+
+And the requirements are:
+
+1. The Windows Operating System Workstation shall allow adding of local privileged user accounts to user groups.
+2. The Windows Operating System Workstation shall allow auditing of all available privileged commands including attributes.
+3. The Windows Operating System Workstation shall allow for auditing of local group accounts.
+4. The Windows Operating System Workstation shall allow for auditing of local user accounts.
+5. The Windows Operating System Workstation shall automatically disable local user accounts after 90 days of inactivity.
+6. The Windows Operating System Workstation shall automatically disable temporary and emergency accounts after 72 hours from their creation date.
+
+For each requirement give me a detailed step by step guide on how to verify that each one is implemented
