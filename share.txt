@@ -5,11 +5,12 @@ I am working on a cybersecurity task.  The title of my ticket is:
 
 And the requirements are:
 
-1. The Windows Operating System Workstation shall allow adding of local privileged user accounts to user groups.
-2. The Windows Operating System Workstation shall allow auditing of all available privileged commands including attributes.
-3. The Windows Operating System Workstation shall allow for auditing of local group accounts.
-4. The Windows Operating System Workstation shall allow for auditing of local user accounts.
-5. The Windows Operating System Workstation shall automatically disable local user accounts after 90 days of inactivity.
-6. The Windows Operating System Workstation shall automatically disable temporary and emergency accounts after 72 hours from their creation date.
+Req1.  The Windows Operating System Workstation shall allow auditing of denied network traffic event logs.
+Req2.  The Windows Operating System Workstation shall allow for analyzing of user account activities.
+Req3.  The Windows Operating System Workstation shall allow for auditing of local security event logs.
+Req4.  The Windows Operating System Workstation shall allow for level adjustments of audit review, analysis, and reporting.
+Req5.  The Windows Operating System Workstation shall allow for local audit logs to be processed by specific events of interests.
+Req6.  The Windows Operating System Workstation shall allow for tailored auditing analysis of limited specific set of events.
+Req7.  The Windows Operating System Workstation shall employ automated tools to support near real-time analysis of security related events.
 
-For each requirement give me a detailed step by step guide on how to verify that each one is implemented
+For each requirement give me a detailed step by step guide on how to verify that each one is implemented.  Make your responses straight forward
