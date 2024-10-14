@@ -1,16 +1,22 @@
 
 I am working on a cybersecurity task.  The title of my ticket is:
 
-[Implementation] Auditing of User Accounts and Groups Role Based Access - Windows Operating System Workstation
+[Implementation] Log Auditing and Reporting - Log Management - Windows Operating System Workstation
 
 And the requirements are:
 
 Req1.  The Windows Operating System Workstation shall allow auditing of denied network traffic event logs.
+
 Req2.  The Windows Operating System Workstation shall allow for analyzing of user account activities.
+
 Req3.  The Windows Operating System Workstation shall allow for auditing of local security event logs.
+
 Req4.  The Windows Operating System Workstation shall allow for level adjustments of audit review, analysis, and reporting.
+
 Req5.  The Windows Operating System Workstation shall allow for local audit logs to be processed by specific events of interests.
+
 Req6.  The Windows Operating System Workstation shall allow for tailored auditing analysis of limited specific set of events.
+
 Req7.  The Windows Operating System Workstation shall employ automated tools to support near real-time analysis of security related events.
 
-For each requirement give me a detailed step by step guide on how to verify that each one is implemented.  Make your responses straight forward
+For each requirement give me a detailed step by step guide on how to verify that each one is implemented.
