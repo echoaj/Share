@@ -20,3 +20,101 @@ Req6.  The Windows Operating System Workstation shall allow for tailored auditin
 Req7.  The Windows Operating System Workstation shall employ automated tools to support near real-time analysis of security related events.
 
 For each requirement give me a detailed step by step guide on how to verify that each one is implemented.
+
+
+
+
+Here is a step-by-step guide for verifying the implementation of each requirement in your cybersecurity task for Windows Operating System Workstations.
+
+Req1: Verify Auditing of Denied Network Traffic Event Logs
+
+	1.	Enable Firewall Logging:
+	•	Open the Windows Defender Firewall with Advanced Security.
+	•	Go to Monitoring > Security Logging.
+	•	Enable logging for both successful connections and dropped packets under the firewall’s properties.
+	2.	Enable Audit Policy for Network Traffic:
+	•	Open Local Group Policy Editor (gpedit.msc).
+	•	Navigate to: Computer Configuration > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Audit Policies.
+	•	Enable Audit Network Policy Server and Audit Filtering Platform Connection.
+	3.	Check the Logs:
+	•	Use Event Viewer to go to Applications and Services Logs > Microsoft > Windows > Windows Firewall with Advanced Security.
+	•	Look for denied connections to confirm that network traffic events are being logged.
+
+Req2: Verify User Account Activity Auditing
+
+	1.	Enable Account Logon Auditing:
+	•	Open Local Group Policy Editor.
+	•	Navigate to Computer Configuration > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Account Logon.
+	•	Enable Audit Logon Events and Audit Account Logon (for both success and failure).
+	2.	Review Logs for Account Activities:
+	•	Open Event Viewer and navigate to Windows Logs > Security.
+	•	Look for event IDs related to user account activities:
+	•	Event ID 4624: Successful account logon.
+	•	Event ID 4625: Failed account logon.
+	•	Event ID 4720: User account creation.
+	•	Event ID 4726: User account deletion.
+
+Req3: Verify Auditing of Local Security Event Logs
+
+	1.	Enable Local Security Event Auditing:
+	•	Open Local Group Policy Editor.
+	•	Navigate to Computer Configuration > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Object Access.
+	•	Enable Audit Security Group Management and Audit Policy Change.
+	2.	Verify Security Event Logs:
+	•	Open Event Viewer and navigate to Windows Logs > Security.
+	•	Check for event IDs related to local security events:
+	•	Event ID 5136: Security group management changes.
+	•	Event ID 4719: System audit policy change.
+
+Req4: Verify Level Adjustments of Audit Review, Analysis, and Reporting
+
+	1.	Adjust Audit Policies:
+	•	Open Local Group Policy Editor.
+	•	Navigate to Computer Configuration > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Audit Policies.
+	•	Review and adjust the policies for specific auditing events, such as logon, account management, object access, and policy changes.
+	2.	Verify in Event Viewer:
+	•	Open Event Viewer.
+	•	Review logs under Windows Logs > Security to ensure changes in audit levels reflect in the logs.
+	3.	Set Up Filters in Event Viewer:
+	•	In Event Viewer, right-click the Security log and click Filter Current Log.
+	•	Adjust filters based on the level of auditing you wish to review (e.g., by Event ID or keywords).
+
+Req5: Verify Processing of Specific Events of Interest
+
+	1.	Create Custom Audit Policies:
+	•	Open Local Group Policy Editor.
+	•	Navigate to Computer Configuration > Windows Settings > Security Settings > Advanced Audit Policy Configuration.
+	•	Define policies under Object Access or Logon/Logoff for specific events of interest.
+	2.	Set Up Event Viewer Filters:
+	•	Open Event Viewer and navigate to Windows Logs > Security.
+	•	Right-click and select Create Custom View to filter specific events of interest.
+	3.	Monitor for Specific Event IDs:
+	•	Define specific event IDs related to your needs (e.g., 4624 for successful logons, 4656 for access to sensitive objects).
+	•	Validate that the workstation is processing these logs by monitoring these specific IDs.
+
+Req6: Verify Tailored Auditing Analysis of Limited Specific Set of Events
+
+	1.	Customize Event Logs:
+	•	Open Local Group Policy Editor.
+	•	Navigate to Computer Configuration > Windows Settings > Security Settings > Advanced Audit Policy Configuration.
+	•	Customize the audit policy to only enable specific events (e.g., account logon events, policy changes, etc.).
+	2.	Set Up Tailored Event Viewer Filters:
+	•	Open Event Viewer.
+	•	Create custom views by filtering based on event IDs or categories relevant to specific audits.
+	3.	Export Tailored Logs:
+	•	In Event Viewer, use Save Filtered Logs to export logs for a tailored set of events.
+	•	Verify that only the desired events are being captured in the logs.
+
+Req7: Verify Automated Tools for Near Real-Time Analysis of Security Events
+
+	1.	Enable Windows Defender Advanced Threat Protection (ATP):
+	•	Open Windows Security Center and configure Windows Defender ATP for near real-time monitoring.
+	2.	Set Up Automated Alerts:
+	•	Configure Task Scheduler or System Center Operations Manager (SCOM) to monitor for specific event IDs and trigger automated responses.
+	3.	Implement SIEM Tools:
+	•	Integrate with a Security Information and Event Management (SIEM) solution like Splunk, Azure Sentinel, or LogRhythm.
+	•	Configure near real-time event processing rules to monitor specific security events.
+	•	Validate the system’s capability to trigger alerts and log security events within seconds of their occurrence.
+
+By following these steps, you should be able to verify each requirement is properly implemented.
+
