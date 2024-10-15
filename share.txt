@@ -1,1 +1,10 @@
-GPOs do not provide a mechanism for real-time processing or automated analysis of logs; they can only control what gets logged but not process those logs in real-time. Real-time analysis requires additional tools like SIEM, which continuously monitors and analyzes security-related events in real-time. Task Scheduler can be used as a basic alternative for automation, but it doesn't offer full real-time analysis capabilities.
+I working with a WSUS and there is a patch I am expecting to recieve this month called
+2024-10 Cumulative Update for Windows 10 Version 1809 for x64-based Systems (KB5044277)
+
+According to the microsoft website, it says to download this patch you must have this configuration:
+This update will automatically sync with Windows Server Update Services (WSUS) if you configure Products and Classifications as follows:
+Product: Windows 10
+Classification: Security Updates
+
+I indeed have this set up on the WSUS and I do receive many October patches except the one mentioned above?
+Why is this happening?
