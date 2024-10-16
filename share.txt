@@ -1,10 +1,19 @@
-I working with a WSUS and there is a patch I am expecting to recieve this month called
-2024-10 Cumulative Update for Windows 10 Version 1809 for x64-based Systems (KB5044277)
-
-According to the microsoft website, it says to download this patch you must have this configuration:
-This update will automatically sync with Windows Server Update Services (WSUS) if you configure Products and Classifications as follows:
-Product: Windows 10
-Classification: Security Updates
-
-I indeed have this set up on the WSUS and I do receive many October patches except the one mentioned above?
-Why is this happening?
+Req1.  The Windows Operating System Workstation shall generate an event log for failed privileged escalation.
+Req2.  The Windows Operating System Workstation shall generate an event log for print to a device failure.
+Req3.  The Windows Operating System Workstation shall generate an event log for print to a device success.
+Req4.  The Windows Operating System Workstation shall generate an event log for print to a file failure.
+Req5.  The Windows Operating System Workstation shall generate an event log for print to a file success.
+Req6.  The Windows Operating System Workstation shall generate an event log for user account activities for misuse.
+Req7.  The Windows Operating System Workstation shall generate an event log upon a successful user account login.
+Req8.  The Windows Operating System Workstation shall generate an event log when a local user account fails authentication.
+Req9.  The Windows Operating System Workstation shall generate an event log when a local user account fails to log off.
+Req10.  The Windows Operating System Workstation shall generate an event log when a local user account is locked out.
+Req11.  The Windows Operating System Workstation shall generate an event log when a local user account successfully logs off.
+Req12.  The Windows Operating System Workstation shall generate an event log when privileged functions are executed.
+Req13.  The Windows Operating System Workstation shall generate an event log when the a local account fails to escalate access.
+Req14.  The Windows Operating System Workstation shall generate an event log when the a local account successfully escalates access.
+Req15. The Windows Operating System Workstation shall generate an event log when the a local privileged account fails to authenticate.
+Req16.  The Windows Operating System Workstation shall generate an event log when the a local privileged account successfully authenticates.
+Req17.  The Windows Operating System Workstation shall monitor privileged user account activities.
+Req18.  The Windows Operating System Workstation shall monitor user account activities for misuse.
+Req19.  The Windows Operating System Workstation shall monitor user account usage activities.
