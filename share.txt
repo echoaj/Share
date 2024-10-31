@@ -1,15 +1,31 @@
-Req1. The Windows Operating System Workstation shall generate an event log for failed directory access.
-Req2. The Windows Operating System Workstation shall generate an event log when a user account fails to access local security relevant files.
-Req3. The Windows Operating System Workstation shall generate an event log when a user account fails to create local security relevant files.
-Req4. The Windows Operating System Workstation shall generate an event log when a user account fails to delete local security relevant files.
-Req5. The Windows Operating System Workstation shall generate an event log when a user account fails to modify local security relevant files.
-Req6. The Windows Operating System Workstation shall generate an event log when a user account fails to modify ownership values of local security relevant files.
-Req7. The Windows Operating System Workstation shall generate an event log when a user account fails to modify permissions of local security relevant files.
-Req8. The Windows Operating System Workstation shall generate an event log when a user account successfully accesses local security relevant files.
-Req9. The Windows Operating System Workstation shall generate an event log when a user account successfully deletes local security relevant files.
-Req10. The Windows Operating System Workstation shall generate an event log when a user account successfully modifies local security relevant files.
-Req11. The Windows Operating System Workstation shall generate an event log when a user account successfully modifies ownership values of local security relevant files.
-Req12. The Windows Operating System Workstation shall generate an event log when there is an attempt to modify secured software.
-Req13. The Windows Operating System Workstation shall prohibit access to files, databases, and execution of software by unauthorized users.
-Req14. The Windows Operating System Workstation shall prohibit unauthorized changes to the security attributes configuration baseline.
-Req15. The Windows Operating System Workstation shall restrict a software application from executing at a higher privilege level than the executing user.
+Req1.  The Windows Operating System Workstation shall allow creation of local privileged user accounts.
+Req2.  The Windows Operating System Workstation shall allow deletion of local privileged user accounts.
+Req3.  The Windows Operating System Workstation shall allow disabling of local privileged user accounts.
+Req4.  The Windows Operating System Workstation shall allow enabling of local privileged user accounts.
+Req5.  The Windows Operating System Workstation shall allow local role based user accounts management.
+Req6.  The Windows Operating System Workstation shall allow modification of local privileged user accounts.
+Req7.  The Windows Operating System Workstation shall allow removal of local privileged user accounts from user groups.
+Req8.  The Windows Operating System Workstation shall generate an event log when a local user account is added to a user group.
+Req9.  The Windows Operating System Workstation shall generate an event log when a local user account is created.
+Req10.  The Windows Operating System Workstation shall generate an event log when a local user account is deleted.
+Req11.  The Windows Operating System Workstation shall generate an event log when a local user account is disabled.
+Req13.  The Windows Operating System Workstation shall generate an event log when a local user account is enabled.
+Req14.  The Windows Operating System Workstation shall generate an event log when a local user account is modified.
+Req15.  The Windows Operating System Workstation shall generate an event log when a local user account is removed from a user group.
+Req16.  The Windows Operating System Workstation shall generate an event log when a local user account successfully authenticates.
+Req17.  The Windows Operating System Workstation shall generate an event log when a local user group is created.
+Req18.  The Windows Operating System Workstation shall generate an event log when a local user group is deleted.
+Req19.  The Windows Operating System Workstation shall generate an event log when a local user group is modified.
+Req20.  The Windows Operating System Workstation shall generate an event log when failure to create a local user account.
+Req21.  The Windows Operating System Workstation shall generate an event log when failure to create a local user group.
+Req22.  The Windows Operating System Workstation shall generate an event log when failure to delete a local user account.
+Req23.  The Windows Operating System Workstation shall generate an event log when failure to delete a local user group.
+Req24.  The Windows Operating System Workstation shall generate an event log when failure to disable a local user account.
+Req25.  The Windows Operating System Workstation shall generate an event log when failure to modify a local user account.
+Req26.  The Windows Operating System Workstation shall generate an event log when failure to modify a local user group.
+Req27.  The Windows Operating System Workstation shall only allow authorized privileged users to add local user accounts to user groups.
+Req28.  The Windows Operating System Workstation shall only allow authorized privileged users to create local user accounts.
+Req29.  The Windows Operating System Workstation shall only allow authorized privileged users to delete local user accounts.
+Req30.  The Windows Operating System Workstation shall only allow authorized privileged users to disable local user accounts.
+Req31.  The Windows Operating System Workstation shall only allow authorized privileged users to enable local user accounts.
+Req32.  The Windows Operating System Workstation shall only allow authorized privileged users to modify local user accounts.
