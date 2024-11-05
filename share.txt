@@ -1,17 +1,3 @@
-Hey James, hope you're doing well.  I wanted to talk about some concerns that I think have been impacting our working environement.  Since Colis joined our team things were pretty good at first but lately there has been a lot of tension unfortunatly.  There have been some passive aggressiveness and comments Colis has made that sound degrading to the team. Such as suggesting we are technicians instead of engineers, comments about hand holding, and general comments that give the impression he views the team as incompetent and helping us out is a chore. The team dynamic has been very tense the past few months but it's to the point that we really feel this needs to be resolved. I've let a lot of these comments slide but what crossed the line for me is on Wednesday after I had asked him for clarification a requirement, I noticed he wrote in the description of a Jira ticket "Due to low Cyber Security experience on the Cyber team, team members need to be trained on how to perform various Cyber Security Tasks". Stateting that we have Low cyber security experience is insulting and the rest of the team agrees.  It really feels like it undermines the hard work we have put in the last 2 years and I think that’s just unfair and offensive.  The reason why I bring this up is because I don't want anyone on the team to come into work with low moral or not feeling valued. It's been stressful for me as well and I just want to be able to keep getting my tickets done. I really don't want anyone on the team to feel alienated or not valued, including Colis. If Colis feels out of place with the team then that’s equally as important and I want him to feel comfortable.  I am definitely up for talking about this further if you would like. (Aldo and Tan as well). I have some ideas of how we can make the team dynamic better. I don't want to stress you out either sir about this but I just felt it was right thing to do to at least bring this up to your attention. Thank you for your support.
-
-
-
-
-- He stated "all of our team just want to hog our knowledge and work and dont want to knowledge share hence why we have one point of failure" (Brian Orr)
-- we worked together before him and even rotatate our job function. None of us were displeased or have issue knowledge share 
-- hes disrespecting the team and disaapointed because this is the first time we work with requirements. He doesn’t know what we did for the past 2 years
-- Disrespecting you about the cyber cert comments and downplay your skill
-- disrespecting the team with his ticket description (guess none of us did any cyber work)
-- None of us get the proper support that we need to succeed. We always have to try our best to help each other when he’s not doing anything
-- he goes on about knowledge share but we are all strugglings with our tickets and try to help each other as much as we can. You can bring me into this aswell if you want but he tried to give me some ambiguous tickets with no guidance and misleading advice
-
--Tan
-- I also talk about direspectful / demoralizing and hostile environment
-- The team dont respect each other and theres no hirearchy
-- He also talk about people dont want to do work and just wanna paid (might just be directed to me)
+- Req1. The Windows Operating System Workstation shall allow for manual software updates.
+- Req2. The Windows Operating System Workstation shall generate an event log for operating system updates.
+- Req3. The Windows Operating System Workstation shall permit operating system updates.
