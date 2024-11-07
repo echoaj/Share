@@ -1,3 +1,1 @@
-- Req1. The Windows Operating System Workstation shall allow for manual software updates.
-- Req2. The Windows Operating System Workstation shall generate an event log for operating system updates.
-- Req3. The Windows Operating System Workstation shall permit operating system updates.
+Req1.  The information system shall conceal the login screen with a public viewable image after user session lock.
