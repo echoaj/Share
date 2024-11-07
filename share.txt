@@ -1,1 +1,2 @@
 Req1.  The information system shall conceal the login screen with a public viewable image after user session lock.
+Req2.  Apply to domain controllers and member servers only.  The system shall initiate a session lock after not to exceed fifteen (15) minutes of inactivity or upon receiving a request from a user. Components that cannot meet this requirement will need risk acceptance.
