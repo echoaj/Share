@@ -1,2 +1,6 @@
-[Cyber Support] Log Forwarding - Log Management - Windows Operating System Workstation
+I have this Jira Ticket called "[Verification] Log Forwarding - Log Management - Windows Operating System Workstation"
+
+The reiquirement is the following:
 Req1.  The Windows Operating System Workstation shall forward its logs to the centralized log collection location.
+
+How do I check to make sure this works. Also I am not sure if the centralized log collection location it's talking about is event viewer or splunk because I know our company uses splunk as well but not sure what it is reffering to.  what do you think?
