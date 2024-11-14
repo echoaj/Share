@@ -1,11 +1,15 @@
-For Req9 the entity that completed is a little unclear.  I'm interpreting it as "the process or user that concluded the action listed by the event log"
+Here’s a stronger, more polished version of your justification:
 
-For req 7 and 9 there isn't a definitive filed that specifies the entity for initializing and completing event, however I think it is inferred by the nature of the event log.  I think in most cases the Entity that initiates the event (i.e req 7) is the same as the one that completes the event.  
+Justification for Requirement 9: “Entity that Completed the Event/Action”
 
-Example 1: A user initiates a login process by entering credentials, the same user process finishes by logging in successfully. 
+The term “entity that completed the event/action” is somewhat ambiguous. I interpret this requirement as the “process or user that finalized the action documented by the event log.” In Windows Event Logs, there isn’t a distinct field that explicitly indicates the entity responsible for both initiating and completing the action. However, this information can typically be inferred from the context and nature of the log entry itself.
 
-Example 2: An application initiates the file creation process through a PowerShell command, that same application process finishes writing data to it and closing it.
+In most cases, the entity that initiates an event (as required by Req7) is inherently the same entity that completes it. For example:
+	1.	User Logon Event: When a user initiates a logon by entering their credentials, the same user completes the event by successfully logging into the system.
+	2.	File Creation by Application: If an application initiates a file creation process through a PowerShell command, that same application is responsible for completing the process by writing data to the file and closing it.
 
-By this logic it is safe to say that "Source" field listed in the screenshot below complete the requirement
+Given this logical consistency, the “Source” field in the Windows Event Log (shown in the screenshot) effectively fulfills the requirement for both the initiating and completing entity. The “Source” field provides sufficient context to identify the responsible process or user, ensuring traceability and accountability.
 
-No Further Implementation Needed
+Conclusion: Based on this interpretation, I believe it is reasonable to conclude that no further implementation is required to meet Req9, as the necessary information is inferred from existing log details.
+
+This version clarifies your reasoning, emphasizes the logical consistency of your interpretation, and directly addresses why further implementation is unnecessary.
