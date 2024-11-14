@@ -1,22 +1,11 @@
-From the event data displayed in your screenshot, here’s an analysis of which requirements appear to be fulfilled:
-	1.	Req1: Date
-	•	Fulfilled: The date is displayed as part of the timestamp (e.g., 11/12/2024).
-	2.	Req2: Time
-	•	Fulfilled: The time is shown in the timestamp (e.g., 10:40:20 AM).
-	3.	Req3: USERID
-	•	Fulfilled: The user ID is shown as SYSTEM under the “User” field.
-	4.	Req4: Remote Access
-	•	Not explicitly shown: There’s no indication of remote access in the event details. This log does not specify whether the event occurred via remote access.
-	5.	Req5: Type of Event/Action
-	•	Fulfilled: The type of event/action is noted as “Installation Started” for a Windows Update in the “Keywords” and description field.
-	6.	Req6: Terminal or Workstation ID
-	•	Fulfilled: The workstation ID is shown as Cyber-Win2022.labvcf.local in the “Computer” field.
-	7.	Req7: Entity that Initiated Event/Action
-	•	Fulfilled: The initiating entity is indicated as WindowsUpdateClient in the “Source” field.
-	8.	Req8: Success or Failure of Event/Action
-	•	Not explicitly shown: There’s no indication in this entry if the event was a success or failure, only that installation has started.
-	9.	Req9: Entity that Completed Event/Action
-	•	Not explicitly shown: This event does not provide information on the entity that completed the action.
+For Req9 the entity that completed is a little unclear.  I'm interpreting it as "the process or user that concluded the action listed by the event log"
 
-Summary:
-This log entry fulfills requirements Req1, Req2, Req3, Req5, Req6, and Req7. However, it does not provide clear information on Req4 (Remote Access), Req8 (Success or Failure), and Req9 (Entity that Completed Event). Additional logs or configuration might be necessary to capture those details.
+For req 7 and 9 there isn't a definitive filed that specifies the entity for initializing and completing event, however I think it is inferred by the nature of the event log.  I think in most cases the Entity that initiates the event (i.e req 7) is the same as the one that completes the event.  
+
+Example 1: A user initiates a login process by entering credentials, the same user process finishes by logging in successfully. 
+
+Example 2: An application initiates the file creation process through a PowerShell command, that same application process finishes writing data to it and closing it.
+
+By this logic it is safe to say that "Source" field listed in the screenshot below complete the requirement
+
+No Further Implementation Needed
