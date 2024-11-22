@@ -1,15 +1,1 @@
-Here’s a stronger, more polished version of your justification:
 
-Justification for Requirement 9: “Entity that Completed the Event/Action”
-
-The term “entity that completed the event/action” is somewhat ambiguous. I interpret this requirement as the “process or user that finalized the action documented by the event log.” In Windows Event Logs, there isn’t a distinct field that explicitly indicates the entity responsible for both initiating and completing the action. However, this information can typically be inferred from the context and nature of the log entry itself.
-
-In most cases, the entity that initiates an event (as required by Req7) is inherently the same entity that completes it. For example:
-	1.	User Logon Event: When a user initiates a logon by entering their credentials, the same user completes the event by successfully logging into the system.
-	2.	File Creation by Application: If an application initiates a file creation process through a PowerShell command, that same application is responsible for completing the process by writing data to the file and closing it.
-
-Given this logical consistency, the “Source” field in the Windows Event Log (shown in the screenshot) effectively fulfills the requirement for both the initiating and completing entity. The “Source” field provides sufficient context to identify the responsible process or user, ensuring traceability and accountability.
-
-Conclusion: Based on this interpretation, I believe it is reasonable to conclude that no further implementation is required to meet Req9, as the necessary information is inferred from existing log details.
-
-This version clarifies your reasoning, emphasizes the logical consistency of your interpretation, and directly addresses why further implementation is unnecessary.
