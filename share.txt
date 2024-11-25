@@ -1,1 +1,9 @@
 
+- Req1. The IAM software shall prohibit privileged domain user accounts from granting privileges access to non-privileged domain users.
+- Req2. The IAM software shall prohibit access to files, databases, and execution of software by unauthorized users.
+- Req3. The IAM software shall authenticate domain users for access to all domain information system devices.
+- Req4. The IAM software shall have a network connection to all domain information system devices.
+- Req5. The IAM software shall restrict access to approved user accounts to the information system components.
+- Req6. The IAM software shall authorize network device access to a managed interface port.
+- Req7. The IAM software shall prohibit access to files, databases, and execution of software by unauthorized domain users.
+- Req8. The IAM software shall restrict non-privileged domain accounts from accessing locally stored audit records, audit settings, and audit reports.
