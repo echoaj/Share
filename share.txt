@@ -11,3 +11,5 @@
 
 This requirement confuses me because by default if your a domain administrator on active directory can't you assign privileges to non-privileged domain users by default?  Isn't that the whole point of being a domain administrator?
 
+
+Assuming IAM software is Active Directory, I think the requirement is a bit contradictory. When I hear privileged domain user account, I think of a domain administrator. But by default, domain administrators in have the ability to manage permissions, assign roles, and grant privileges.  If privileged accounts cannot grant privileges, then they are unable to manage the system.
