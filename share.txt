@@ -7,3 +7,7 @@
 - Req6. The IAM software shall authorize network device access to a managed interface port.
 - Req7. The IAM software shall prohibit access to files, databases, and execution of software by unauthorized domain users.
 - Req8. The IAM software shall restrict non-privileged domain accounts from accessing locally stored audit records, audit settings, and audit reports.
+
+
+This requirement confuses me because by default if your a domain administrator on active directory can't you assign privileges to non-privileged domain users by default?  Isn't that the whole point of being a domain administrator?
+
