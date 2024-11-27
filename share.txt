@@ -22,3 +22,5 @@ or master admin privileges. For example, you may have a privileged account to ac
 However, you may not be able make any changes to the hypervisor itself, such as create a new virtual switch, install updates, etc.  
 As for what is required for your to verify on the system, just ensure that there are no other accounts, other than xadministrator or admin, which ever one it is, 
 that has full admin privilege on the system.
+
+Is a privileged domain user a user on the domain with privileges or a user with privileges within the domain itself?
