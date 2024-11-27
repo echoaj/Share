@@ -24,3 +24,8 @@ As for what is required for your to verify on the system, just ensure that there
 that has full admin privilege on the system.
 
 Is a privileged domain user a user on the domain with privileges or a user with privileges within the domain itself?
+
+A privileged user is different from a privileged domain user.
+A privileged user may be able to create VM’s or access certain resources but that doesn’t mean they have privileges to modify the domain.  
+A privileged domain user has elevated rights within the domain itself like managing AD and GPOs.
+A privileged domain user would be a member of Domain Admins, Enterprise Admins, or Schema Admins.
