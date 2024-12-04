@@ -1,31 +1,22 @@
 
-- Req1. The IAM software shall prohibit privileged domain user accounts from granting privileges access to non-privileged domain users.
-- Req2. The IAM software shall prohibit access to files, databases, and execution of software by unauthorized users.
-- Req3. The IAM software shall authenticate domain users for access to all domain information system devices.
-- Req4. The IAM software shall have a network connection to all domain information system devices.
-- Req5. The IAM software shall restrict access to approved user accounts to the information system components.
-- Req6. The IAM software shall authorize network device access to a managed interface port.
-- Req7. The IAM software shall prohibit access to files, databases, and execution of software by unauthorized domain users.
-- Req8. The IAM software shall restrict non-privileged domain accounts from accessing locally stored audit records, audit settings, and audit reports.
+import winrm
 
+# Replace these values with your actual server credentials and IP
+host = "http://<windows-ip>:5985/wsman"
+username = "your_username"
+password = "your_password"
 
-This requirement confuses me because by default if your a domain administrator on active directory can't you assign privileges to non-privileged domain users by default?  Isn't that the whole point of being a domain administrator?
+# Establish session
+session = winrm.Session(host, auth=(username, password))
 
+# Run PowerShell command to create a text file
+command = "New-Item -Path C:\\testfile.txt -ItemType File"
+result = session.run_ps(command)
 
-Assuming IAM software is Active Directory, I think the requirement is a bit contradictory. When I hear privileged domain user account, I think of a domain administrator. But by default, domain administrators in have the ability to manage permissions, assign roles, and grant privileges.  If privileged accounts cannot grant privileges, then they are unable to manage the system.
-
-
-Okay, so there are several types of privileged accounts. In general there will be one account we the engineers use to build and manage the system (admin, xadministrator, etc.).  
-Then, there are domain admins that the operators of the system will have in order to perform specific operational functions. These accounts are know as having special privileges.  
-These are the domain admin accounts that should not have the ability to grant permissions to other accounts.  Hence, they are domain admins with special privileges, not all, 
-or master admin privileges. For example, you may have a privileged account to access LHLABVCF.  You may be able to create new VMs as well as delete them.  
-However, you may not be able make any changes to the hypervisor itself, such as create a new virtual switch, install updates, etc.  
-As for what is required for your to verify on the system, just ensure that there are no other accounts, other than xadministrator or admin, which ever one it is, 
-that has full admin privilege on the system.
-
-Is a privileged domain user a user on the domain with privileges or a user with privileges within the domain itself?
-
-A privileged user is different from a privileged domain user.
-A privileged user may be able to create VM’s or access certain resources but that doesn’t mean they have privileges to modify the domain.  
-A privileged domain user has elevated rights within the domain itself like managing AD and GPOs.
-A privileged domain user would be a member of Domain Admins, Enterprise Admins, or Schema Admins.
+# Print the output
+if result.status_code == 0:
+    print("Command executed successfully")
+    print(result.std_out.decode())
+else:
+    print(f"Error: {result.status_code}")
+    print(result.std_err.decode())
