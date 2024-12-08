@@ -1,5 +1,4 @@
-I have a Jira ticket in which I am suppose to verify if IAM software does auditing. The name of the ticket is "Auditing of User Accounts and Groups - Role Based Access - IAM Software".
-In this case, IAM Software refers to Active Directory.  We have a lot of different computers and vms under this domain.  How do I verify the following requirements.  I know they are kind of braud but give it your best shot.
+I have a Jira ticket realted to cyber security in which the name of the ticket is "Invalidate Session Identifier - Upon Termination - Windows Operating System Workstation".
+How do I verify the following requirement. I am not sure what it means and I know it is kind of braud but give it your best shot.
 
-- Req1. The IAM software shall allow for auditing of domain group accounts.
-- Req2. The IAM software shall allow for auditing of domain user accounts.
+Req1.  The Windows Operating System Server shall invalidate session identifiers upon user logout or other session termination.
