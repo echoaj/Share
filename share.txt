@@ -1,4 +1,4 @@
-I have a Jira ticket realted to cyber security in which the name of the ticket is "Invalidate Session Identifier - Upon Termination - Windows Operating System Workstation".
+I have a Jira ticket realted to cyber security in which the name of the ticket is "Unique Session Identifier - Each Session - Windows Operating System Server".
 How do I verify the following requirement. I am not sure what it means and I know it is kind of braud but give it your best shot.
 
-Req1.  The Windows Operating System Server shall invalidate session identifiers upon user logout or other session termination.
+Req1.  The Windows Operating System Server shall generate a unique session identifier for each session.
