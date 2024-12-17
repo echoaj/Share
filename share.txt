@@ -1,4 +1,5 @@
-I have a Jira ticket realted to cyber security in which the name of the ticket is "Unique Session Identifier - Each Session - Windows Operating System Server".
+I have a Jira ticket realted to cyber security in which the name of the ticket is "Unique Session Identifier - Each Session - Windows Operating System Workstation".
 How do I verify the following requirement. I am not sure what it means and I know it is kind of braud but give it your best shot.
 
-Req1.  The Windows Operating System Server shall generate a unique session identifier for each session.
+- Req1. The Windows Operating System Workstation shall ensure all audit logs sent to the remote SIEM keep the original content and timestamps.
+- Req2. The Windows Operating System Workstation shall restrict non-privileged accounts from accessing locally stored audit records, audit settings, and audit reports.
