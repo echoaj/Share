@@ -1,23 +1,14 @@
 I have a Jira ticket realted to cyber security in which the name of the ticket is "Log Protection - Log Management -  Windows Operating System Server".
-How do I verify the following requirement. I know it is kind of braud but give it your best shot.  You can group realted requiremts together if it helps explain it.
+How do I verify the following requirement. I know it is kind of braud but give it your best shot.
 
 - Req14.  The Windows Operating System Workstation shall generate an event log for export, writes, or downloads to devices/digital media success.
-- Req15.  The Windows Operating System Workstation shall generate an event log for export, writes, or downloads to devices/digital media failure.
 - Req16.  The Windows Operating System Workstation shall generate an event log for import, uploads from devices or digital media success.
-- Req17.  The Windows Operating System Workstation shall generate an event log for import, uploads from devices or digital media failure.
 - Req18.  The Windows Operating System Workstation shall generate an event log for user account add, delete, modify, disable, and lock success.
-- Req19.  The Windows Operating System Workstation shall generate an event log for user account add, delete, modify, disable, and lock failure.
 - Req20.  The Windows Operating System Workstation shall generate an event log for user account group add, delete, and modify success.
-- Req21.  The Windows Operating System Workstation shall generate an event log for user account group add, delete, and modify failure.
 - Req22.  The Windows Operating System Workstation shall generate an event log for security and audit policy changes success.
-- Req23.  The Windows Operating System Workstation shall generate an event log for security and audit policy changes failure.
-- Req24.  The Windows Operating System Workstation shall generate an event log for IFC baseline configuration change success.
-- Req25.  The Windows Operating System Workstation shall generate an event log for IFC baseline configuration change failure.
 - Req26.  The Windows Operating System Workstation shall generate an event log for information system component reboot, restart and shutdown success.
-- Req27.  The Windows Operating System Workstation shall generate an event log for information system component reboot, restart and shutdown failure.
 - Req28.  The Windows Operating System Workstation shall generate an event log for print to a device success.
-- Req29.  The Windows Operating System Workstation shall generate an event log for print to a device failure.
 - Req30.  The Windows Operating System Workstation shall generate an event log for print to a file success.
-- Req31.  The Windows Operating System Workstation shall generate an event log for print to a file failure.
 - Req32.  The Windows Operating System Workstation shall generate an event log for application initialization success.
-- Req33.  The Windows Operating System Workstation shall generate an event log for application initialization failure.
+
+Before explaining, quickly give a statement of what  digital media success, lock success, print to a device success, and print to a file success means.
