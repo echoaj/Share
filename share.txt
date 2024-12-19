@@ -1,14 +1,11 @@
-I have a Jira ticket realted to cyber security in which the name of the ticket is "Log Protection - Log Management -  Windows Operating System Server".
-How do I verify the following requirement. I know it is kind of braud but give it your best shot.
 
-- Req14.  The Windows Operating System Workstation shall generate an event log for export, writes, or downloads to devices/digital media success.
-- Req16.  The Windows Operating System Workstation shall generate an event log for import, uploads from devices or digital media success.
-- Req18.  The Windows Operating System Workstation shall generate an event log for user account add, delete, modify, disable, and lock success.
-- Req20.  The Windows Operating System Workstation shall generate an event log for user account group add, delete, and modify success.
-- Req22.  The Windows Operating System Workstation shall generate an event log for security and audit policy changes success.
-- Req26.  The Windows Operating System Workstation shall generate an event log for information system component reboot, restart and shutdown success.
-- Req28.  The Windows Operating System Workstation shall generate an event log for print to a device success.
-- Req30.  The Windows Operating System Workstation shall generate an event log for print to a file success.
-- Req32.  The Windows Operating System Workstation shall generate an event log for application initialization success.
+Create a bash script that does the following
+Convert: \\10.10.23.14\share\vm-templates\R-Team\Windows\12-24\r-wsus-win22-21h2\2.1.8\20241211-205755
 
-Before explaining, quickly give a statement of what  digital media success, lock success, print to a device success, and print to a file success means.
+-> To
+$BASE_URL=https://nexus.gnd.com/
+$BASE_URL/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755/
+
+-> To
+
+/mnt/ssb-fileshare/vm-templates/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755/EXPORT-wsus-2.1.8-patches.zip
