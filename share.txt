@@ -1,11 +1,1 @@
-
-Create a bash script that does the following
-Convert: \\10.10.23.14\share\vm-templates\R-Team\Windows\12-24\r-wsus-win22-21h2\2.1.8\20241211-205755
-
--> To
-$BASE_URL=https://nexus.gnd.com/
-$BASE_URL/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755/
-
--> To
-
-/mnt/ssb-fileshare/vm-templates/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755/EXPORT-wsus-2.1.8-patches.zip
+The requirements outlined in SDSO-3532 are identical to those already addressed in SDSO-3400, which focused on Windows Workstation. Both workstation and server environments inherit the same Domain policies and maintain consistent functionality regarding Local Role-Based Access. The implementation and policies for Local Role-Based Access do not differ between the two systems. Comprehensive evidence for the workstation implementation has been detailed in SDSO-3400, and therefore, SDSO-3532 can be marked as complete.
