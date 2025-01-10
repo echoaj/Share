@@ -1,47 +1,30 @@
-variables:
-  BASE_URL: 'https://nexus.usdin.gc1.myngc.com/repository/vm-templates'
-  EXPORT_LOCATION: '\\10.10.21.84\share\vm-templates\R-Team\Windows\12-24\r-wsus-win22-21h2\2.1.8\20241211-205755'     # Change
-  CYAN: '\033[0;96m'
-  END: '\033[0m'
-  HEADER: $CYAN
+echo "Starting Nexus Upload..."
 
-stages:
-  # - export
-  - nexus
+# 1) Remove the leading \\server\share\ part
+CLEAN_PATH="$(echo "$EXPORT_LOCATION" \
+  | sed -E 's#^\\\\[^\\]+\\[^\\]+\\##')"
 
-# export-patches:
-#   stage: export
-#   tags:
-#     - gitlabagent-cyber-exp-rh9
+# 2) Convert any remaining backslashes to forward slashes
+CLEAN_PATH="$(echo "$CLEAN_PATH" \
+  | sed 's#\\#/#g')"
 
-#   script: 
-#     # Exit immediately if a bash command fails
-#     - |
-#       set -e
-#       source /opt/ansible_venv/bin/activate
-#       ansible --version
-    
-#     # Replace backslashes in EXPORT_LOCATION with double backslashes
-#     - |
-#       EXPORT_PATH=$(echo $EXPORT_LOCATION | sed 's/\\/\\\\/g')
-    
-#     # Run ansible
-#     - |
-#       ansible-playbook -i inventory playbook.yml --extra-vars "user=$DSO_SERVICE_ACCOUNT_USR pass=$DSO_SERVICE_ACCOUNT_PSW path=$EXPORT_PATH"
+# 3) Remove leading "vm-templates/" since BASE_URL already ends with /vm-templates
+RELATIVE_PATH="$(echo "$CLEAN_PATH" \
+  | sed 's#^vm-templates/##')"
 
+# 4) Build the final UPLOAD_URL
+UPLOAD_URL="${BASE_URL}/${RELATIVE_PATH}/"
 
-# Future feature
-nexus-upload: 
-  stage: nexus
-  tags:
-    - gitlabagent-cyber-exp-rh9
+# 5) Build the local ZIP_PATH
+#    You may rename EXPORT-wsus-2.1.8-patches_.zip if you prefer a different pattern.
+ZIP_PATH="/mnt/ssb-fileshare/${CLEAN_PATH}/EXPORT-wsus-2.1.8-patches_.zip"
 
-  script:
-    - |
-      echo "Uploading patches"
-      UPLOAD_URL=$BASE_URL/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755/
-      ZIP_PATH='/mnt/ssb-fileshare/vm-templates/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755/EXPORT-wsus-2.1.8-patches_.zip'
-      echo "To Nexus: $UPLOAD_URL"
-      curl -u $USDIN_NEXUS_TOKEN_NAME:$USDIN_NEXUS_TOKEN_PASS --upload-file $ZIP_PATH $UPLOAD_URL
-      echo Done
+echo "Resolved UPLOAD_URL: $UPLOAD_URL"
+echo "Resolved ZIP_PATH:  $ZIP_PATH"
 
+# 6) Perform the upload to Nexus
+curl -u "$USDIN_NEXUS_TOKEN_NAME:$USDIN_NEXUS_TOKEN_PASS" \
+  --upload-file "$ZIP_PATH" \
+  "$UPLOAD_URL"
+
+echo "Done uploading to Nexus!"
