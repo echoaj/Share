@@ -1,1 +1,47 @@
-The requirements outlined in SDSO-3532 are identical to those already addressed in SDSO-3400, which focused on Windows Workstation. Both workstation and server environments inherit the same Domain policies and maintain consistent functionality regarding Local Role-Based Access. The implementation and policies for Local Role-Based Access do not differ between the two systems. Comprehensive evidence for the workstation implementation has been detailed in SDSO-3400, and therefore, SDSO-3532 can be marked as complete.
+variables:
+  BASE_URL: 'https://nexus.usdin.gc1.myngc.com/repository/vm-templates'
+  EXPORT_LOCATION: '\\10.10.21.84\share\vm-templates\R-Team\Windows\12-24\r-wsus-win22-21h2\2.1.8\20241211-205755'     # Change
+  CYAN: '\033[0;96m'
+  END: '\033[0m'
+  HEADER: $CYAN
+
+stages:
+  # - export
+  - nexus
+
+# export-patches:
+#   stage: export
+#   tags:
+#     - gitlabagent-cyber-exp-rh9
+
+#   script: 
+#     # Exit immediately if a bash command fails
+#     - |
+#       set -e
+#       source /opt/ansible_venv/bin/activate
+#       ansible --version
+    
+#     # Replace backslashes in EXPORT_LOCATION with double backslashes
+#     - |
+#       EXPORT_PATH=$(echo $EXPORT_LOCATION | sed 's/\\/\\\\/g')
+    
+#     # Run ansible
+#     - |
+#       ansible-playbook -i inventory playbook.yml --extra-vars "user=$DSO_SERVICE_ACCOUNT_USR pass=$DSO_SERVICE_ACCOUNT_PSW path=$EXPORT_PATH"
+
+
+# Future feature
+nexus-upload: 
+  stage: nexus
+  tags:
+    - gitlabagent-cyber-exp-rh9
+
+  script:
+    - |
+      echo "Uploading patches"
+      UPLOAD_URL=$BASE_URL/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755/
+      ZIP_PATH='/mnt/ssb-fileshare/vm-templates/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755/EXPORT-wsus-2.1.8-patches_.zip'
+      echo "To Nexus: $UPLOAD_URL"
+      curl -u $USDIN_NEXUS_TOKEN_NAME:$USDIN_NEXUS_TOKEN_PASS --upload-file $ZIP_PATH $UPLOAD_URL
+      echo Done
+
