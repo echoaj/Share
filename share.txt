@@ -1,30 +1,5 @@
-echo "Starting Nexus Upload..."
+[Implementation] Host Scanning - Security Vulnerability Management - Windows Operating System Workstation
 
-# 1) Remove the leading \\server\share\ part
-CLEAN_PATH="$(echo "$EXPORT_LOCATION" \
-  | sed -E 's#^\\\\[^\\]+\\[^\\]+\\##')"
-
-# 2) Convert any remaining backslashes to forward slashes
-CLEAN_PATH="$(echo "$CLEAN_PATH" \
-  | sed 's#\\#/#g')"
-
-# 3) Remove leading "vm-templates/" since BASE_URL already ends with /vm-templates
-RELATIVE_PATH="$(echo "$CLEAN_PATH" \
-  | sed 's#^vm-templates/##')"
-
-# 4) Build the final UPLOAD_URL
-UPLOAD_URL="${BASE_URL}/${RELATIVE_PATH}/"
-
-# 5) Build the local ZIP_PATH
-#    You may rename EXPORT-wsus-2.1.8-patches_.zip if you prefer a different pattern.
-ZIP_PATH="/mnt/ssb-fileshare/${CLEAN_PATH}/EXPORT-wsus-2.1.8-patches_.zip"
-
-echo "Resolved UPLOAD_URL: $UPLOAD_URL"
-echo "Resolved ZIP_PATH:  $ZIP_PATH"
-
-# 6) Perform the upload to Nexus
-curl -u "$USDIN_NEXUS_TOKEN_NAME:$USDIN_NEXUS_TOKEN_PASS" \
-  --upload-file "$ZIP_PATH" \
-  "$UPLOAD_URL"
-
-echo "Done uploading to Nexus!"
+- Req1. The Windows Operating System Workstation shall allow scanning of its configuration and firmware for vulnerabilities.
+- Req2. The Windows Operating System Workstation shall implement Host Based Security System (HBSS) software.
+- Req3. The Windows Operating System Workstation shall permit security vulnerability scanning software to scan for vulnerabilities.
