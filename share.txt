@@ -1,5 +1,8 @@
-[Implementation] Host Scanning - Security Vulnerability Management - Windows Operating System Workstation
 
-- Req1. The Windows Operating System Workstation shall allow scanning of its configuration and firmware for vulnerabilities.
-- Req2. The Windows Operating System Workstation shall implement Host Based Security System (HBSS) software.
-- Req3. The Windows Operating System Workstation shall permit security vulnerability scanning software to scan for vulnerabilities.
+Here is the list of patch titles by line from the image:
+	1.	2024-06 Cumulative Update for Windows 10 Version 21H2 for x64-based Systems (KB5039211)
+	2.	2024-06 Cumulative Update for Microsoft server operating system version 21H2 for x64-based Systems (KB5039227)
+	3.	2024-05 Cumulative Update for Microsoft server operating system version 21H2 for x64-based Systems (KB5037782)
+	4.	2024-05 Cumulative Update for Windows 10 Version 21H2 for x64-based Systems (KB5037768)
+	5.	2024-04 Cumulative Update for .NET Framework 3.5, 4.8, and 4.8.1 for Windows 10 Version 21H2 for x64 (KB5037035)
+	6.	2024-04 Cumulative Update for .NET Framework 3.5, 4.8, and 4.8.1 for Microsoft server operating system version 21H2 for x64 (KB5037033)
