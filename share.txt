@@ -1,8 +1,30 @@
+Here’s a revised version of the text with improved clarity and professionalism:
 
-Here is the list of patch titles by line from the image:
-	1.	2024-06 Cumulative Update for Windows 10 Version 21H2 for x64-based Systems (KB5039211)
-	2.	2024-06 Cumulative Update for Microsoft server operating system version 21H2 for x64-based Systems (KB5039227)
-	3.	2024-05 Cumulative Update for Microsoft server operating system version 21H2 for x64-based Systems (KB5037782)
-	4.	2024-05 Cumulative Update for Windows 10 Version 21H2 for x64-based Systems (KB5037768)
-	5.	2024-04 Cumulative Update for .NET Framework 3.5, 4.8, and 4.8.1 for Windows 10 Version 21H2 for x64 (KB5037035)
-	6.	2024-04 Cumulative Update for .NET Framework 3.5, 4.8, and 4.8.1 for Microsoft server operating system version 21H2 for x64 (KB5037033)
+Subject: Update on Patching Workflow
+
+Hi Keith,
+
+I wanted to provide a quick update to ensure we’re aligned on the current status and responsibilities regarding the patching process.
+
+Background Context:
+For the past several months, I’ve been compiling a ZIP file containing WSUS patches and sharing it with the team on a monthly basis. Each month, I email them the location of the ZIP file.
+
+However, it appears they haven’t been utilizing our patches, so Joseph recently reached out to request the scripts needed to integrate these patches into their existing WSUS. Today, I provided Joseph with the script and included a tutorial video explaining how to upload the patches.
+
+Current Workflow:
+	•	My responsibility is to:
+	1.	Compile the necessary patches into a ZIP file.
+	2.	Upload the ZIP file to Nexus.
+	3.	Share the Nexus location via email.
+	•	From that point forward, the team handles the following steps:
+	1.	Running the scripts to integrate the patches into their WSUS.
+	2.	Using their WSUS to update all Windows machines as required.
+
+Since I don’t have direct access to their infrastructure, SEL, or internal systems, my role concludes after providing the ZIP file and necessary instructions.
+
+Let me know if you have any questions or need additional details.
+
+Best regards,
+[Your Name]
+
+This version organizes the content into clear sections and ensures a polished tone. Let me know if further adjustments are needed!
