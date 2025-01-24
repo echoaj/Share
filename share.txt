@@ -1,1 +1,10 @@
 Req6. The IAM software shall authorize network device access to a managed interface port.
+
+# Search for the .xml.gz file within the C: drive
+$file = Get-ChildItem -Path C:\ -Filter *.xml.gz -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+
+# Store the filename in a variable
+$filename = $file.Name
+
+# Output the filename
+$filename
