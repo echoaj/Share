@@ -1,4 +1,6 @@
 Req6. The IAM software shall authorize network device access to a managed interface port.
+Req2. The IAM software shall prohibit access to files, databases, and execution of software by unauthorized users.
+Req8. The IAM software shall restrict non-privileged domain accounts from accessing locally stored audit records, audit settings, and audit reports.
 
 # Search for the .xml.gz file within the C: drive
 $file = Get-ChildItem -Path C:\ -Filter *.xml.gz -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
@@ -8,3 +10,4 @@ $filename = $file.Name
 
 # Output the filename
 $filename
+
