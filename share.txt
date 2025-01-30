@@ -5,3 +5,18 @@ Write a bash script that converts the string:
 to 
 
 \\10.10.21.84\share\vm-templates\R-Team\Windows\12-24\r-wsus-win22-21h2\2.1.8\20241211-205755
+
+
+#!/bin/bash
+
+# Input path
+input_path="/mnt/ssb-fileshare/vm-templates/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755"
+
+# Convert to Windows UNC path
+# Replace "/mnt/ssb-fileshare" with "\\10.10.21.84\share"
+# Replace all forward slashes with backslashes
+windows_path="\\\\10.10.21.84\\share${input_path#/mnt/ssb-fileshare}"
+windows_path="${windows_path//\//\\}"
+
+# Output the converted path
+echo "$windows_path"
