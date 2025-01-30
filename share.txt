@@ -1,13 +1,7 @@
-Req6. The IAM software shall authorize network device access to a managed interface port.
-Req2. The IAM software shall prohibit access to files, databases, and execution of software by unauthorized users.
-Req8. The IAM software shall restrict non-privileged domain accounts from accessing locally stored audit records, audit settings, and audit reports.
+Write a bash script that converts the string:
 
-# Search for the .xml.gz file within the C: drive
-$file = Get-ChildItem -Path C:\ -Filter *.xml.gz -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+/mnt/ssb-fileshare/vm-templates/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755
 
-# Store the filename in a variable
-$filename = $file.Name
+to 
 
-# Output the filename
-$filename
-
+\\10.10.21.84\share\vm-templates\R-Team\Windows\12-24\r-wsus-win22-21h2\2.1.8\20241211-205755
