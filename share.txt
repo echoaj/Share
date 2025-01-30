@@ -1,22 +1,33 @@
-Write a bash script that converts the string:
 
-/mnt/ssb-fileshare/vm-templates/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755
+I need help selecting which products to select for patching Windows 10 LTSC Version 21H2 and Windows Server 2022 LTSC Version 21h2 machines.
+Here are the patches that I selected so far.  I main just care about cumualitive patcehs and .NET patches.  
+Do I have the right products selected?  
+Are there any this list that are not needed?
+Are there any that are missing?
 
-to 
+WSUS Products List:
+Microsoft 365 Apps/Office 2019/Office LTSC
+PowerShell - x64
+Microsoft SQL Server 2014
+SQL Server 2014-2016 Product Updates for Setup
+Microsoft Server operating system-21H2
+Windows - Client, version 21H2 and later, Servicing Drivers
+Windows - Client, version 21H2 and later, Upgrade & Servicing Drivers
+Windows - Server, version 21H2 and later, Servicing Drivers
+Windows - Server, version 21H2 and later, Upgrade & Servicing Drivers
+Windows 10 LTSB
+Windows 10, version 1903 and later, Service Drivers
+Windows 10, version 1903 and later, Upgrade & Servicing Drivers
+Windows 10, version 1903 and later
+Windows 10
+Windows Server 2019 and later, Servicing Drivers
+Windows Server 2019 and later, Upgrade & Servicing Drivers
+Windows Server 2019
 
-\\10.10.21.84\share\vm-templates\R-Team\Windows\12-24\r-wsus-win22-21h2\2.1.8\20241211-205755
-
-
-#!/bin/bash
-
-# Input path
-input_path="/mnt/ssb-fileshare/vm-templates/R-Team/Windows/12-24/r-wsus-win22-21h2/2.1.8/20241211-205755"
-
-# Convert to Windows UNC path
-# Replace "/mnt/ssb-fileshare" with "\\10.10.21.84\share"
-# Replace all forward slashes with backslashes
-windows_path="\\\\10.10.21.84\\share${input_path#/mnt/ssb-fileshare}"
-windows_path="${windows_path//\//\\}"
-
-# Output the converted path
-echo "$windows_path"
+The classifications that I am using are:
+Critical Updates
+Definition Updates
+Security Updates
+Update Rollups
+Updates
+Upgrades
