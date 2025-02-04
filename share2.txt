@@ -1,0 +1,32 @@
+I have a gitlab pipeline that consists of an a .gitlab.ci.yml, which runs "ansible-playbook -i inventory playbook.yml"
+In the playbook I have:
+[windows]
+192.168.5.45       
+
+[windows:vars]
+ansible_user = Admin...
+ansible_password = Pass...
+ansible_connection = winrm
+ansible_winrm_port = 5986
+ansible_winrm_transport = basic
+become_user = Administrator
+become_flags = "logon_type=interactive logon_flags=with_profile"
+ansible_winrm_server_cert_validation = ignore
+ansible_winrm_read_timeout_sec = 60
+
+Then I have a playbook.yml with 
+---
+- name: Calling Windows Role
+  hosts: windows
+  gather_facts: true
+  roles:
+    - role : windows
+
+Then within the windows folder I have a tasks folder with a few rolls.  one of them copies a powershell file and executes it on the target virtual machine defined in the playbook.
+
+Every time I run the pipeline I need to edit the inventory file to change the ip address for the target machine.  
+But what I want to do is, I want to define the IP address of that machine within the .gitlab-ci.yml file instead and have ansible use that IP address.  Is this possible?
+Can that ip address define within the .gitlab-ci.yml be passed to the inventory file?
+Do I even need an inventory file?
+Do I need the playbook.yml?
+What's the best solution to acheive this if possible?
