@@ -70,3 +70,18 @@ skipping: no hosts matched
 PLAY RECAP *********************************************************************
 
 Am I doing something wrong?
+
+
+
+#!/bin/bash
+target_ip="192.168.3.25"
+
+# List all VMs and iterate through them
+for vm in $(govc ls /path/to/your/vm/folder); do
+  # Get VM info in JSON format and extract the guest IP
+  ip=$(govc vm.info -json "$vm" | jq -r '.VirtualMachines[0].Guest.IpAddress')
+  if [ "$ip" = "$target_ip" ]; then
+    echo "Found VM: $vm (IP: $ip)"
+  fi
+done
+
