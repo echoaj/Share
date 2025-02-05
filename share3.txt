@@ -1,0 +1,8 @@
+I have a cyber verification ticket on IAM software (Active Directory).  
+We use AD and have multiple windows machines within the domain with multiple domain user accounts etc...
+Here are the requirements
+
+- Req1. The IAM software shall allow for auditing of domain group accounts.
+- Req2. The IAM software shall allow for auditing of domain user accounts.
+
+What do these requirements mean and how would I write an verification guide procedure on it?
