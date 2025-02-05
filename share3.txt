@@ -1,8 +1,5 @@
-I have a cyber verification ticket on IAM software (Active Directory).  
-We use AD and have multiple windows machines within the domain with multiple domain user accounts etc...
-Here are the requirements
-
-- Req1. The IAM software shall allow for auditing of domain group accounts.
-- Req2. The IAM software shall allow for auditing of domain user accounts.
-
-What do these requirements mean and how would I write an verification guide procedure on it?
+How would you define domain group account?
+a) A shared domain account among multiple users
+b) A user account belonging to a group on the domain
+c) The actual domain group itself
+d) other
