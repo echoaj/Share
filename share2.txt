@@ -30,3 +30,43 @@ Can that ip address define within the .gitlab-ci.yml be passed to the inventory 
 Do I even need an inventory file?
 Do I need the playbook.yml?
 What's the best solution to acheive this if possible?
+
+
+
+So I added to the .gitlab-ci file this:
+variables:
+  WSUS_IP: '192.168.3.25'                               # Change
+
+And in the job I am runnning ansible like this:
+ansible-playbook playbook.yml --extra-vars "user=$DSO_SERVICE_ACCOUNT_USR pass=$DSO_SERVICE_ACCOUNT_PSW path=$EXPORT_PATH_WINDOWS ip=$WSUS_IP"
+
+and modified playbook.yml to this:
+---
+
+- name: Calling Windows Role
+  hosts: "{{ ip }}"
+  gather_facts: true
+  vars:
+    ansible_user: Admin...
+    ansible_password: Pass...
+    ansible_connection: winrm
+    ansible_winrm_port: 5985
+    ansible_winrm_transport: basic
+    become_user: Administrator
+    become_flags: "logon_type=interactive logon_flags=with_profile"
+    ansible_winrm_server_cert_validation: ignore
+    ansible_winrm_read_timeout_sec: 60                                         
+  roles:
+    - role : windows
+
+
+But it doesn't seem to work.  I get this result in the console
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that
+the implicit localhost does not match 'all'
+[WARNING]: Could not match supplied host pattern, ignoring: 192.168.5.45
+PLAY [Calling Windows Role] ****************************************************
+skipping: no hosts matched
+PLAY RECAP *********************************************************************
+
+Am I doing something wrong?
