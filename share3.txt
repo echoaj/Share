@@ -1,5 +1,12 @@
-How would you define domain group account?
-a) A shared domain account among multiple users
-b) A user account belonging to a group on the domain
-c) The actual domain group itself
-d) other
+$ipList = @("192.168.1.10", "192.168.1.11", "192.168.1.12") # Add your list of IPs here
+
+foreach ($ip in $ipList) {
+    $hostname = [System.Net.Dns]::GetHostEntry($ip).HostName
+    Write-Host "Checking $hostname ($ip)..."
+    
+    if (Test-ComputerSecureChannel -Server $hostname -ErrorAction SilentlyContinue) {
+        Write-Host "$hostname ($ip) is domain-joined!" -ForegroundColor Green
+    } else {
+        Write-Host "$hostname ($ip) is NOT domain-joined!" -ForegroundColor Red
+    }
+}
