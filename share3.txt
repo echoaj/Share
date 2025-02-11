@@ -10,3 +10,25 @@ foreach ($ip in $ipList) {
         Write-Host "$hostname ($ip) is NOT domain-joined!" -ForegroundColor Red
     }
 }
+
+
+
+# Read the list of IP addresses from the file
+$ipList = Get-Content -Path "C:\Temp\IPs.txt"
+
+foreach ($ip in $ipList) {
+    try {
+        # Query the Win32_ComputerSystem WMI class on the remote computer
+        $computerSystem = Get-WmiObject -Class Win32_ComputerSystem -ComputerName $ip -ErrorAction Stop
+
+        # Check if the computer is joined to a domain
+        if ($computerSystem.PartOfDomain) {
+            Write-Output "$ip is joined to the domain '$($computerSystem.Domain)'."
+        } else {
+            Write-Output "$ip is NOT joined to a domain."
+        }
+    }
+    catch {
+        Write-Output "Error connecting to $ip. It may be offline or not responding to WMI queries."
+    }
+}
