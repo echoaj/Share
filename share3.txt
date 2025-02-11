@@ -32,3 +32,48 @@ foreach ($ip in $ipList) {
         Write-Output "Error connecting to $ip. It may be offline or not responding to WMI queries."
     }
 }
+
+# Import Active Directory module (requires RSAT)
+Import-Module ActiveDirectory
+
+# List of IP addresses to check
+$ipList = @(
+    "192.168.1.1",
+    "10.0.0.2"
+    # Add more IPs here
+)
+
+foreach ($ip in $ipList) {
+    try {
+        # Resolve IP to hostname
+        $hostEntry = [System.Net.Dns]::GetHostEntry($ip)
+        $hostname = $hostEntry.HostName.Split('.')[0]  # Extract computer name (e.g., "PC01" from "PC01.domain.com")
+        
+        # Check if the computer exists in AD
+        $adComputer = Get-ADComputer -Identity $hostname -ErrorAction Stop
+        
+        # Output result
+        [PSCustomObject]@{
+            IPAddress      = $ip
+            Hostname       = $hostname
+            DomainJoined   = $true
+            ADObjectFound  = $adComputer.DistinguishedName
+        }
+    } catch [System.Management.Automation.RuntimeException] {
+        # Handle "computer not found" errors
+        [PSCustomObject]@{
+            IPAddress      = $ip
+            Hostname       = $hostname
+            DomainJoined   = $false
+            Error          = "Computer not found in Active Directory."
+        }
+    } catch {
+        # General errors (e.g., DNS resolution failed)
+        [PSCustomObject]@{
+            IPAddress      = $ip
+            Hostname       = "N/A"
+            DomainJoined   = $false
+            Error          = $_.Exception.Message
+        }
+    }
+}
