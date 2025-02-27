@@ -1,1 +1,1 @@
-Req1.  The Windows Operating System Server shall permit security compliance software to scan its baseline configuration.
+The Windows Operating System Workstation shall allow for level adjustments of audit review, analysis, and reporting
