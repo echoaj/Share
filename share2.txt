@@ -1,1 +1,1 @@
-The Windows Operating System Workstation shall allow for level adjustments of audit review, analysis, and reporting
+Req5. The Windows Operating System Workstation shall allow for local audit logs to be processed by specific events of interests.
