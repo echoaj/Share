@@ -1,4 +1,4 @@
-For me I used my knowladge as a cyber security engineer to essentially help track down the scammer in a couple different ways.
-The first being we identified what devices were perviously connected to the car's bluetooth and took that meta data and used a combination of tracking tools to discover where the car had previosly been.
+For me I used my knowladge as a cyber security engineer to help track down the scammer in a couple different ways.
+The first being we took the meta data of the devices previosuly connected to the car's bluetooth and used a combination of different tracking tools to discover where the car had previosly been.
 So we knew that the car came from the Garden Grove area even before the police were involved and that helped us narrow down our craigslit search between garden grove and carona for finding the scammer again.
-I also helped in identifying if phone number was a fake number whenever Evelyn or Amy would find a susspicious craigslist listing. 
+I also helped in determining if a phone number was a fake number whenever Evelyn or Amy would find a susspicious craigslist listing. 
