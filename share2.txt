@@ -1,1 +1,1 @@
-Req5. The Windows Operating System Workstation shall allow for local audit logs to be processed by specific events of interests.
+mkisofs -quiet -print-size -input-charset utf-8 -allow-limited-size -iso-level 3 -o $ARTIFACT_PATH_EXT -J -r $ARTIFACT_PATH
