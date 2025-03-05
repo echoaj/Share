@@ -1,1 +1,1 @@
-mkisofs -quiet -print-size -input-charset utf-8 -allow-limited-size -iso-level 3 -o $ARTIFACT_PATH_EXT -J -r $ARTIFACT_PATH
+mkisofs -quiet -input-charset utf-8 -iso-level 3 -o $ARTIFACT_PATH_EXT -J -r $ARTIFACT_PATH
