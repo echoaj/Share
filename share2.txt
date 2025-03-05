@@ -1,1 +1,17 @@
-mkisofs -quiet -input-charset utf-8 -iso-level 3 -o $ARTIFACT_PATH_EXT -J -r $ARTIFACT_PATH
+Audit object access
+
+----- Creation -----
+
+----- Access -----
+Access was granted to an already existing object.
+Access was granted to an already existing object type.
+A client attempted to access an object.
+
+---- Delete ----
+An attempt was made to open an object with the intent to delete it.
+A protected object was deleted.
+
+---- Data Mod -----
+
+---- Permission Mod -----
+A permission associated with a handle was used.
