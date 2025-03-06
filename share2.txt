@@ -1,17 +1,37 @@
-Audit object access
 
 ----- Creation -----
+Audit File Share
+  5142(S): A network share object was added.
 
 ----- Access -----
-Access was granted to an already existing object.
-Access was granted to an already existing object type.
-A client attempted to access an object.
+Audit object access
+  560: Access was granted to an already existing object.
+  565: Access was granted to an already existing object type.
+  570: A client attempted to access an object.
+Audit File Share
+  5140(S, F): A network share object was accessed.
+Audit File System
+  4663(S): An attempt was made to access an object.
 
 ---- Delete ----
-An attempt was made to open an object with the intent to delete it.
-A protected object was deleted.
-
+Audit object access
+  563: An attempt was made to open an object with the intent to delete it.
+  564: A protected object was deleted.
+Audit File Share
+  5144(S): A network share object was deleted.
+Audit File System
+  4660(S): An object was deleted.
+  
 ---- Data Mod -----
-
+Audit File Share
+  5143(S): A network share object was modified.
+  
 ---- Permission Mod -----
-A permission associated with a handle was used.
+Audit object access
+  567: A permission associated with a handle was used.
+Audit File System
+  4670(S): Permissions on an object were changed.
+
+
+https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/basic-audit-object-access
+https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/audit-file-share
