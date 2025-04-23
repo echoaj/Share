@@ -1,1 +1,1 @@
-Req23. The Windows Operating System Workstation shall generate an event log for security and audit policy changes failure.
+The IAM software shall allow authentication of remote privileged domain users to execute authorized privileged commands.
