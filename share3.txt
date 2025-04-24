@@ -1,12 +1,1 @@
-The Windows Operating System Server shall forward its logs to the centralized log collection location.
-
-I have the above requirement.  I have a splunk server and a windows 10 server client machine with splunk forwarder installed.  How do I ensure the splunk forwarder is running, and that it is configured to forward it's event logs to the splunk server.  Is there a configuration file somehwere I must edit?  
-
-Splunk server;
-DSN NAME: splunk01.vcf.lab
-IP ADDR: 10.10.32.30
-
-Windows 10 Server Client:
-DSN Name:Cyber-Win2022
-IP ADDR: 10.10.32.80
-
+to be honest, I was really surprised that she was bothered by that because she is not a jelous person at all, and knows I am very affectionate with my female friends.  I've told her in the past that you give me big hugs and sometimes lift me up and she thinks it's funny.  Yesterday driving to class we were talking about you and she was even making jokes about me being interested in you.  She know's you and my friend Esme are my two favorite people in class and yesterday I was really excited to go to class to see you and introduce her to you.  I think it was an error on my part for brining her yesterday because she was already in a bad mood because of her in-grown toe nail and she didn't feel like dancing or saying hi to anyone.  Even when we were walking to class I saw Debbie and said hi to her and when I went to introduce my wife (Ayda) to debbie, Ayda was hidding behind a beam not wanting to say hi and she just shake her hand.  Ayda in general is a very shy person but it's very rare that I see her upset by things like this.
