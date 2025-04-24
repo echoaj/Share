@@ -1,1 +1,12 @@
-The IAM software shall allow authentication of remote privileged domain users to execute authorized privileged commands.
+The Windows Operating System Server shall forward its logs to the centralized log collection location.
+
+I have the above requirement.  I have a splunk server and a windows 10 server client machine with splunk forwarder installed.  How do I ensure the splunk forwarder is running, and that it is configured to forward it's event logs to the splunk server.  Is there a configuration file somehwere I must edit?  
+
+Splunk server;
+DSN NAME: splunk01.vcf.lab
+IP ADDR: 10.10.32.30
+
+Windows 10 Server Client:
+DSN Name:Cyber-Win2022
+IP ADDR: 10.10.32.80
+
