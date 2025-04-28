@@ -1,1 +1,1 @@
-
+ The Windows Operating System Server shall initiate a session lock after not to exceed fifteen (15) minutes of inactivity or upon receiving a request from a user.
