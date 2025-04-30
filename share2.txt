@@ -1,9 +1,5 @@
-The Windows Operating System Workstation shall generate an event log when a user account fails to access local security relevant files.
-The Windows Operating System Workstation shall generate an event log for security relevant file access failure.
-
-
-- Req3. The Windows Operating System Workstation shall generate an event log when a user account fails to create local security relevant files.
-Req3.  The Windows Operating System Workstation shall generate an event log for security relevant file creation failure.
+Req 2  The Windows Operating System Workstation shall generate an event log when a user account fails to access local security relevant files.
+Req 4 The Windows Operating System Workstation shall generate an event log for security relevant file access failure.
 
 - Req4. The Windows Operating System Workstation shall generate an event log when a user account fails to delete local security relevant files.
 Req7.  The Windows Operating System Workstation shall generate an event log for security relevant file deletion failure.
