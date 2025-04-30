@@ -1,3 +1,18 @@
-How do I make an active directory group that allows users to execute powershell commands
+The Windows Operating System Workstation shall generate an event log when a user account fails to access local security relevant files.
+The Windows Operating System Workstation shall generate an event log for security relevant file access failure.
 
-How do I make an active directory group that allows users to be vmware vsphere admin
+
+- Req3. The Windows Operating System Workstation shall generate an event log when a user account fails to create local security relevant files.
+Req3.  The Windows Operating System Workstation shall generate an event log for security relevant file creation failure.
+
+- Req4. The Windows Operating System Workstation shall generate an event log when a user account fails to delete local security relevant files.
+Req7.  The Windows Operating System Workstation shall generate an event log for security relevant file deletion failure.
+
+- Req5. The Windows Operating System Workstation shall generate an event log when a user account fails to modify local security relevant files.
+Req9.  Windows Operating System Workstation shall generate an event log for security relevant file data modification failure.
+
+- Req6. The Windows Operating System Workstation shall generate an event log when a user account fails to modify ownership values of local security relevant files.
+Req13.  The Windows Operating System Workstation shall generate an event log for security relevant file ownership modification failure.
+
+- Req7. The Windows Operating System Workstation shall generate an event log when a user account fails to modify permissions of local security relevant files.
+Req11.  The Windows Operating System Workstation shall generate an event log for security relevant file permissions modification failure.
