@@ -1,14 +1,8 @@
-Req 2  The Windows Operating System Workstation shall generate an event log when a user account fails to access local security relevant files.
-Req 4 The Windows Operating System Workstation shall generate an event log for security relevant file access failure.
-
-- Req4. The Windows Operating System Workstation shall generate an event log when a user account fails to delete local security relevant files.
-Req7.  The Windows Operating System Workstation shall generate an event log for security relevant file deletion failure.
-
-- Req5. The Windows Operating System Workstation shall generate an event log when a user account fails to modify local security relevant files.
-Req9.  Windows Operating System Workstation shall generate an event log for security relevant file data modification failure.
-
-- Req6. The Windows Operating System Workstation shall generate an event log when a user account fails to modify ownership values of local security relevant files.
-Req13.  The Windows Operating System Workstation shall generate an event log for security relevant file ownership modification failure.
-
-- Req7. The Windows Operating System Workstation shall generate an event log when a user account fails to modify permissions of local security relevant files.
-Req11.  The Windows Operating System Workstation shall generate an event log for security relevant file permissions modification failure.
+- Req8. The Windows Operating System Workstation shall generate an event log when a user account successfully accesses local security relevant files.
+4
+- Req9. The Windows Operating System Workstation shall generate an event log when a user account successfully deletes local security relevant files.
+6
+- Req10. The Windows Operating System Workstation shall generate an event log when a user account successfully modifies local security relevant files.
+8
+- Req11. The Windows Operating System Workstation shall generate an event log when a user account successfully to modifies ownership values of local security relevant files.
+12
