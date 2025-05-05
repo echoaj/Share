@@ -1,8 +1,3 @@
-- Req8. The Windows Operating System Workstation shall generate an event log when a user account successfully accesses local security relevant files.
-4
-- Req9. The Windows Operating System Workstation shall generate an event log when a user account successfully deletes local security relevant files.
-6
-- Req10. The Windows Operating System Workstation shall generate an event log when a user account successfully modifies local security relevant files.
-8
-- Req11. The Windows Operating System Workstation shall generate an event log when a user account successfully to modifies ownership values of local security relevant files.
-12
+- Req12. The Windows Operating System Workstation shall generate an event log when there is an attempt to modify secured software.
+- Req13. The Windows Operating System Workstation shall prohibit access to files, databases, and execution of software by unauthorized users.
+- Req15. The Windows Operating System Workstation shall restrict a software application from executing at a higher privilege level than the executing user.
