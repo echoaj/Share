@@ -1,8 +1,3 @@
+I have this requirement: The Windows Operating System Server shall generate an event log for application initialization success.
 
-	First TV (from the first image):
-	•	Model Number: UN70TU6980FXZA
-	2.	Second TV (from the second image):
-	•	Model Number: QN55Q60RAFXZA
-
-
-https://www.bestbuy.com/site/reviews/samsung-70-class-6-series-led-4k-uhd-smart-tizen-tv/6428508
+What GPOs are responsible for this??
