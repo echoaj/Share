@@ -1,8 +1,7 @@
-I have this requirement: The Windows Operating System Server shall generate an event log for application initialization success.
-
-What GPOs are responsible for this??
-
-
-Your Living Spaces order of SO-014417502 is ready to be scheduled for delivery, please visit the link below for options: https://www.livingspaces.com/user/my-account/order-history/order-details/OrderDetailsSms?orderId=%7E6NKpWUHVC3r4ydqPst2sMw%3D%3D&customerId=%7EUkygDeG5jdfrSP4Ep9jWxw%3D%3D&mktu=YWxqb3NsaW4xM0B5YWhvby5jb20= 
-
-Or go to www.livingspaces.com/ChangeDelivery
+- Req1. The Virtual Hypervisor shall generate an event log for failed privileged escalation.
+- Req2. The Virtual Hypervisor shall generate an event log for user account activities for misuse.
+- Req5. The Virtual Hypervisor shall generate an event log when a local user account fails to log off.
+- Req8. The Virtual Hypervisor shall generate an event log when privileged functions are executed.
+- Req9. The Virtual Hypervisor shall generate an event log when the a local account fails to escalate access.
+- Req13. The Virtual Hypervisor shall monitor user account command-line and GUI configuration activities.
+- Req14. The Virtual Hypervisor shall generate an event log when the a local account successfully escalates access.
