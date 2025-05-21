@@ -5,3 +5,8 @@
 - Req9. The Virtual Hypervisor shall generate an event log when the a local account fails to escalate access.
 - Req13. The Virtual Hypervisor shall monitor user account command-line and GUI configuration activities.
 - Req14. The Virtual Hypervisor shall generate an event log when the a local account successfully escalates access.
+
+
+How do I verify this requirement
+
+The Virtual Hypervisor shall monitor user account command-line and GUI configuration activities.
