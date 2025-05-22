@@ -1,12 +1,1 @@
-- Req1. The Virtual Hypervisor shall generate an event log for failed privileged escalation.
-- Req2. The Virtual Hypervisor shall generate an event log for user account activities for misuse.
-- Req5. The Virtual Hypervisor shall generate an event log when a local user account fails to log off.
-- Req8. The Virtual Hypervisor shall generate an event log when privileged functions are executed.
-- Req9. The Virtual Hypervisor shall generate an event log when the a local account fails to escalate access.
-- Req13. The Virtual Hypervisor shall monitor user account command-line and GUI configuration activities.
-- Req14. The Virtual Hypervisor shall generate an event log when the a local account successfully escalates access.
-
-
-How do I verify this requirement
-
-The Virtual Hypervisor shall monitor user account command-line and GUI configuration activities.
+https://www.instacart.com/company/ideas/types-of-nuts/
