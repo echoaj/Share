@@ -1,1 +1,4 @@
 govc export.ovf -vm=$VM_EXPORT_NAME -name=$VM_EXPORT_NAME -k=true $ARTIFACT_DIR
+
+
+https://www.sdfair.com/order/tickets/7f8b5912-153c-4960-8a49-5aa76078fe17
