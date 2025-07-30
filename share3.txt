@@ -1,5 +1,35 @@
-My partner Ayda Torres got a new phone number from T-Mobile.  They gave her a new number and helped her set up her phone with it.  Why is it when I do a reverse phone number search on her number it shows up as "N Antonio" a name completely different?
+I am using ansible to perform cyber security checks on windows 10 virtual machine
+I am automating the following requirement:
+The Windows Operating System Workstation shall generate an event log for failed directory access
 
-https://www.amazon.com/BRICHBROW-Premium-Checkered-Tablecloths-Tablecovers/dp/B08GLYG1BR/ref=sr_1_54?crid=3HF2IWCOPI417&dib=eyJ2IjoiMSJ9.X8WJWkMoz_NRiY9zGps3UNBTzPxSmzfWJ0EsrIcWtRINBZJAVUIijb2LQmk6IQjbgkFzyyG8GNnAULs_yHosWBe2eM_0CYvkw62YGHIHBNzTrZCNGyzJTKoxB-1rTThat3so6_dc7Cng6F_rEyuSKZjc66BKOwSKFBnmgCw8g_qB4X8EEgSPDxjpwiiOcIxQ02F4f_ch8S_SZir_wzVKPO5e0iitOdc0C5rGKOHl1jwanYIVn_EhYKCrlVYNuPpQyWx0mwUX2Yf2a7oRVzolYy0WzkKMzxgRDtACLP-a9bY.Li2c5NACbLtOK8HNKrXbqA6cIbnwCEuT8s2UosgSfVE&dib_tag=se&keywords=checkered%2Btable%2Bcloth%2Bfabric&qid=1748990333&sprefix=checkered%2Btable%2Bc%2Caps%2C161&sr=8-54&th=1
 
-https://www.sandiegofamily.com/things-to-do/seasonal-happenings/sdcounty-fair-tips
+Here is the code I have so far.
+---
+- tags: 
+    - req1-SDSO-8167
+    - SDSO-8167
+  block:
+    - name: The Windows Operating System Workstation shall generate an event log for failed directory access
+      ansible.builtin.meta: noop
+
+    - name: Create directory in C:\
+      ansible.builtin.win_file: 
+        path: C:\Directory
+        state: directory
+
+    - name: Set directory security properties
+      ansible.builtin.win_audit_rule:
+        path: C:\Directory
+        user: Administrators
+        principal: Everyone
+        rights: FullControl
+        audit_flags: failure
+    
+    - name: Set deny permissions on user
+      ansible.builtin.win_acl:
+        path: C:\Directory
+        user: Administrators
+        rights: 'FullControl'
+        type: 'deny'
+
+I believe my next step to have ansible attempt to open the directory as the Administrator.  Clearly we will get an error since the Administrator does not have permission.  Then Ansible should find if a 4656 File System security event log was generated. It should find the keyword "Audit Failure" and "Access Reasons" should contain the word "Denied" in it.  If so this requirement passes, otherwise it does not.  Are you able to generate the rest of the ansible code to complete this requirement?
