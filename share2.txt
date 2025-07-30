@@ -1,4 +1,132 @@
-govc export.ovf -vm=$VM_EXPORT_NAME -name=$VM_EXPORT_NAME -k=true $ARTIFACT_DIR
+# Ensure you're running with a user that belongs to Administrators
+# (denied by the ACL we set). If you need to force a specific user,
+# you can add become settings at the task or block level, e.g.:
+# become: yes
+# become_method: runas
+# become_user: Administrator
+# become_password: "{{ vault_admin_password }}"
 
+- tags:
+    - req1-SDSO-8167
+    - SDSO-8167
+  block:
 
-https://www.sdfair.com/order/tickets/7f8b5912-153c-4960-8a49-5aa76078fe17
+    # --- Your existing tasks (adjust FQCNs if needed) ---
+    - name: The Windows Operating System Workstation shall generate an event log for failed directory access
+      ansible.builtin.meta: noop
+
+    - name: Create directory in C:\
+      ansible.windows.win_file:
+        path: C:\Directory
+        state: directory
+
+    - name: Set directory security audit rule (failure)
+      ansible.windows.win_audit_rule:
+        path: C:\Directory
+        principal: Everyone            # You can keep this as 'Administrators' if preferred
+        rights: FullControl
+        audit_flags: failure
+
+    - name: Set deny permissions on Administrators
+      ansible.windows.win_acl:
+        path: C:\Directory
+        user: Administrators
+        rights: FullControl
+        type: deny
+
+    # --- Ensure failure auditing is enabled for File System ---
+    - name: Ensure 'File System' failure auditing is enabled
+      ansible.windows.win_command: >
+        auditpol /set /subcategory:"File System" /failure:enable
+      register: auditpol_set
+      changed_when: "'successfully' in (auditpol_set.stdout | lower) or 'successfully' in (auditpol_set.stderr | lower)"
+      failed_when: auditpol_set.rc not in [0]
+
+    # --- Attempt access and query for event 4656 Audit Failure with "Denied" ---
+    - name: Attempt denied access and query Security log for 4656 Audit Failure
+      ansible.windows.win_powershell:
+        script: |
+          $Path  = 'C:\Directory'
+
+          # Mark the time just before the access attempt so we only search new events
+          $Start = Get-Date
+          Start-Sleep -Seconds 1
+
+          # Attempt access (should fail due to explicit deny on Administrators)
+          $Attempt = @{
+            Path         = $Path
+            Result       = 'unknown'
+            ErrorMessage = $null
+          }
+
+          try {
+            # Any read on the directory should exercise the audit
+            Get-ChildItem -LiteralPath $Path -Force -ErrorAction Stop | Out-Null
+            $Attempt.Result = 'succeeded'
+          } catch {
+            $Attempt.Result = 'failed'
+            $Attempt.ErrorMessage = $_.Exception.Message
+          }
+
+          # A short delay to allow the Security event to be written
+          Start-Sleep -Seconds 2
+
+          # Query Security log: Event ID 4656 + Audit Failure since $Start for our path
+          $Filter = @{ LogName = 'Security'; Id = 4656; StartTime = $Start }
+          $Matches = @()
+
+          try {
+            Get-WinEvent -FilterHashtable $Filter -ErrorAction Stop | ForEach-Object {
+              if ($_.KeywordsDisplayNames -contains 'Audit Failure') {
+                $xml = [xml]$_.ToXml()
+
+                # Pull relevant fields
+                $objName      = ($xml.Event.EventData.Data | Where-Object { $_.Name -eq 'ObjectName' }).'#text'
+                $accessReason = ($xml.Event.EventData.Data | Where-Object { $_.Name -eq 'AccessReasons' }).'#text'
+
+                if ($objName -and $objName -like "$Path*") {
+                  $Matches += [pscustomobject]@{
+                    TimeCreated   = $_.TimeCreated
+                    EventId       = $_.Id
+                    ObjectName    = $objName
+                    AccessReasons = $accessReason
+                    HasDenied     = ($accessReason -match 'Denied')
+                  }
+                }
+              }
+            }
+          } catch {
+            # If the log query fails for any reason, capture that
+            $Matches = @()
+          }
+
+          $Pass = ($Attempt.Result -eq 'failed' -and ($Matches | Where-Object { $_.HasDenied }).Count -ge 1)
+
+          [pscustomobject]@{
+            Attempt     = $Attempt
+            EventsFound = $Matches
+            Pass        = $Pass
+          } | ConvertTo-Json -Depth 6
+      register: audit_check
+      changed_when: false
+
+    - name: Parse audit check result
+      ansible.builtin.set_fact:
+        audit_check_result: "{{ audit_check.stdout | from_json }}"
+
+    - name: Show matching events (for troubleshooting)
+      ansible.builtin.debug:
+        var: audit_check_result
+      when: audit_check_result.Pass | bool == false
+
+    - name: Assert logging requirement is met
+      ansible.builtin.assert:
+        that:
+          - audit_check_result.Pass | bool
+        success_msg: >-
+          Requirement PASSED: 4656 "Audit Failure" was recorded for a denied access attempt
+          on {{ 'C:\\Directory' }}.
+        fail_msg: >-
+          Requirement FAILED: No 4656 "Audit Failure" event with AccessReasons containing "Denied"
+          was found for {{ 'C:\\Directory' }} since the access attempt. Attempt result:
+          {{ audit_check_result.Attempt.Result }}. Error (if any): {{ audit_check_result.Attempt.ErrorMessage }}.
