@@ -1,33 +1,29 @@
+$now      = Get-Date
+$start    = $now.AddMinutes(-1)
 
-I need help selecting which products to select for patching Windows 10 LTSC Version 21H2 and Windows Server 2022 LTSC Version 21h2 machines.
-Here are the patches that I selected so far.  I main just care about cumualitive patcehs and .NET patches.  
-Do I have the right products selected?  
-Are there any this list that are not needed?
-Are there any that are missing?
+# trigger a file access so an event is created
+Get-ChildItem -LiteralPath C:\Directory -Force | Out-Null
+Start-Sleep -Seconds 2
 
-WSUS Products List:
-Microsoft 365 Apps/Office 2019/Office LTSC
-PowerShell - x64
-Microsoft SQL Server 2014
-SQL Server 2014-2016 Product Updates for Setup
-Microsoft Server operating system-21H2
-Windows - Client, version 21H2 and later, Servicing Drivers
-Windows - Client, version 21H2 and later, Upgrade & Servicing Drivers
-Windows - Server, version 21H2 and later, Servicing Drivers
-Windows - Server, version 21H2 and later, Upgrade & Servicing Drivers
-Windows 10 LTSB
-Windows 10, version 1903 and later, Service Drivers
-Windows 10, version 1903 and later, Upgrade & Servicing Drivers
-Windows 10, version 1903 and later
-Windows 10
-Windows Server 2019 and later, Servicing Drivers
-Windows Server 2019 and later, Upgrade & Servicing Drivers
-Windows Server 2019
+$evt = Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=4656; StartTime=$start } |
+       Select-Object -First 1
 
-The classifications that I am using are:
-Critical Updates
-Definition Updates
-Security Updates
-Update Rollups
-Updates
-Upgrades
+$evt | Select-Object TimeCreated, Id, LogName, TaskDisplayName,
+  @{ Name='Audit'; Expression={
+        if ($_.KeywordsDisplayNames -contains 'Audit Failure') {'Audit Failure'}
+        elseif ($_.KeywordsDisplayNames -contains 'Audit Success') {'Audit Success'}
+        else { ($_.KeywordsDisplayNames -join ', ') }
+     }},
+  @{ Name='AccessReasons'; Expression={
+        $xml = [xml]$_.ToXml()
+        ($xml.Event.EventData.Data |
+            Where-Object { $_.Name -in 'AccessReason','AccessReasons' }
+        ).'#text' -join '; '
+     }},
+  @{ Name='ContainsDenied'; Expression={
+        $xml = [xml]$_.ToXml()
+        $reasons = ($xml.Event.EventData.Data |
+            Where-Object { $_.Name -in 'AccessReason','AccessReasons' }
+        ).'#text' -join '; '
+        [bool]($reasons -match '(?i)\bdenied\b')  # case-insensitive
+     }}
