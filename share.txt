@@ -1,29 +1,123 @@
-$now      = Get-Date
-$start    = $now.AddMinutes(-1)
+- tags:
+    - req1-SDSO-8167
+    - SDSO-8167
+  block:
 
-# trigger a file access so an event is created
-Get-ChildItem -LiteralPath C:\Directory -Force | Out-Null
-Start-Sleep -Seconds 2
+    - name: The Windows Operating System Workstation shall generate an event log for failed directory access
+      ansible.builtin.meta: noop
 
-$evt = Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=4656; StartTime=$start } |
-       Select-Object -First 1
+    # Ensure Windows will log failures for File System object access (so 4656s appear)
+    - name: Enable auditing for File System failures (Object Access)
+      community.windows.win_audit_policy_system:
+        subcategory: File System
+        category: Object Access
+        failure: enable
+      register: audit_policy
 
-$evt | Select-Object TimeCreated, Id, LogName, TaskDisplayName,
-  @{ Name='Audit'; Expression={
-        if ($_.KeywordsDisplayNames -contains 'Audit Failure') {'Audit Failure'}
-        elseif ($_.KeywordsDisplayNames -contains 'Audit Success') {'Audit Success'}
-        else { ($_.KeywordsDisplayNames -join ', ') }
-     }},
-  @{ Name='AccessReasons'; Expression={
-        $xml = [xml]$_.ToXml()
-        ($xml.Event.EventData.Data |
-            Where-Object { $_.Name -in 'AccessReason','AccessReasons' }
-        ).'#text' -join '; '
-     }},
-  @{ Name='ContainsDenied'; Expression={
-        $xml = [xml]$_.ToXml()
-        $reasons = ($xml.Event.EventData.Data |
-            Where-Object { $_.Name -in 'AccessReason','AccessReasons' }
-        ).'#text' -join '; '
-        [bool]($reasons -match '(?i)\bdenied\b')  # case-insensitive
-     }}
+    # Prep target: directory + SACL + deny ACE so we force a failure
+    - name: Create directory C:\Directory
+      ansible.windows.win_file:
+        path: C:\Directory
+        state: directory
+
+    - name: Set audit rule (Everyone, failure) on C:\Directory
+      ansible.windows.win_audit_rule:
+        path: C:\Directory
+        principal: Everyone
+        rights: FullControl
+        audit_flags: failure
+        state: present
+
+    - name: Deny Administrators FullControl on C:\Directory (force an access failure)
+      ansible.windows.win_acl:
+        path: C:\Directory
+        user: Administrators
+        rights: FullControl
+        type: deny
+        state: present
+
+    # Timestamp just before the failure attempt
+    - name: Capture check start time (ISO 8601)
+      ansible.windows.win_shell: '(Get-Date).ToString("o")'
+      register: check_start
+      changed_when: false
+
+    # Trigger an access failure as Administrator
+    - name: Attempt to list C:\Directory as Administrator (expected to fail)
+      become: yes
+      become_user: Administrator
+      ansible.windows.win_shell: |
+        try {
+          Get-ChildItem -LiteralPath 'C:\Directory' -Force | Out-Null
+        } catch {
+          # Failure expected due to deny ACE
+        }
+      register: access_attempt
+      ignore_errors: true
+      changed_when: false
+
+    # Give the Security log a moment to flush
+    - name: Pause briefly for Security event write
+      ansible.builtin.pause:
+        seconds: 3
+
+    # Query only for: Event ID 4656 with Audit Failure since our start time
+    - name: Query for 4656 with Audit Failure since start time
+      become: yes
+      become_user: Administrator
+      ansible.windows.win_shell: |
+        $Start = [datetime]::Parse('{{ check_start.stdout | trim }}')
+
+        $evt = Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=4656; StartTime=$Start } |
+               Sort-Object TimeCreated -Descending |
+               Select-Object -First 1
+
+        if ($null -eq $evt) {
+          $result = [PSCustomObject]@{
+            found       = $false
+            pass        = $false
+            reason      = 'No 4656 events since start time'
+            timeCreated = $null
+            id          = $null
+            audit       = $null
+            logName     = 'Security'
+          }
+        } else {
+          $audit = if ($evt.KeywordsDisplayNames -contains 'Audit Failure') {'Audit Failure'}
+                   elseif ($evt.KeywordsDisplayNames -contains 'Audit Success') {'Audit Success'}
+                   else {'Unknown'}
+
+          $result = [PSCustomObject]@{
+            found       = $true
+            pass        = ($audit -eq 'Audit Failure')
+            reason      = if ($audit -eq 'Audit Failure') {'Matched 4656 with Audit Failure'} else {'4656 found but not Audit Failure'}
+            timeCreated = $evt.TimeCreated
+            id          = $evt.Id
+            audit       = $audit
+            logName     = $evt.LogName
+          }
+        }
+
+        $result | ConvertTo-Json -Depth 5
+      register: evt_check
+      changed_when: false
+
+    - name: Parse event check result
+      ansible.builtin.set_fact:
+        audit_result: "{{ evt_check.stdout | from_json }}"
+
+    - name: Show event summary
+      ansible.builtin.debug:
+        var: audit_result
+
+    - name: Assert requirement pass/fail (Audit Failure required)
+      ansible.builtin.assert:
+        that:
+          - audit_result.pass | bool
+        success_msg: >-
+          Requirement PASSED: Found Security event {{ audit_result.id }} at {{ audit_result.timeCreated }}
+          with audit status '{{ audit_result.audit }}'.
+        fail_msg: >-
+          Requirement FAILED: {{ audit_result.reason }}.
+          Last check -> found={{ audit_result.found }}, audit='{{ audit_result.audit }}',
+          time={{ audit_result.timeCreated }}.
