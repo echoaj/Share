@@ -1,51 +1,20 @@
-I am using ansible to perform cyber security checks on windows 10 virtual machine
-I am automating the following requirement:
-The Windows Operating System Workstation shall generate an event log for failed directory access
-
-
-Here is the code I have so far.
----
-- tags: 
-    - req1-SDSO-8167
-    - SDSO-8167
-  block:
-    - name: The Windows Operating System Workstation shall generate an event log for failed directory access
-      ansible.builtin.meta: noop
-
-    - name: Create directory in C:\
-      ansible.builtin.win_file: 
+  always:
+    - name: Check if C:\Directory exists
+      ansible.windows.win_stat:
         path: C:\Directory
-        state: directory
+      register: dir_check
 
-    - name: Set directory security properties
-      ansible.builtin.win_audit_rule:
+    - name: Reset permissions on C:\Directory for Administrator (if exists)
+      ansible.windows.win_acl:
         path: C:\Directory
         user: Administrators
-        principal: Everyone
         rights: FullControl
-        audit_flags: failure
-    
-    - name: Set deny permissions on user
-      ansible.builtin.win_acl:
+        type: allow
+        state: present
+      when: dir_check.stat.exists
+
+    - name: Remove C:\Directory (if exists)
+      ansible.windows.win_file:
         path: C:\Directory
-        user: Administrators
-        rights: 'FullControl'
-        type: 'deny'
-
-I believe my next step to have ansible attempt to open the directory as the Administrator.  Clearly we will get an error since the Administrator does not have permission.  Then Ansible should find if a 4656 File System security event log was generated. It should find the keyword "Audit Failure" and "Access Reasons" should contain the word "Denied" in it.  If so this requirement passes, otherwise it does not.  Are you able to generate the rest of the ansible code to complete this requirement?
-This is the code I have to far to complete the requirement. But this in Powershell and I will need to ansiblize it.  Can you do that.  Keep in mind if the event log 4656 has an audit status of "Audit Failure" the verification check passes
-
-$Now = Get-Date
-$Nowdelay = $Now.AddMinutes(-1)
-Write-Output $Nowdelay
-Get-ChildItem -LiteralPath C:\Directory -Force | Out-Null
-Start-Sleep -Seconds 3
-$Event = Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=4656} | Where-Object { $_.TimeCreated -ge $Nowdelay } | Select-Object -First 1
-$Event | Select-Object -Property TimeCreated, Id, Message, LogName, TaskDisplayName, KeywordsDisplaynNmes
-$Event | Select-Object @{ Name='Audit'; Expression={
-	if ($_.KeywordsDisplayNames -contains 'Audit Success') {'Audit Success'}
-	elseif ($_.KeywordsDisplayNames -contains 'Audit Failure') {'Audit Failure'}
-	else { ($_.KeywordsDisplayNames -join ', ') }
-}}
-
-#Make it match audit failure
+        state: absent
+      when: dir_check.stat.exists
