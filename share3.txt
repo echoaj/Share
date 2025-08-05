@@ -1,20 +1,131 @@
-  always:
-    - name: Check if C:\Directory exists
-      ansible.windows.win_stat:
-        path: C:\Directory
-      register: dir_check
 
-    - name: Reset permissions on C:\Directory for Administrator (if exists)
-      ansible.windows.win_acl:
+---
+- tags: 
+    - req1-SDSO-8167
+    - SDSO-8167
+  block:
+    - name: The Windows Operating System Workstation shall generate an event log for failed directory access
+      ansible.builtin.meta: noop
+
+    - name: Create directory in C:\
+      ansible.builtin.win_file: 
+        path: C:\Directory
+        state: directory
+
+    - name: Set directory security properties
+      ansible.builtin.win_audit_rule:
         path: C:\Directory
         user: Administrators
+        principal: Everyone
         rights: FullControl
-        type: allow
-        state: present
-      when: dir_check.stat.exists
-
-    - name: Remove C:\Directory (if exists)
-      ansible.windows.win_file:
+        audit_flags: failure
+    
+    - name: Set deny permissions on user
+      ansible.builtin.win_acl:
         path: C:\Directory
-        state: absent
-      when: dir_check.stat.exists
+        user: Administrators
+        rights: 'FullControl'
+        type: 'deny'
+    
+     # Capture TIMESTAMP before triggering directory access failure
+    - name: Capture timestamp before triggering event log
+      ansible.windows.win_shell: '(Get-Date).ToString("o")'
+      register: check_start                                     # Capture output of a task and store in a variable
+      changed_when: false                                       # Ensures task is not marked as changed
+
+    # Trigger directory access FAILURE event log
+    - name: Attempt to access C:\Directory 
+      ansible.windows.win_shell: |
+        try {
+          Get-ChildItem -LiteralPath 'C:\Directory' -Force | Out-Null
+        } catch {
+          # Failure expected due to deny ACE
+        }
+      ignore_errors: true                                       # Ansible continue executing reguardless of errors thrown
+      changed_when: false
+    
+    # Allow time for event log to generate
+    - name: Sleep for event long write
+      ansible.builtin.pause:
+        seconds: 3
+
+    # Query Event ID 4656 since Start Time
+    - name: Query ID 4656 since start time
+      ansible.windows.win_shell: |
+        $Start = [datetime]::Parse('{{ check_start.stdout | trim }}')
+        $events = Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=4656; StartTime=$Start }
+        $eventCount = $events.Count
+        $eventResult = $null
+        foreach ($evt in $events) {
+          $message = $evt.FormatDescription().Split("`n")[0].Trim()
+          if ($evt.KeywordsDisplayNames -contains 'Audit Failure') {
+            $eventResult = [PSCustomObject]@{
+              id          = $evt.Id
+              found       = $true
+              timestamp   = $evt.TimeCreated
+              audit       = 'Audit Failure'
+              logName     = $evt.LogName
+              summary     = "Event ID 4656 ($message) FOUND out of $eventCount event(s)."
+            }
+            break
+          }
+        }
+
+        if ($null -eq $eventResult) {
+          $eventResult = [PSCustomObject]@{
+            id          = $null
+            found       = $false
+            timestamp   = $null
+            audit       = $null
+            logName     = $null
+            summary     = 'Event ID 4656 NOT FOUND out of $eventCount event(s).'
+          }
+        }
+        $eventResult | ConvertTo-Json -Depth 5
+      register: evt_check
+      changed_when: false
+  
+    - name: Parse event check result
+      ansible.builtin.set_fact:
+        audit_result: "{{ evt_check.stdout | from_json }}"
+
+    - name: Show event summary
+      ansible.builtin.debug:
+        var: audit_result
+    
+    - name: Assert requirement pass/fail (Audit Failure required)
+      ansible.builtin.assert:
+        that:
+          - audit_result.found | bool
+        success_msg: >-
+          Requirement PASSED: Found Security event {{ audit_result.id }} at {{ audit_result.timestamp }}
+          with audit status '{{ audit_result.audit }}'.
+        fail_msg: >-
+          Requirement FAILED: {{ audit_result.summary }}.
+          Last check -> found={{ audit_result.found }}, audit='{{ audit_result.audit }}',
+          time={{ audit_result.timestamp }}.
+
+  # rescue:
+  #   - name: Rule check has failed
+  #     set variable to error thrown
+
+  always:
+  - name: Check if C:\Directory exists
+    ansible.windows.win_stat:
+      path: C:\Directory
+    register: dir_check
+
+  - name: Remove deny permissions on user
+    ansible.builtin.win_acl:
+      path: C:\Directory
+      user: Administrators
+      rights: 'FullControl'
+      type: 'deny'
+      state: absent
+    when: dir_check.stat.exists
+
+  - name: Remove C:\Directory
+    ansible.windows.win_file:
+      path: C:\Directory
+      state: absent
+    when: dir_check.stat.exists
