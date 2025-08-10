@@ -1,131 +1,203 @@
+# Requires: collections:
+#   - community.windows
 
----
-- tags: 
-    - req1-SDSO-8167
-    - SDSO-8167
+- name: SDSO-8167 — Failed directory access generates event log
+  vars:
+    test_id: "SDSO-8167"
+    test_req: "The Windows OS Workstation shall generate an event log for failed directory access."
+    test_directory: "AuditFailProbe"
+    test_path: "C:\\{{ test_directory }}"
+    audit_user: "Everyone"             # principal for SACL
+    deny_user: "Administrators"        # who will attempt access (the play usually runs as Admin)
+    # audit policy subcategory we need
+    audit_subcat: "File System"
   block:
-    - name: The Windows Operating System Workstation shall generate an event log for failed directory access
-      ansible.builtin.meta: noop
 
-    - name: Create directory in C:\
-      ansible.builtin.win_file: 
-        path: C:\Directory
+    - name: Init test result container
+      ansible.builtin.set_fact:
+        test_results: {}
+
+    - name: Capture current audit policy for restore
+      community.windows.win_audit_policy_system:
+        subcategory: "{{ audit_subcat }}"
+        state: query
+      register: _orig_audit
+
+    - name: Ensure Audit Policy 'File System' is enabled for Failure
+      community.windows.win_audit_policy_system:
+        subcategory: "{{ audit_subcat }}"
+        failure: enable
+
+    - name: Ensure clean slate for test directory
+      ansible.windows.win_file:
+        path: "{{ test_path }}"
+        state: absent
+
+    - name: Create test directory
+      ansible.windows.win_file:
+        path: "{{ test_path }}"
         state: directory
 
-    - name: Set directory security properties
-      ansible.builtin.win_audit_rule:
-        path: C:\Directory
-        user: Administrators
-        principal: Everyone
-        rights: FullControl
-        audit_flags: failure
-    
-    - name: Set deny permissions on user
-      ansible.builtin.win_acl:
-        path: C:\Directory
-        user: Administrators
-        rights: 'FullControl'
-        type: 'deny'
-    
-     # Capture TIMESTAMP before triggering directory access failure
-    - name: Capture timestamp before triggering event log
+    - name: Apply SACL audit rule (failure) on test directory
+      community.windows.win_audit_rule:
+        path: "{{ test_path }}"
+        user: "{{ audit_user }}"
+        rights:
+          - read
+          - write
+          - execute
+        audit_flags:
+          - failure
+        state: present
+
+    - name: Apply DENY read/list to force an access failure
+      ansible.windows.win_acl:
+        path: "{{ test_path }}"
+        user: "{{ deny_user }}"
+        rights:
+          - read
+          - list
+        type: deny
+        state: present
+
+    - name: Timestamp (ISO 8601) before access attempt
       ansible.windows.win_shell: '(Get-Date).ToString("o")'
-      register: check_start                                     # Capture output of a task and store in a variable
-      changed_when: false                                       # Ensures task is not marked as changed
-
-    # Trigger directory access FAILURE event log
-    - name: Attempt to access C:\Directory 
-      ansible.windows.win_shell: |
-        try {
-          Get-ChildItem -LiteralPath 'C:\Directory' -Force | Out-Null
-        } catch {
-          # Failure expected due to deny ACE
-        }
-      ignore_errors: true                                       # Ansible continue executing reguardless of errors thrown
+      register: check_start
       changed_when: false
-    
-    # Allow time for event log to generate
-    - name: Sleep for event long write
-      ansible.builtin.pause:
-        seconds: 3
 
-    # Query Event ID 4656 since Start Time
-    - name: Query ID 4656 since start time
+    - name: Attempt to access directory (expect AccessDenied)
+      ansible.windows.win_shell: |
+        $ErrorActionPreference = 'Stop'
+        try {
+          Get-ChildItem -LiteralPath '{{ test_path }}' -Force | Out-Null
+          Write-Output 'ACCESS_SUCCEEDED'
+          exit 0
+        } catch {
+          Write-Output 'ACCESS_FAILED'
+          exit 1
+        }
+      register: access_attempt
+      # We EXPECT a failure. If it succeeded, that’s a test failure.
+      failed_when: access_attempt.rc == 0
+      changed_when: false
+
+    # Poll a few times for the event to land instead of sleeping blindly
+    - name: Query Security log for 4656/4663 Audit Failure tied to our path
       ansible.windows.win_shell: |
         $Start = [datetime]::Parse('{{ check_start.stdout | trim }}')
-        $events = Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=4656; StartTime=$Start }
-        $eventCount = $events.Count
-        $eventResult = $null
+        $target = [regex]::Escape('{{ test_path }}')
+        # 4656 = handle requested; 4663 = access attempt
+        $ids = 4656,4663
+        $events = Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=$ids; StartTime=$Start } -ErrorAction SilentlyContinue
+        $match = $null
         foreach ($evt in $events) {
-          $message = $evt.FormatDescription().Split("`n")[0].Trim()
-          if ($evt.KeywordsDisplayNames -contains 'Audit Failure') {
-            $eventResult = [PSCustomObject]@{
-              id          = $evt.Id
-              found       = $true
-              timestamp   = $evt.TimeCreated
-              audit       = 'Audit Failure'
-              logName     = $evt.LogName
-              summary     = "Event ID 4656 ($message) FOUND out of $eventCount event(s)."
+          $isFailure = $evt.KeywordsDisplayNames -contains 'Audit Failure'
+          if (-not $isFailure) { continue }
+          $render = $evt.FormatDescription()
+          if ($render -match $target) {
+            $match = [PSCustomObject]@{
+              id        = $evt.Id
+              time      = $evt.TimeCreated.ToString('yyyy-MM-dd HH:mm:ss')
+              audit     = 'Audit Failure'
+              log       = $evt.LogName
+              message   = ($render -split "`r?`n")[0].Trim()
             }
             break
           }
         }
-
-        if ($null -eq $eventResult) {
-          $eventResult = [PSCustomObject]@{
-            id          = $null
-            found       = $false
-            timestamp   = $null
-            audit       = $null
-            logName     = $null
-            summary     = 'Event ID 4656 NOT FOUND out of $eventCount event(s).'
-          }
+        if ($null -eq $match) {
+          [PSCustomObject]@{ found = $false } | ConvertTo-Json -Depth 4
+        } else {
+          $match | Select-Object @{n='found';e={$true}}, * | ConvertTo-Json -Depth 6
         }
-        $eventResult | ConvertTo-Json -Depth 5
       register: evt_check
       changed_when: false
-  
-    - name: Parse event check result
+      retries: 5
+      delay: 2
+      until: evt_check.stdout is search('"found": true')
+
+    - name: Parse event query result
       ansible.builtin.set_fact:
         audit_result: "{{ evt_check.stdout | from_json }}"
 
-    - name: Show event summary
-      ansible.builtin.debug:
-        var: audit_result
-    
-    - name: Assert requirement pass/fail (Audit Failure required)
+    - name: Assert that an Audit Failure was found
       ansible.builtin.assert:
         that:
-          - audit_result.found | bool
-        success_msg: >-
-          Requirement PASSED: Found Security event {{ audit_result.id }} at {{ audit_result.timestamp }}
-          with audit status '{{ audit_result.audit }}'.
-        fail_msg: >-
-          Requirement FAILED: {{ audit_result.summary }}.
-          Last check -> found={{ audit_result.found }}, audit='{{ audit_result.audit }}',
-          time={{ audit_result.timestamp }}.
+          - audit_result.found | default(false) | bool
+        success_msg: "Audit Failure event (4656/4663) found for {{ test_path }}"
+        fail_msg: "No Audit Failure event found for {{ test_path }} since {{ check_start.stdout | trim }}."
+      changed_when: false
 
-  # rescue:
-  #   - name: Rule check has failed
-  #     set variable to error thrown
+    - name: Record PASS
+      ansible.builtin.set_fact:
+        test_results: >-
+          {{ test_results | combine({
+            test_id: {
+              'requirement': test_req,
+              'status': 'Pass',
+              'details': audit_result | default({})
+            }
+          }, recursive=True) }}
+
+  rescue:
+    - name: Record FAIL (capture context)
+      ansible.builtin.set_fact:
+        test_results: >-
+          {{ test_results | combine({
+            test_id: {
+              'requirement': test_req,
+              'status': 'Fail',
+              'details': {
+                'access_attempt_rc': access_attempt.rc | default('n/a'),
+                'access_attempt_stdout': access_attempt.stdout | default(''),
+                'audit_query_raw': evt_check.stdout | default(''),
+                'since': check_start.stdout | default('')
+              }
+            }
+          }, recursive=True) }}
+
+    - name: Show failure context
+      ansible.builtin.debug:
+        var: test_results[test_id]
 
   always:
-  - name: Check if C:\Directory exists
-    ansible.windows.win_stat:
-      path: C:\Directory
-    register: dir_check
+    - name: Remove DENY ACL
+      ansible.windows.win_acl:
+        path: "{{ test_path }}"
+        user: "{{ deny_user }}"
+        rights:
+          - read
+          - list
+        type: deny
+        state: absent
+      ignore_errors: true
 
-  - name: Remove deny permissions on user
-    ansible.builtin.win_acl:
-      path: C:\Directory
-      user: Administrators
-      rights: 'FullControl'
-      type: 'deny'
-      state: absent
-    when: dir_check.stat.exists
+    - name: Remove SACL audit rule
+      community.windows.win_audit_rule:
+        path: "{{ test_path }}"
+        user: "{{ audit_user }}"
+        rights:
+          - read
+          - write
+          - execute
+        audit_flags:
+          - failure
+        state: absent
+      ignore_errors: true
 
-  - name: Remove C:\Directory
-    ansible.windows.win_file:
-      path: C:\Directory
-      state: absent
-    when: dir_check.stat.exists
+    - name: Delete test directory
+      ansible.windows.win_file:
+        path: "{{ test_path }}"
+        state: absent
+      ignore_errors: true
+
+    - name: Restore original audit policy (if we changed it)
+      when: _orig_audit is defined and (_orig_audit.subcategory[0].failure | lower) not in ['enable','enabled','true']
+      community.windows.win_audit_policy_system:
+        subcategory: "{{ audit_subcat }}"
+        failure: disable
+      ignore_errors: true
+
+    - name: Display final result
+      ansible.builtin.debug:
+        var: test_results[test_id]
