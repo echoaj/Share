@@ -1,25 +1,3 @@
-- block:
-    - name: Run event log query and check for Audit Failure
-      # your existing PowerShell event logic here
-      register: evt_check
-      changed_when: false
-
-    - name: Parse event check result
+    - name: Initialize test result tracker
       ansible.builtin.set_fact:
-        audit_result: "{{ evt_check.stdout | from_json }}"
-
-    - name: Set test result - pass/fail
-      ansible.builtin.set_fact:
-        test_results: >-
-          {{ test_results | combine({
-            'SDSO-8167': (
-              'Pass' if audit_result.found | bool else 'Fail'
-            )
-          }) }}
-  rescue:
-    - name: Set test result - runtime error
-      ansible.builtin.set_fact:
-        test_results: >-
-          {{ test_results | combine({
-            'SDSO-8167': 'Error'
-          }) }}
+        test_results: {}
