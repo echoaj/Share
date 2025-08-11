@@ -1,3 +1,24 @@
 How may I verifiy this cybersecurity requirement.  Can I do it by trying to execute powershell not as admin and see if it lets me?  how would you approach it?
 
 The Windows Operating System Workstation shall restrict a software application from executing at a higher privilege level than the executing user.
+
+
+- name: Create and remove temporary Windows user cyber-test-500
+  block:
+    - name: Create temporary user cyber-test-500
+      ansible.windows.win_user:
+        name: cyber-test-500
+        password: 'P@ssw0rd123!'  # Windows requires a password that meets complexity rules
+        state: present
+        groups:
+          - Users
+
+    - name: Do whatever tests you need
+      ansible.builtin.debug:
+        msg: "Running tests with user cyber-test-500..."
+
+  always:
+    - name: Remove temporary user cyber-test-500
+      ansible.windows.win_user:
+        name: cyber-test-500
+        state: absent
