@@ -1,5 +1,64 @@
-I am trying to write a powershell script that verifies that a user can't execute powershell as higher privilege.
+I have so ansible code below.  I am able to create a user account but I can't figure out how to then log in using that user account.  I keep getting errors.
+The error reads as follow:
+'
+ERROR! conflicting action statements: ansible.windows.win_shell, become_password
 
-Start-Process powershell -Verb runAs
+The error appears to be in '/home/n29392/cs2/windows-workstation/tasks/access-restrictions-role-based-access--restrict-software-from-executing-at-higher-privilege-than-executing-user.yaml': line 34, column 7, but may
+be elsewhere in the file depending on the exact syntax problem.
 
-When I run the above command a User Account Control dialog appers.  I don't want it to appear though, I just want to get the error response for when I run that command.
+The offending line appears to be:
+
+
+    - name: Show who I am as the temporary user
+      ^ here"
+'
+
+This is the ansible code I have below
+---
+
+- tags: 
+    - req15-SDSO-8167
+    - SDSO-8167
+  block:
+    - name: The Windows Operating System Workstation shall restrict a software application from executing at a higher privilege level than the
+    
+      ansible.builtin.meta: noop
+    
+    - name: Initialize test result tracker
+      ansible.builtin.set_fact:
+        test_results: {}
+
+    - name: Create temporary user cyber-test-500
+      ansible.windows.win_user:
+        name: cyber-test-500
+        password: Cbr25!$#frK@ml7
+        state: present
+        groups:
+          - Users
+        account_disabled: no
+        password_expired: no
+        password_never_expires: yes
+    
+    - name: Pause for 2 min
+      ansible.builtin.pause:
+        seconds: 5
+        
+    - name: Show who I am as the temporary user
+      ansible.windows.win_shell: whoami
+      become: yes
+      become_method: runas
+      become_user: '.\cyber-test-500'
+      become_password: Cbr25!$#frK@ml7
+      become_flags: logon_type=interavtive
+      register: identity_output
+
+    - name: Display identity and groups
+      ansible.builtin.debug:
+        msg: "{{ identity_output.stdout_lines }}"
+
+  always:
+    - name: Remove temporary user cyber-test-500
+      ansible.windows.win_user:
+        name: cyber-test-500
+        state: absent
+
