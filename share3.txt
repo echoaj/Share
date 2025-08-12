@@ -1,45 +1,5 @@
-How may I verifiy this cybersecurity requirement.  Can I do it by trying to execute powershell not as admin and see if it lets me?  how would you approach it?
+I am trying to write a powershell script that verifies that a user can't execute powershell as higher privilege.
 
-The Windows Operating System Workstation shall restrict a software application from executing at a higher privilege level than the executing user.
+Start-Process powershell -Verb runAs
 
-
-- name: Create and remove temporary Windows user cyber-test-500
-  block:
-    - name: Create temporary user cyber-test-500
-      ansible.windows.win_user:
-        name: cyber-test-500
-        password: 'P@ssw0rd123!'  # Windows requires a password that meets complexity rules
-        state: present
-        groups:
-          - Users
-
-    - name: Do whatever tests you need
-      ansible.builtin.debug:
-        msg: "Running tests with user cyber-test-500..."
-
-  always:
-    - name: Remove temporary user cyber-test-500
-      ansible.windows.win_user:
-        name: cyber-test-500
-        state: absent
-
-
-
-
-
-
-
-- name: Show who I am as the temporary user
-      ansible.windows.win_shell: |
-        whoami
-        whoami /groups
-      become: yes
-      become_user: "{{ temp_user }}"
-      become_method: runas
-      vars:
-        ansible_become_password: "{{ temp_password }}"
-      register: identity_output
-
-    - name: Display identity and groups
-      ansible.builtin.debug:
-        msg: "{{ identity_output.stdout_lines }
+When I run the above command a User Account Control dialog appers.  I don't want it to appear though, I just want to get the error response for when I run that command.
