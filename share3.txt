@@ -1,3 +1,15 @@
+Looks like that solved my previous error but Now I get the error:
+An exception occurred during task execution. To see the full traceback, use -vvv. The error was:    at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)
+fatal: [192.168.5.11]: FAILED! => {"changed": false, "msg": "internal error: failed to become user 'Administrator': Exception calling \"CreateProcessAsUser\" with \"9\" argument(s): \"Failed to logon .\\Administrator (The user name or password is incorrect, Win32ErrorCode 1326 - 0x0000052E)\""}
+
+
+
+
+
+
+
+
+
 I have so ansible code below.  I am able to create a user account but I can't figure out how to then log in using that user account.  I keep getting errors.
 The error reads as follow:
 '
