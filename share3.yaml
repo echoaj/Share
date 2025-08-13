@@ -1,0 +1,67 @@
+I am writting ansible code to essentially creata a normal non-admin user, log in, and try to run powershell as admin.
+That should trigger UAC (User account control).  However I get this error:
+
+"
+k: [192.168.5.11] => {
+    "msg": [
+        "Start-Process : This command cannot be run due to the error: This operation requires an ",
+        "interactive window station.",
+        "At line:1 char:1",
+        "+ Start-Process powershell -Verb RunAs",
+        "+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+        "    + CategoryInfo          : InvalidOperation: (:) [Start-Process], InvalidOperationException",
+        "    + FullyQualifiedErrorId : InvalidOperationException,Microsoft.PowerShell.Commands.StartProcess ",
+        "   Command",
+        " ",
+        ""
+    ]
+}
+"
+
+Is it possible to fix my code below to fix this error?  Or is automating this pretty much not possible beause UAC requires an interactive session (meaning a physical user must be logged into the machine and click on the GUI)
+
+
+- tags: 
+    - req15-SDSO-8167
+    - SDSO-8167
+  block:
+    
+    - name: Initialize test result tracker
+      ansible.builtin.set_fact:
+        test_results: {}
+
+    - name: Create temporary user cyber-test-500
+      ansible.windows.win_user:
+        name: cyber-test-500
+        password: Cbr25!$#frK@ml7
+        state: present
+        groups:
+          - Users
+        account_disabled: no
+        password_expired: no
+        password_never_expires: yes
+        
+    - name: Show who I am as the temporary user
+      ansible.windows.win_shell: |
+        try {
+          $output = Invoke-Expression 'Start-Process powershell -Verb RunAs' -ErrorAction Stop
+        }
+        catch {
+          $output = $_ | Out-String
+        }
+        $output
+      vars:
+        ansible_become: yes
+        ansible_become_method: runas
+        ansible_become_user: '.\\cyber-test-500'
+        ansible_become_password: Cbr25!$#frK@ml7
+        ansible_become_flags: "logon_type=interactive"
+      register: identity
+
+    - name: Display identity and groups
+      ansible.builtin.debug:
+        msg: "{{ identity.stdout_lines }}"
+
+
+
+
