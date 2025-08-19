@@ -7,4 +7,29 @@ git add .
 git commit -m $args[0]
 git push
 }
-function graph { git log --oneline --decorate --graph }
+function graph { git log --oneline --decorate --graph }# Open your useful commands folder in VS Code
+snips() {
+    code "/mnt/c/Users/N29392/OneDrive - NGC/Documents/UsefulCommands/"
+}
+
+# Change to Documents
+docs() {
+    cd "/mnt/c/Users/N29392/OneDrive - NGC/Documents/"
+}
+
+# Change to Desktop
+desk() {
+    cd "/mnt/c/Users/N29392/OneDrive - NGC/Desktop/"
+}
+
+# Git add, commit, push
+gall() {
+    git add .
+    git commit -m "$1"
+    git push
+}
+
+# Git log graph
+graph() {
+    git log --oneline --decorate --graph
+}
