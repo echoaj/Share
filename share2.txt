@@ -1,35 +1,19 @@
-How would I write this same code in bash.  I am trying to make shortcuts so I can just type gall in the terminal and it will add, commit, and push my code.:
-function snips { code "C:\Users\N29392\OneDrive - NGC\Documents\UsefulCommands\"}
-function docs { Set-Location "C:\Users\N29392\OneDrive - NGC\Documents\"}
-function desk { Set-Location "C:\Users\N29392\OneDrive - NGC\Desktop\"}
-function gall {
-git add .
-git commit -m $args[0]
-git push
-}
-function graph { git log --oneline --decorate --graph }# Open your useful commands folder in VS Code
-snips() {
-    code "/mnt/c/Users/N29392/OneDrive - NGC/Documents/UsefulCommands/"
-}
+- name: Query interactive session ID(s)
+  ansible.windows.win_shell: |
+    quser | Select-String -Pattern '^\s*(\S+)\s+(\S+)\s+(\d+)\s+' | ForEach-Object {
+      [pscustomobject]@{
+        User = $_.Matches[0].Groups[1].Value
+        Id   = [int]$_.Matches[0].Groups[3].Value
+      }
+    } | ConvertTo-Json
+  register: quser_out
+  changed_when: false
 
-# Change to Documents
-docs() {
-    cd "/mnt/c/Users/N29392/OneDrive - NGC/Documents/"
-}
+- name: Parse quser
+  ansible.builtin.set_fact:
+    sessions: "{{ quser_out.stdout | from_json | community.general.json_query(\"[?User=='{{ test_username }}'].Id\") }}"
 
-# Change to Desktop
-desk() {
-    cd "/mnt/c/Users/N29392/OneDrive - NGC/Desktop/"
-}
-
-# Git add, commit, push
-gall() {
-    git add .
-    git commit -m "$1"
-    git push
-}
-
-# Git log graph
-graph() {
-    git log --oneline --decorate --graph
-}
+- name: Log off the temp user's session by ID
+  ansible.windows.win_shell: "logoff {{ item }}"
+  loop: "{{ sessions }}"
+  when: sessions | length > 0
