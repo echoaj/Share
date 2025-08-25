@@ -1,19 +1,84 @@
-- name: Query interactive session ID(s)
-  ansible.windows.win_shell: |
-    quser | Select-String -Pattern '^\s*(\S+)\s+(\S+)\s+(\d+)\s+' | ForEach-Object {
-      [pscustomobject]@{
-        User = $_.Matches[0].Groups[1].Value
-        Id   = [int]$_.Matches[0].Groups[3].Value
-      }
-    } | ConvertTo-Json
-  register: quser_out
-  changed_when: false
+- vars:
+    test_user: "{{ test_username }}"
+    test_pass: "{{ test_password }}"
+    task_name: "ansible-4634-proof-{{ test_username }}"
+  block:
+    - name: Capture timestamp before creating the logon session
+      ansible.windows.win_shell: '(Get-Date).ToString("o")'
+      register: check_start
+      changed_when: false
 
-- name: Parse quser
-  ansible.builtin.set_fact:
-    sessions: "{{ quser_out.stdout | from_json | community.general.json_query(\"[?User=='{{ test_username }}'].Id\") }}"
+    # Create a one-off scheduled task that runs under the user's credentials.
+    # This creates a non-interactive logon session (LogonType=Batch/4 or Service-like),
+    # and ending the task will emit Event ID 4634 for that account.
+    - name: Create scheduled task under the test user
+      community.windows.win_scheduled_task:
+        name: "{{ task_name }}"
+        description: "Emit 4634 by creating a short-lived logon session for {{ test_user }}"
+        actions:
+          - path: cmd.exe
+            arguments: /c whoami & timeout /t 2 /nobreak >nul
+        triggers:
+          - type: once
+            start_boundary: "{{ (ansible_date_time.iso8601 | regex_replace('Z$','')) }}"
+        username: ".\\{{ test_user }}"
+        password: "{{ test_pass }}"
+        logon_type: password            # run whether user is logged on or not (non-interactive)
+        run_level: limited
+        enabled: yes
+        state: present
 
-- name: Log off the temp user's session by ID
-  ansible.windows.win_shell: "logoff {{ item }}"
-  loop: "{{ sessions }}"
-  when: sessions | length > 0
+    - name: Start the scheduled task
+      ansible.windows.win_shell: 'schtasks /run /tn "{{ task_name }}"'
+      register: run_task
+      changed_when: "'SUCCESS' in run_task.stdout"
+
+    # Poll until the task finishes (ready = not running).
+    - name: Wait for task to complete
+      ansible.windows.win_shell: |
+        $s = schtasks /query /tn "{{ task_name }}" /fo list /v
+        if ($s -match 'Status:\s+Ready') { 'done' } else { 'running' }
+      register: task_state
+      retries: 15
+      delay: 2
+      until: task_state.stdout | trim == 'done'
+      changed_when: false
+
+    - name: Delete scheduled task
+      community.windows.win_scheduled_task:
+        name: "{{ task_name }}"
+        state: absent
+
+    # Query Event ID 4634 for the specific user since start time
+    - name: Query 4634 since start for {{ test_user }}
+      ansible.windows.win_shell: |
+        $Start = [datetime]::Parse('{{ check_start.stdout | trim }}')
+        $u = '{{ test_user }}'
+        $events = Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=4634; StartTime=$Start }
+        # Match on the rendered description to keep it simple/robust
+        $hit = $null
+        foreach($e in $events){
+          $txt = $e.FormatDescription()
+          if($txt -match "(?im)^Account Name:\s+$u\s*$"){ $hit = $e; break }
+        }
+        if($hit){
+          [pscustomobject]@{
+            found = $true
+            id = $hit.Id
+            time = $hit.TimeCreated.ToString('yyyy-MM-dd HH:mm:ss')
+            summary = "4634 for user '{{ test_user }}' found."
+          } | ConvertTo-Json
+        } else {
+          [pscustomobject]@{
+            found = $false
+            id = $null
+            time = $null
+            summary = "4634 for user '{{ test_user }}' NOT found."
+          } | ConvertTo-Json
+        }
+      register: evt_check
+      changed_when: false
+
+    - name: Show result
+      ansible.builtin.debug:
+        var: evt_check.stdout
