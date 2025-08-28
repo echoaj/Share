@@ -1,2 +1,3 @@
-Req18.  The Windows Operating System Workstation shall monitor user account activities for misuse.
-Req19.  The Windows Operating System Workstation shall monitor user account usage activities.
+Req1.  The Windows Operating System Workstation shall allow auditing of denied network traffic event logs.
+Req3.  The Windows Operating System Workstation shall allow for auditing of local security event logs.
+Req7.  The Windows Operating System Workstation shall allow for local audit logs to be processed by specific events of interests.
