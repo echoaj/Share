@@ -1,3 +1,8 @@
 Req1.  The Windows Operating System Workstation shall allow auditing of denied network traffic event logs.
 Req3.  The Windows Operating System Workstation shall allow for auditing of local security event logs.
 Req7.  The Windows Operating System Workstation shall allow for local audit logs to be processed by specific events of interests.
+
+
+sudo rsync -aAXHv --delete --exclude={"/mnt/storage/*","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/lost+found"} / /mnt/storage/backup
+
+sudo dd if=/dev/sda of=/mnt/storage/debian.img bs=64K status=progress
