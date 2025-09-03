@@ -1,16 +1,6 @@
-I have this ansible code that tries to log in a user.  I was told to get rid of the ignore_errors: true and instead use change_when or failed_when with a result code.
-This task is successful when the user fails to log in.  The expected output is that they can't log in, there should be an error code and it should move onto the next task.  
+I want to change my ansible task so that it will print out identity.msg if it exists because sometimes identity has the .msg defined and sometimes it doesn't.
+Or make it so it prints out either identity.stdout_lines or identiry.msg depending one exists.
 
-
-    - name: Log in fail attempt for {{ test_username }}
-      ansible.windows.win_shell: |
-        Write-Output "This should not run."
-      vars:
-        ansible_become: true
-        ansible_become_method: runas
-        ansible_become_user: '.\\{{ test_username }}'
-        ansible_become_password: "{{ test_password }}"
-        ansible_become_flags: "logon_type=interactive"
-      register: identity
-      # ignore_errors: true
-      no_log: true
+- name: Display log in result
+      ansible.builtin.debug:
+        msg: "{{ identity.msg }}"
