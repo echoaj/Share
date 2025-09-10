@@ -3,30 +3,27 @@
     src: 'C:\Program Files\SplunkUniversalForwarder\etc\system\local\inputs.conf'
   register: inputs_b64
 
-- name: Decode inputs.conf
+- name: Decode and split into lines
   ansible.builtin.set_fact:
-    inputs_text: "{{ inputs_b64.content | b64decode }}"
+    inputs_lines: "{{ (inputs_b64.content | b64decode).splitlines() }}"
 
-- name: Read inputs.conf
-  ansible.builtin.slurp:
-    src: 'C:\Program Files\SplunkUniversalForwarder\etc\system\local\inputs.conf'
-  register: inputs_b64
-
-- name: Decode inputs.conf
+- name: Filter disabled lines (ignore comments)
   ansible.builtin.set_fact:
-    inputs_text: "{{ inputs_b64.content | b64decode }}"
+    disabled_lines: >-
+      {{ inputs_lines
+         | select('match', '(?i)^\\s*[^#].*disabled')
+         | map('regex_replace', '\\s+', '')    # remove ALL whitespace
+         | list }}
 
-# Look for any uncommented line with "disabled = 0" or "disabled = false"
-- name: Check if any input is enabled
+- name: Debug filtered lines
+  ansible.builtin.debug:
+    var: disabled_lines
+
+- name: Set flag if any line is disabled=0 or disabled=false
   ansible.builtin.set_fact:
-    has_enabled: >-
-      {{
-        (inputs_text |
-         regex_search('(?im)^\\s*(?!#)\\s*disabled\\s*=\\s*(0|false)\\s*$')
-        ) is not none
-      }}
+    has_enabled: "{{ disabled_lines | select('match', '(?i)^disabled=(0|false)$') | list | length > 0 }}"
 
-- name: Fail if no enabled inputs found
+- name: Fail if no enabled input found
   ansible.builtin.fail:
-    msg: "inputs.conf has no enabled lines (disabled = 0/false)."
+    msg: "No enabled (disabled=0/false) entries found in inputs.conf"
   when: not has_enabled
