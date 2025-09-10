@@ -1,6 +1,8 @@
-I want to change my ansible task so that it will print out identity.msg if it exists because sometimes identity has the .msg defined and sometimes it doesn't.
-Or make it so it prints out either identity.stdout_lines or identiry.msg depending one exists.
 
-- name: Display log in result
-      ansible.builtin.debug:
-        msg: "{{ identity.msg }}"
+I have this ansible task that executes the splunk forwarder service to verify it is running.  When I do it in powershell it works, it says Running but doing it in ansible fail.
+- name: Get splunk forwarder
+      ansible.windows.win_command: Get-Service -Name Splunkforwarder
+
+Why am I getting a failure?
+ASK [windows-workstation : Get splunk forwarder] *******************************************
+fatal: [192.168.5.11]: FAILED! => {"changed": false, "cmd": "Get-Service -Name Splunkforwarder", "msg": "Failed to run: 'Get-Service -Name Splunkforwarder': Exception calling \"CreateProcess\" with \"7\" argument(s): \"CreateProcessW() failed (The system cannot find the file specified, Win32ErrorCode 2 - 0x00000002)\"", "rc": 2}
