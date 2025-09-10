@@ -18,3 +18,21 @@ index=wineventlog
 [WinEventLog://Setup]
 disabled = 1
 index=wineventlog
+
+
+
+
+
+File Edit Format View Help [tcpout]
+compressed - true
+defaultGroup = default-autolb-group
+[tcpout: default-autolb-group]
+server - cyber-win2022.cybertest.local:9997
+autolBFrequency = 30
+forceTimebasedAutolB - true
+indexerDiscovery - splunkmgr01
+useACK = true
+[tepout-server://indexer01: 9997]
+[indexer_discovery: splunkmgr01]
+pass4SymmKey = $7$6a3f79nRxdCwbCJe1A49fSUpY]tK2crqQQJUrXqd2AmdsE4vRjq41dV31iFgICeb0VtK+pN8dFD9qG1hiBbkwImCX8sHгZ8-
+master uri = https://cyber-win2022.cybertest.local:8089
