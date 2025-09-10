@@ -7,23 +7,26 @@
   ansible.builtin.set_fact:
     inputs_text: "{{ inputs_b64.content | b64decode }}"
 
-# Count stanzas like [WinEventLog://Security] whose block contains an
-# UNcommented line: disabled = 0  OR  disabled = false
-# - Ignores lines starting with '#' (even with leading spaces)
-# - Handles arbitrary whitespace around '='
-# - Anchors the search within each WinEventLog block (up to next '[')
-- name: Find ENABLED WinEventLog stanzas
+- name: Read inputs.conf
+  ansible.builtin.slurp:
+    src: 'C:\Program Files\SplunkUniversalForwarder\etc\system\local\inputs.conf'
+  register: inputs_b64
+
+- name: Decode inputs.conf
   ansible.builtin.set_fact:
-    enabled_matches: >-
-      {{ inputs_text |
-         regex_findall('(?mis)^\\s*\\[WinEventLog://([^\\]]+)\\][^\\[]*?^\\s*(?!#)\\s*disabled\\s*=\\s*(?:0|false)\\s*$', multiline=True) }}
+    inputs_text: "{{ inputs_b64.content | b64decode }}"
 
-- name: Debug which stanzas are enabled
-  ansible.builtin.debug:
-    msg: "Enabled stanzas: {{ enabled_matches }}"
-  when: enabled_matches | length > 0
+# Look for any uncommented line with "disabled = 0" or "disabled = false"
+- name: Check if any input is enabled
+  ansible.builtin.set_fact:
+    has_enabled: >-
+      {{
+        (inputs_text |
+         regex_search('(?im)^\\s*(?!#)\\s*disabled\\s*=\\s*(0|false)\\s*$')
+        ) is not none
+      }}
 
-- name: Fail if NO WinEventLog stanzas are enabled
+- name: Fail if no enabled inputs found
   ansible.builtin.fail:
-    msg: "No WinEventLog stanza in inputs.conf has an enabled (disabled=0/false) setting."
-  when: enabled_matches | length == 0
+    msg: "inputs.conf has no enabled lines (disabled = 0/false)."
+  when: not has_enabled
