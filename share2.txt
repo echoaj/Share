@@ -1,29 +1,14 @@
-- name: Read inputs.conf
-  ansible.builtin.slurp:
-    src: 'C:\Program Files\SplunkUniversalForwarder\etc\system\local\inputs.conf'
-  register: inputs_b64
-
-- name: Decode and split into lines
-  ansible.builtin.set_fact:
-    inputs_lines: "{{ (inputs_b64.content | b64decode).splitlines() }}"
-
-- name: Filter disabled lines (ignore comments)
-  ansible.builtin.set_fact:
-    disabled_lines: >-
-      {{ inputs_lines
-         | select('match', '(?i)^\\s*[^#].*disabled')
-         | map('regex_replace', '\\s+', '')    # remove ALL whitespace
-         | list }}
-
-- name: Debug filtered lines
-  ansible.builtin.debug:
-    var: disabled_lines
-
-- name: Set flag if any line is disabled=0 or disabled=false
-  ansible.builtin.set_fact:
-    has_enabled: "{{ disabled_lines | select('match', '(?i)^disabled=(0|false)$') | list | length > 0 }}"
-
-- name: Fail if no enabled input found
-  ansible.builtin.fail:
-    msg: "No enabled (disabled=0/false) entries found in inputs.conf"
-  when: not has_enabled
+[tepout)
+compressed true
+defaultGroup - default-autolb group
+[tcpout: default-autolb-group]
+server - cyber-win2022.cybertest.local:9997
+autol BFrequency 30
+forceTimebasedAutolB true
+indexerDiscovery = splunkmgr01
+useACK = true
+[tcpout-server: //indexer01:9997]
+[indexer
+_discovery: splunkmgr01
+pass4SymmKey = $7$6a3f79nRxdCwbCJe1A49fSUpY]tK2crqQQ]UrXqd2AmdsE4vRjq41dV3]iFgICeb®VtK+pN8dFD9qG1hiBbkwImCX8sHrZ8=
+master_uri - https://cyber-win2022.cybertest.local:8089
