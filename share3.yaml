@@ -1,38 +1,16 @@
-
-[WinEventLog://Application]
-disabled = 1
-index=wineventlog
-
-[WinEventLog://Security]
-disabled = 0
-index=wineventlog
-
-[WinEventLog://System]
-disabled = 1
-index=wineventlog
-
-[WinEventLog://ForwardedEvents]
-disabled = 1
-index=wineventlog
-
-[WinEventLog://Setup]
-disabled = 1
-index=wineventlog
+I am working with asible and I have target_splunk_host and target_splunk_host_port defined within my inventory.ini file.
+when i print out the the server name and port number it works and is what I want but when i use the same variables in the second task it doesn't work.
+A coeworker said it may have to do with how jinja interpretas strings. I'm not sure what to do.  
 
 
+  # We determine inputs.conf is configured if we find a line where "disabled=" set to false
+    - name: print out server
+      ansible.builtin.debug:
+        msg: 'server={{ target_splunk_host }}:{{ target_splunk_host_port }}'
 
-
-
-File Edit Format View Help [tcpout]
-compressed - true
-defaultGroup = default-autolb-group
-[tcpout: default-autolb-group]
-server - cyber-win2022.cybertest.local:9997
-autolBFrequency = 30
-forceTimebasedAutolB - true
-indexerDiscovery - splunkmgr01
-useACK = true
-[tepout-server://indexer01: 9997]
-[indexer_discovery: splunkmgr01]
-pass4SymmKey = $7$6a3f79nRxdCwbCJe1A49fSUpY]tK2crqQQJUrXqd2AmdsE4vRjq41dV31iFgICeb0VtK+pN8dFD9qG1hiBbkwImCX8sHгZ8-
-master uri = https://cyber-win2022.cybertest.local:8089
+  
+  
+  # We determine inputs.conf is configured if we find a line where "disabled=" set to false
+    - name: Set flag if server degined
+      ansible.builtin.set_fact:
+        server_is_defined: "{{ server_lines | select('match', '(?i)^server={{ target_splunk_host }}:{{ target_splunk_host_port }}$') | list | length > 0 }}"
