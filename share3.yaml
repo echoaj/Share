@@ -1,5 +1,71 @@
-New-NetFirewallRule -DisplayName "Block Outbound Ping to 8.8.8.8" `
-  -Direction Outbound `
-  -Protocol ICMPv4 `
-  -RemoteAddress 8.8.8.8 `
-  -Action Block
+---
+- name: Verify denied network traffic logging via blocked ping
+  hosts: windows
+  gather_facts: no
+  vars:
+    rule_name: "Block Outbound Ping to 8.8.8.8"
+    test_ip: "8.8.8.8"
+    cleanup_after: false   # set true if you want to remove the rule at the end
+
+  tasks:
+    - name: Ensure audit subcategories are enabled (Packet Drop + Connection)
+      ansible.windows.win_shell: |
+        auditpol /set /subcategory:"Filtering Platform Packet Drop" /success:enable /failure:enable
+        auditpol /set /subcategory:"Filtering Platform Connection" /success:enable /failure:enable
+      register: auditpol_set
+
+    - name: Show audit policy status (for evidence)
+      ansible.windows.win_shell: auditpol /get /category:"Object Access"
+      register: auditpol_status
+
+    - name: Create firewall rule to block outbound ICMP to {{ test_ip }}
+      ansible.windows.win_firewall_rule:
+        name: "{{ rule_name }}"
+        direction: Outbound
+        action: Block
+        protocol: ICMPv4
+        remote_addresses: "{{ test_ip }}"
+        enabled: yes
+        state: present
+
+    - name: Trigger a single ping (expect failure/timeouts)
+      ansible.windows.win_command: ping -n 1 {{ test_ip }}
+      register: ping_result
+      ignore_errors: true
+
+    - name: Wait a moment to allow Security events to be written
+      ansible.builtin.pause:
+        seconds: 3
+
+    - name: Query for recent 5152/5157 events (blocked packet/connection)
+      ansible.windows.win_shell: |
+        $since = (Get-Date).AddMinutes(-5)
+        $ids   = 5152,5157
+        Get-WinEvent -FilterHashtable @{LogName='Security'; StartTime=$since; Id=$ids} |
+          Select-Object -First 10 -Property TimeCreated, Id, ProviderName, Message |
+          Format-List *
+      register: wfp_events
+      changed_when: false
+
+    - name: Assert that we captured at least one relevant event
+      ansible.builtin.assert:
+        that:
+          - wfp_events.stdout is search("Id\\s*:\\s*(5152|5157)")
+        fail_msg: >-
+          No WFP 'blocked packet/connection' events (5152/5157) found in the last 5 minutes.
+          Ensure auditing is enabled and the ping was actually blocked.
+        success_msg: "Found WFP deny events (5152/5157) — requirement verified."
+
+    - name: Evidence | Show auditpol status
+      ansible.builtin.debug:
+        var: auditpol_status.stdout_lines
+
+    - name: Evidence | Show sample WFP events
+      ansible.builtin.debug:
+        var: wfp_events.stdout
+
+    - name: Optional cleanup — remove the firewall rule
+      when: cleanup_after
+      ansible.windows.win_firewall_rule:
+        name: "{{ rule_name }}"
+        state: absent
