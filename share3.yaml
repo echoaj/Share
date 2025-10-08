@@ -1,1 +1,5 @@
-
+New-NetFirewallRule -DisplayName "Block Outbound Ping to 8.8.8.8" `
+  -Direction Outbound `
+  -Protocol ICMPv4 `
+  -RemoteAddress 8.8.8.8 `
+  -Action Block
