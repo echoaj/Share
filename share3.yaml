@@ -1,71 +1,47 @@
----
-- name: Verify denied network traffic logging via blocked ping
-  hosts: windows
-  gather_facts: no
-  vars:
-    rule_name: "Block Outbound Ping to 8.8.8.8"
-    test_ip: "8.8.8.8"
-    cleanup_after: false   # set true if you want to remove the rule at the end
+# 1) Services that must not be disabled
+$svc = Get-Service wuauserv,bits,dosvc -ErrorAction SilentlyContinue |
+       Select Name, Status, StartType
 
-  tasks:
-    - name: Ensure audit subcategories are enabled (Packet Drop + Connection)
-      ansible.windows.win_shell: |
-        auditpol /set /subcategory:"Filtering Platform Packet Drop" /success:enable /failure:enable
-        auditpol /set /subcategory:"Filtering Platform Connection" /success:enable /failure:enable
-      register: auditpol_set
+# 2) Policy switches that commonly block updates
+$pol = [pscustomobject]@{
+  NoAutoUpdate              = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' -Name NoAutoUpdate -ErrorAction SilentlyContinue).NoAutoUpdate
+  DisableWindowsUpdateAccess= (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'    -Name DisableWindowsUpdateAccess -ErrorAction SilentlyContinue).DisableWindowsUpdateAccess
+  UseWUServer               = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' -Name UseWUServer -ErrorAction SilentlyContinue).UseWUServer
+}
 
-    - name: Show audit policy status (for evidence)
-      ansible.windows.win_shell: auditpol /get /category:"Object Access"
-      register: auditpol_status
+# 3) Try an actual scan (strongest proof)
+try {
+  $session  = New-Object -ComObject Microsoft.Update.Session
+  $searcher = $session.CreateUpdateSearcher()
+  $res      = $searcher.Search("IsInstalled=0 and Type='Software'")  # scan allowed if this completes
+  $scanCode = $res.ResultCode   # 2=Succeeded, 3=SucceededWithErrors, 4=Failed, 5=Aborted
+} catch {
+  $scanCode = 4  # treat as failed
+}
 
-    - name: Create firewall rule to block outbound ICMP to {{ test_ip }}
-      ansible.windows.win_firewall_rule:
-        name: "{{ rule_name }}"
-        direction: Outbound
-        action: Block
-        protocol: ICMPv4
-        remote_addresses: "{{ test_ip }}"
-        enabled: yes
-        state: present
+# 4) Last successful update events (optional corroboration)
+$evt = Get-WinEvent -FilterHashtable @{
+  LogName='System'; Id=@(19,20,43); ProviderName='Microsoft-Windows-WindowsUpdateClient'
+} -ErrorAction SilentlyContinue | Select -First 1 -Property Id,TimeCreated,Message
 
-    - name: Trigger a single ping (expect failure/timeouts)
-      ansible.windows.win_command: ping -n 1 {{ test_ip }}
-      register: ping_result
-      ignore_errors: true
+# 5) Decide
+$servicesOK = @('wuauserv','bits','dosvc') -notmatch ($svc | Where-Object { $_.Status -eq 'Stopped' -or $_.StartType -eq 'Disabled' } | ForEach-Object Name)
+$policyOK   = -not ($pol.DisableWindowsUpdateAccess -eq 1)
+$scanOK     = $scanCode -in 2,3
 
-    - name: Wait a moment to allow Security events to be written
-      ansible.builtin.pause:
-        seconds: 3
+$result = [pscustomobject]@{
+  Services     = $svc
+  Policy       = $pol
+  ScanResult   = $scanCode
+  AnyWUEvent   = $evt
+  UpdatesPermitted = ($servicesOK -and $policyOK -and $scanOK)
+}
 
-    - name: Query for recent 5152/5157 events (blocked packet/connection)
-      ansible.windows.win_shell: |
-        $since = (Get-Date).AddMinutes(-5)
-        $ids   = 5152,5157
-        Get-WinEvent -FilterHashtable @{LogName='Security'; StartTime=$since; Id=$ids} |
-          Select-Object -First 10 -Property TimeCreated, Id, ProviderName, Message |
-          Format-List *
-      register: wfp_events
-      changed_when: false
+$result | Format-List
+if (-not $result.UpdatesPermitted) { exit 1 } else { exit 0 }
 
-    - name: Assert that we captured at least one relevant event
-      ansible.builtin.assert:
-        that:
-          - wfp_events.stdout is search("Id\\s*:\\s*(5152|5157)")
-        fail_msg: >-
-          No WFP 'blocked packet/connection' events (5152/5157) found in the last 5 minutes.
-          Ensure auditing is enabled and the ping was actually blocked.
-        success_msg: "Found WFP deny events (5152/5157) — requirement verified."
 
-    - name: Evidence | Show auditpol status
-      ansible.builtin.debug:
-        var: auditpol_status.stdout_lines
+$searcher = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateSearcher()
+$scan = $searcher.Search("IsInstalled=0 and Type='Software'"); $scan.ResultCode
+# Expect 2 (Succeeded) or 3 (SucceededWithErrors)
 
-    - name: Evidence | Show sample WFP events
-      ansible.builtin.debug:
-        var: wfp_events.stdout
-
-    - name: Optional cleanup — remove the firewall rule
-      when: cleanup_after
-      ansible.windows.win_firewall_rule:
-        name: "{{ rule_name }}"
-        state: absent
