@@ -1,8 +1,3 @@
-Req1.  The Windows Operating System Workstation shall allow auditing of denied network traffic event logs.
-Req3.  The Windows Operating System Workstation shall allow for auditing of local security event logs.
-Req7.  The Windows Operating System Workstation shall allow for local audit logs to be processed by specific events of interests.
-
-
-sudo rsync -aAXHv --delete --exclude={"/mnt/storage/*","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/lost+found"} / /mnt/storage/backup
-
-sudo dd if=/dev/sda of=/mnt/storage/debian.img bs=64K status=progress
+Create an ansible task that will search for the windows event Id 19.  It is a System id.
+If any event ID 19 is found (regardless of of when) then the task passes and goes onto the next task.
+If it is not found, the rescue block will be triggered.  (Task category is "Windows Update Agent".
