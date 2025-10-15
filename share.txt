@@ -3,3 +3,6 @@ $output = "C:\Path\To\Output.iso"
 $label = "MYISO"
 
 wsl mkisofs -o "$output" -V "$label" -J -R "$source"
+
+
+oscdimg -lMYISO -m -o -u2 -udfver102 "C:\Path\To\YourFolder" "C:\Path\To\Output.iso"
