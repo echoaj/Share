@@ -1,3 +1,5 @@
-Create an ansible task that will search for the windows event Id 19.  It is a System id.
-If any event ID 19 is found (regardless of of when) then the task passes and goes onto the next task.
-If it is not found, the rescue block will be triggered.  (Task category is "Windows Update Agent".
+$source = "C:\Path\To\Folder"
+$output = "C:\Path\To\Output.iso"
+$label = "MYISO"
+
+wsl mkisofs -o "$output" -V "$label" -J -R "$source"
