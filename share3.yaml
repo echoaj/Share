@@ -1,47 +1,65 @@
-# 1) Services that must not be disabled
-$svc = Get-Service wuauserv,bits,dosvc -ErrorAction SilentlyContinue |
-       Select Name, Status, StartType
+---
+# playbooks/check-windows-update-gpo.yml
+- name: Verify Windows Update is enabled by Group Policy
+  hosts: windows
+  gather_facts: no
+  vars:
+    # Treat these AUOptions as acceptable "patching allowed" modes.
+    # 2=notify/notify, 3=auto download + notify, 4=auto download + schedule, 5=local admin chooses
+    approved_auoptions: [2, 3, 4, 5]
 
-# 2) Policy switches that commonly block updates
-$pol = [pscustomobject]@{
-  NoAutoUpdate              = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' -Name NoAutoUpdate -ErrorAction SilentlyContinue).NoAutoUpdate
-  DisableWindowsUpdateAccess= (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate'    -Name DisableWindowsUpdateAccess -ErrorAction SilentlyContinue).DisableWindowsUpdateAccess
-  UseWUServer               = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' -Name UseWUServer -ErrorAction SilentlyContinue).UseWUServer
-}
+  tasks:
+    - name: Check if Windows Update AU policy key exists
+      ansible.windows.win_reg_stat:
+        path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+      register: au_key
 
-# 3) Try an actual scan (strongest proof)
-try {
-  $session  = New-Object -ComObject Microsoft.Update.Session
-  $searcher = $session.CreateUpdateSearcher()
-  $res      = $searcher.Search("IsInstalled=0 and Type='Software'")  # scan allowed if this completes
-  $scanCode = $res.ResultCode   # 2=Succeeded, 3=SucceededWithErrors, 4=Failed, 5=Aborted
-} catch {
-  $scanCode = 4  # treat as failed
-}
+    - name: Read NoAutoUpdate (if present)
+      ansible.windows.win_reg_stat:
+        path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+        name: NoAutoUpdate
+      register: noautoupdate_stat
+      when: au_key.exists
 
-# 4) Last successful update events (optional corroboration)
-$evt = Get-WinEvent -FilterHashtable @{
-  LogName='System'; Id=@(19,20,43); ProviderName='Microsoft-Windows-WindowsUpdateClient'
-} -ErrorAction SilentlyContinue | Select -First 1 -Property Id,TimeCreated,Message
+    - name: Read AUOptions (if present)
+      ansible.windows.win_reg_stat:
+        path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+        name: AUOptions
+      register: auoptions_stat
+      when: au_key.exists
 
-# 5) Decide
-$servicesOK = @('wuauserv','bits','dosvc') -notmatch ($svc | Where-Object { $_.Status -eq 'Stopped' -or $_.StartType -eq 'Disabled' } | ForEach-Object Name)
-$policyOK   = -not ($pol.DisableWindowsUpdateAccess -eq 1)
-$scanOK     = $scanCode -in 2,3
+    - name: Determine compliance
+      ansible.builtin.set_fact:
+        wu_gpo_check:
+          key_exists: "{{ au_key.exists | default(false) }}"
+          no_auto_update_set: "{{ (noautoupdate_stat.value is defined) }}"
+          no_auto_update_value: "{{ (noautoupdate_stat.value | default(None)) }}"
+          auoptions_set: "{{ (auoptions_stat.value is defined) }}"
+          auoptions_value: "{{ (auoptions_stat.value | default(None)) }}"
+          # Compliant when:
+          # - key exists (policy configured) AND
+          # - NoAutoUpdate is either not set or set to 0 (i.e., NOT disabling updates) AND
+          # - AUOptions is either not set (still allows updates) or in approved list.
+          compliant: >-
+            {{
+              (au_key.exists | default(false))
+              and (
+                    (noautoupdate_stat.value is not defined)
+                    or (noautoupdate_stat.value | int == 0)
+                  )
+              and (
+                    (auoptions_stat.value is not defined)
+                    or ((auoptions_stat.value | int) in approved_auoptions)
+                  )
+            }}
 
-$result = [pscustomobject]@{
-  Services     = $svc
-  Policy       = $pol
-  ScanResult   = $scanCode
-  AnyWUEvent   = $evt
-  UpdatesPermitted = ($servicesOK -and $policyOK -and $scanOK)
-}
+    - name: Show Windows Update GPO evaluation
+      ansible.builtin.debug:
+        var: wu_gpo_check
 
-$result | Format-List
-if (-not $result.UpdatesPermitted) { exit 1 } else { exit 0 }
-
-
-$searcher = (New-Object -ComObject Microsoft.Update.Session).CreateUpdateSearcher()
-$scan = $searcher.Search("IsInstalled=0 and Type='Software'"); $scan.ResultCode
-# Expect 2 (Succeeded) or 3 (SucceededWithErrors)
-
+    - name: Fail if non-compliant
+      ansible.builtin.fail:
+        msg: >-
+          Non-Compliant: Windows Update GPO is not enabling OS patching.
+          Details={{ wu_gpo_check }}
+      when: not wu_gpo_check.compliant
