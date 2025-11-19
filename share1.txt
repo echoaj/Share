@@ -1,0 +1,2 @@
+Req8.  The Host Based Security System Server shall behave in a predictable and documented manner when invalid inputs are received.
+Req9.  The Host Based Security System Server shall perform real time scans of files from external sources and endpoints and network entry/exit points as files are downloaded, opened, or executed.
