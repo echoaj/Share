@@ -1,1 +1,120 @@
 
+---
+- name: Get systems from Trellix ePO
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    epo_server: "https://localhost:8443"
+    epo_user: "admin"
+    epo_pass: "Password.123"        # put this in ansible-vault in real life
+
+  tasks:
+    - name: Call ePO system.find (all systems)
+      uri:
+        url: "{{ epo_server }}/remote/system.find"
+        method: GET
+        user: "{{ epo_user }}"
+        password: "{{ epo_pass }}"
+        force_basic_auth: yes
+        validate_certs: no          # self-signed in lab; switch to yes in prod
+        return_content: yes
+        status_code: 200
+        params:
+          searchText: ""            # empty = all systems
+          ":output": "json"         # same as in PowerShell
+      register: epo_raw
+
+    - name: Show raw response content (like Write-Host $content)
+      debug:
+        var: epo_raw.content
+
+    - name: Strip "OK:" prefix if present and parse JSON
+      set_fact:
+        epo_data: >-
+          {{
+            (
+              epo_raw.content[3:]
+              if epo_raw.content is match("^OK:")
+              else epo_raw.content
+            ) | from_json
+          }}
+
+    - name: Show how many systems we got
+      debug:
+        msg: "Found {{ (epo_data.result.list.row | length) | default(0) }} systems."
+
+    - name: Print each system (ComputerName, IP, OS)
+      debug:
+        msg: >-
+          {{ item['EPOComputerProperties.ComputerName'] | default('N/A') }}
+          {{ item['EPOComputerProperties.IPAddress'] | default('N/A') }}
+          {{ item['EPOComputerProperties.OSType'] | default('N/A') }}
+      loop: "{{ epo_data.result.list.row | default([]) }}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+- name: Get systems from Trellix ePO
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    epo_server: "https://localhost:8443"
+    epo_user: "admin"
+    epo_pass: "Password.123"        # put this in ansible-vault in real life
+
+  tasks:
+    - name: Call ePO system.find (all systems)
+      uri:
+        url: "{{ epo_server }}/remote/system.find"
+        method: GET
+        user: "{{ epo_user }}"
+        password: "{{ epo_pass }}"
+        force_basic_auth: yes
+        validate_certs: no          # self-signed in lab; switch to yes in prod
+        return_content: yes
+        status_code: 200
+        params:
+          searchText: ""            # empty = all systems
+          ":output": "json"         # same as in PowerShell
+      register: epo_raw
+
+    - name: Show raw response content (like Write-Host $content)
+      debug:
+        var: epo_raw.content
+
+    - name: Strip "OK:" prefix if present and parse JSON
+      set_fact:
+        epo_data: >-
+          {{
+            (
+              epo_raw.content[3:]
+              if epo_raw.content is match("^OK:")
+              else epo_raw.content
+            ) | from_json
+          }}
+
+    - name: Show how many systems we got
+      debug:
+        msg: "Found {{ (epo_data.result.list.row | length) | default(0) }} systems."
+
+    - name: Print each system (ComputerName, IP, OS)
+      debug:
+        msg: >-
+          {{ item['EPOComputerProperties.ComputerName'] | default('N/A') }}
+          {{ item['EPOComputerProperties.IPAddress'] | default('N/A') }}
+          {{ item['EPOComputerProperties.OSType'] | default('N/A') }}
+      loop: "{{ epo_data.result.list.row | default([]) }}"
