@@ -59,6 +59,55 @@
 
 
 
+---
+- name: Query Trellix ePO API for System Information
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    # --- CONFIGURATION ---
+    # In a production environment, use Ansible Vault for passwords!
+    epo_server: "https://localhost"
+    epo_port: "8443"
+    epo_user: "admin"
+    epo_pass: "Password.123"
+    
+    # The API command we want to run
+    api_endpoint: "/remote/system.find"
+    search_text: "" # Empty returns all systems, similar to your script
+
+  tasks:
+    - name: Call ePO API (system.find)
+      ansible.builtin.uri:
+        url: "{{ epo_server }}:{{ epo_port }}{{ api_endpoint }}?searchText={{ search_text }}&output=json"
+        method: GET
+        user: "{{ epo_user }}"
+        password: "{{ epo_pass }}"
+        force_basic_auth: yes
+        # Equivalent to the C# TrustAllCertsPolicy in your PS script
+        validate_certs: no
+        return_content: yes
+      register: epo_response
+
+    - name: Clean and Parse API Response
+      # ePO often returns "OK:" before the JSON. We must strip it to get valid JSON.
+      ansible.builtin.set_fact:
+        # 1. regex_replace strips the leading "OK:"
+        # 2. from_json converts the string into an Ansible dictionary/list
+        cleaned_json: "{{ epo_response.content | regex_replace('^OK:', '') | trim | from_json }}"
+
+    - name: Display Raw System List
+      ansible.builtin.debug:
+        var: cleaned_json
+
+    - name: Display Specific Fields (Example)
+      # Iterate through the systems and print just the names and IP addresses
+      ansible.builtin.debug:
+        msg: "System: {{ item.EPOComputerProperties.ComputerName }} - IP: {{ item.EPOComputerProperties.IPAddress }}"
+      loop: "{{ cleaned_json }}"
+      loop_control:
+        label: "{{ item.EPOComputerProperties.ComputerName }}"
+
 
 
 
