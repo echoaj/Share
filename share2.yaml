@@ -1,169 +1,18 @@
+- name: Read server.ini
+  ansible.builtin.slurp:
+    src: "C:/Program Files (x86)/Trellix/ePolicy Orchestrator/Server/conf/server.ini"
+  register: server_ini_raw
 
----
-- name: Get systems from Trellix ePO
-  hosts: localhost
-  gather_facts: no
+- name: Decode content
+  ansible.builtin.set_fact:
+    server_ini_content: "{{ server_ini_raw['content'] | b64decode }}"
 
-  vars:
-    epo_server: "https://localhost:8443"
-    epo_user: "admin"
-    epo_pass: "Password.123"        # put this in ansible-vault in real life
+- name: Check for SecureHttpPort
+  ansible.builtin.debug:
+    msg: "SecureHttpPort=8443 FOUND"
+  when: "'SecureHttpPort=8443' in server_ini_content"
 
-  tasks:
-    - name: Call ePO system.find (all systems)
-      uri:
-        url: "{{ epo_server }}/remote/system.find"
-        method: GET
-        user: "{{ epo_user }}"
-        password: "{{ epo_pass }}"
-        force_basic_auth: yes
-        validate_certs: no          # self-signed in lab; switch to yes in prod
-        return_content: yes
-        status_code: 200
-        params:
-          searchText: ""            # empty = all systems
-          ":output": "json"         # same as in PowerShell
-      register: epo_raw
-
-    - name: Show raw response content (like Write-Host $content)
-      debug:
-        var: epo_raw.content
-
-    - name: Strip "OK:" prefix if present and parse JSON
-      set_fact:
-        epo_data: >-
-          {{
-            (
-              epo_raw.content[3:]
-              if epo_raw.content is match("^OK:")
-              else epo_raw.content
-            ) | from_json
-          }}
-
-    - name: Show how many systems we got
-      debug:
-        msg: "Found {{ (epo_data.result.list.row | length) | default(0) }} systems."
-
-    - name: Print each system (ComputerName, IP, OS)
-      debug:
-        msg: >-
-          {{ item['EPOComputerProperties.ComputerName'] | default('N/A') }}
-          {{ item['EPOComputerProperties.IPAddress'] | default('N/A') }}
-          {{ item['EPOComputerProperties.OSType'] | default('N/A') }}
-      loop: "{{ epo_data.result.list.row | default([]) }}"
-
-
-
-
-
-
-
-
----
-- name: Query Trellix ePO API for System Information
-  hosts: localhost
-  connection: local
-  gather_facts: no
-  vars:
-    # --- CONFIGURATION ---
-    # In a production environment, use Ansible Vault for passwords!
-    epo_server: "https://localhost"
-    epo_port: "8443"
-    epo_user: "admin"
-    epo_pass: "Password.123"
-    
-    # The API command we want to run
-    api_endpoint: "/remote/system.find"
-    search_text: "" # Empty returns all systems, similar to your script
-
-  tasks:
-    - name: Call ePO API (system.find)
-      ansible.builtin.uri:
-        url: "{{ epo_server }}:{{ epo_port }}{{ api_endpoint }}?searchText={{ search_text }}&output=json"
-        method: GET
-        user: "{{ epo_user }}"
-        password: "{{ epo_pass }}"
-        force_basic_auth: yes
-        # Equivalent to the C# TrustAllCertsPolicy in your PS script
-        validate_certs: no
-        return_content: yes
-      register: epo_response
-
-    - name: Clean and Parse API Response
-      # ePO often returns "OK:" before the JSON. We must strip it to get valid JSON.
-      ansible.builtin.set_fact:
-        # 1. regex_replace strips the leading "OK:"
-        # 2. from_json converts the string into an Ansible dictionary/list
-        cleaned_json: "{{ epo_response.content | regex_replace('^OK:', '') | trim | from_json }}"
-
-    - name: Display Raw System List
-      ansible.builtin.debug:
-        var: cleaned_json
-
-    - name: Display Specific Fields (Example)
-      # Iterate through the systems and print just the names and IP addresses
-      ansible.builtin.debug:
-        msg: "System: {{ item.EPOComputerProperties.ComputerName }} - IP: {{ item.EPOComputerProperties.IPAddress }}"
-      loop: "{{ cleaned_json }}"
-      loop_control:
-        label: "{{ item.EPOComputerProperties.ComputerName }}"
-
-
-
-
-
-
-
-
----
-- name: Get systems from Trellix ePO
-  hosts: localhost
-  gather_facts: no
-
-  vars:
-    epo_server: "https://localhost:8443"
-    epo_user: "admin"
-    epo_pass: "Password.123"        # put this in ansible-vault in real life
-
-  tasks:
-    - name: Call ePO system.find (all systems)
-      uri:
-        url: "{{ epo_server }}/remote/system.find"
-        method: GET
-        user: "{{ epo_user }}"
-        password: "{{ epo_pass }}"
-        force_basic_auth: yes
-        validate_certs: no          # self-signed in lab; switch to yes in prod
-        return_content: yes
-        status_code: 200
-        params:
-          searchText: ""            # empty = all systems
-          ":output": "json"         # same as in PowerShell
-      register: epo_raw
-
-    - name: Show raw response content (like Write-Host $content)
-      debug:
-        var: epo_raw.content
-
-    - name: Strip "OK:" prefix if present and parse JSON
-      set_fact:
-        epo_data: >-
-          {{
-            (
-              epo_raw.content[3:]
-              if epo_raw.content is match("^OK:")
-              else epo_raw.content
-            ) | from_json
-          }}
-
-    - name: Show how many systems we got
-      debug:
-        msg: "Found {{ (epo_data.result.list.row | length) | default(0) }} systems."
-
-    - name: Print each system (ComputerName, IP, OS)
-      debug:
-        msg: >-
-          {{ item['EPOComputerProperties.ComputerName'] | default('N/A') }}
-          {{ item['EPOComputerProperties.IPAddress'] | default('N/A') }}
-          {{ item['EPOComputerProperties.OSType'] | default('N/A') }}
-      loop: "{{ epo_data.result.list.row | default([]) }}"
+- name: Fail if port missing
+  ansible.builtin.fail:
+    msg: "SecureHttpPort=8443 NOT found in server.ini"
+  when: "'SecureHttpPort=8443' not in server_ini_content"
