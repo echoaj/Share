@@ -1,5 +1,5 @@
-# DESCRIPTION:
-#       * This script uses Trellix API to check if devices have the agent installed.
+
+Below is the code I have
 
 ---
 
@@ -33,18 +33,77 @@
       ansible.builtin.debug:
         var: cleaned_json
 
-    - name: Display Specific Fields (Example)
-      # Iterate through the systems and print just the names and IP addresses
+    - name: Show keys in first row (sanity check)
       ansible.builtin.debug:
-        msg: "System: {{ item.EPOComputerProperties.ComputerName }} - IP: {{ item.EPOComputerProperties.IPAddress }}"
-      loop: "{{ cleaned_json.result.list.row | default([]) }}"
-      loop_control:
-        label: "{{ item.EPOComputerProperties.ComputerName }}"
+        var: cleaned_json[0]
 
-    - name: Record result as passed
-      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/pass.yaml"
 
-  rescue:
-    - name: Display error message
-      ansible.builtin.debug:
-        msg: "{{ ansible_failed_result }}"
+Here is the terminal result:
+
+TASK [hbss : Show keys in first row (sanity check)] *******************************************************
+ok: [192.168.4.46] => {
+    "cleaned_json[0]": {
+        "EPOBranchNode.AutoID": 4,
+        "EPOComputerProperties.CPUSerialNumber": "",
+        "EPOComputerProperties.CPUSpeed": 0,
+        "EPOComputerProperties.CPUType": "",
+        "EPOComputerProperties.ComputerDescription": null,
+        "EPOComputerProperties.ComputerName": "192.168.5.11",
+        "EPOComputerProperties.DefaultLangID": "",
+        "EPOComputerProperties.Description": null,
+        "EPOComputerProperties.DomainName": "",
+        "EPOComputerProperties.FreeDiskSpace": 0,
+        "EPOComputerProperties.FreeMemory": 0,
+        "EPOComputerProperties.Free_Space_of_Drive_C": 0,
+        "EPOComputerProperties.IPAddress": "",
+        "EPOComputerProperties.IPHostName": "",
+        "EPOComputerProperties.IPSubnet": null,
+        "EPOComputerProperties.IPSubnetMask": null,
+        "EPOComputerProperties.IPV4x": null,
+        "EPOComputerProperties.IPV6": null,
+        "EPOComputerProperties.IPXAddress": "",
+        "EPOComputerProperties.IsPortable": -1,
+        "EPOComputerProperties.LastAgentHandler": null,
+        "EPOComputerProperties.NetAddress": "",
+        "EPOComputerProperties.NumOfCPU": 0,
+        "EPOComputerProperties.OSBitMode": -1,
+        "EPOComputerProperties.OSBuildNum": 0,
+        "EPOComputerProperties.OSCsdVersion": "",
+        "EPOComputerProperties.OSOEMID": "",
+        "EPOComputerProperties.OSPlatform": "",
+        "EPOComputerProperties.OSType": "",
+        "EPOComputerProperties.OSVersion": "",
+        "EPOComputerProperties.ParentID": 1,
+        "EPOComputerProperties.SubnetAddress": "",
+        "EPOComputerProperties.SubnetMask": "",
+        "EPOComputerProperties.TimeZone": "",
+        "EPOComputerProperties.TotalDiskSpace": 0,
+        "EPOComputerProperties.TotalPhysicalMemory": 0,
+        "EPOComputerProperties.Total_Space_of_Drive_C": 0,
+        "EPOComputerProperties.UserName": "",
+        "EPOComputerProperties.UserProperty1": null,
+        "EPOComputerProperties.UserProperty2": null,
+        "EPOComputerProperties.UserProperty3": null,
+        "EPOComputerProperties.UserProperty4": null,
+        "EPOComputerProperties.UserProperty5": null,
+        "EPOComputerProperties.UserProperty6": null,
+        "EPOComputerProperties.UserProperty7": null,
+        "EPOComputerProperties.UserProperty8": null,
+        "EPOComputerProperties.Vdi": -1,
+        "EPOLeafNode.AgentGUID": null,
+        "EPOLeafNode.AgentVersion": null,
+        "EPOLeafNode.ExcludedTags": "",
+        "EPOLeafNode.LastUpdate": null,
+        "EPOLeafNode.ManagedState": 0,
+        "EPOLeafNode.Tags": "Win10"
+    }
+}
+
+TASK [hbss : Display Agent Information] *******************************************************************
+skipping: [192.168.4.46]
+
+
+
+I can't figure out why the Display Agent Information task skips.  Why does it not show the dictionary?
+
+
