@@ -1,56 +1,10 @@
-
-# --- CONFIG ---
-$EpoServer = "https://localhost:8443"
-$EpoUser   = "svc_ansible_or_whatever"
-$EpoPass   = "SuperSecretPassword"
-
-# If using self-signed certs in a lab, you can ignore SSL errors (comment these lines out in prod!)
-add-type @"
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-public class TrustAllCertsPolicy : ICertificatePolicy {
-    public bool CheckValidationResult(
-        ServicePoint srvPoint, X509Certificate certificate,
-        WebRequest request, int certificateProblem) {
-        return true;
-    }
-}
-"@
-[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-
-# --- CALL ePO API: system.find (all systems) ---
-$uri = "$EpoServer/remote/system.find?searchText=&:output=json"
-
-# Use Invoke-WebRequest so we see raw content (ePO sometimes returns "OK:<json>")
-$response = Invoke-WebRequest -Uri $uri -Method Get -UseBasicParsing `
-    -Credential (New-Object System.Management.Automation.PSCredential($EpoUser, (ConvertTo-SecureString $EpoPass -AsPlainText -Force)))
-
-# Raw content from ePO
-$content = $response.Content
-
-# ePO typically returns "OK:" prefix → strip it if present
-if ($content.StartsWith("OK:")) {
-    $jsonString = $content.Substring(3)   # remove "OK:"
-} else {
-    $jsonString = $content
-}
-
-# Parse JSON
-$data = $jsonString | ConvertFrom-Json
-
-# Dump raw structure once if you're curious
-# $data | Format-List * -Force
-
-# ePO returns rows in data.result.list.row
-$rows = $data.result.list.row
-
-Write-Host "Found $($rows.Count) systems:`n"
-
-# Print some key fields
-foreach ($row in $rows) {
-    $name = $row.'EPOComputerProperties.ComputerName'
-    $ip   = $row.'EPOComputerProperties.IPAddress'
-    $os   = $row.'EPOComputerProperties.OSType'
-    Write-Host "$name`t$ip`t$os"
-}
+- name: Display Agent Information
+  ansible.builtin.debug:
+    msg: >-
+      System: {{ item.EPOComputerProperties.ComputerName }}
+      | IP: {{ item.EPOComputerProperties.IPAddress | default('N/A') }}
+      | AgentGUID: {{ item.EPOAgentProperties.AgentGUID | default('NOT INSTALLED') }}
+      | AgentVersion: {{ item.EPOAgentProperties.AgentVersion | default('N/A') }}
+  loop: "{{ cleaned_json.result.list.row | default([]) }}"
+  loop_control:
+    label: "{{ item.EPOComputerProperties.ComputerName }}"
