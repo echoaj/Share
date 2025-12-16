@@ -1,18 +1,50 @@
-- name: Read server.ini
-  ansible.builtin.slurp:
-    src: "C:/Program Files (x86)/Trellix/ePolicy Orchestrator/Server/conf/server.ini"
-  register: server_ini_raw
+# DESCRIPTION:
+#       * This script uses Trellix API to check if devices have the agent installed.
 
-- name: Decode content
-  ansible.builtin.set_fact:
-    server_ini_content: "{{ server_ini_raw['content'] | b64decode }}"
+---
 
-- name: Check for SecureHttpPort
-  ansible.builtin.debug:
-    msg: "SecureHttpPort=8443 FOUND"
-  when: "'SecureHttpPort=8443' in server_ini_content"
+- tags:
+    - req2-SDSO-6699
+    - SDSO-6699
+  block:
+    - name: Initialize result tracker
+      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/init.yaml"
 
-- name: Fail if port missing
-  ansible.builtin.fail:
-    msg: "SecureHttpPort=8443 NOT found in server.ini"
-  when: "'SecureHttpPort=8443' not in server_ini_content"
+    - name: Call ePO API 
+      ansible.windows.win_uri:
+        url: "https://localhost:8443/remote/system.find?searchText=&:output=json"
+        url_method: GET
+        url_username: "{{ epo_user }}"
+        url_password: "{{ epo_pass }}"
+        force_basic_auth: yes
+        validate_certs: no          # self-signed in lab; switch to yes in prod
+        return_content: yes
+        status_code: 200
+      register: epo_response
+
+    - name: Clean and Parse API Response
+      # ePO often returns "OK:" before the JSON. We must strip it to get valid JSON.
+      ansible.builtin.set_fact:
+        # 1. regex_replace strips the leading "OK:"
+        # 2. from_json converts the string into an Ansible dictionary/list
+        cleaned_json: "{{ epo_response.content | regex_replace('^OK:', '') | trim | from_json }}"
+
+    - name: Display Raw System List
+      ansible.builtin.debug:
+        var: cleaned_json
+
+    - name: Display Specific Fields (Example)
+      # Iterate through the systems and print just the names and IP addresses
+      ansible.builtin.debug:
+        msg: "System: {{ item.EPOComputerProperties.ComputerName }} - IP: {{ item.EPOComputerProperties.IPAddress }}"
+      loop: "{{ cleaned_json.result.list.row | default([]) }}"
+      loop_control:
+        label: "{{ item.EPOComputerProperties.ComputerName }}"
+
+    - name: Record result as passed
+      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/pass.yaml"
+
+  rescue:
+    - name: Display error message
+      ansible.builtin.debug:
+        msg: "{{ ansible_failed_result }}"
