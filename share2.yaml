@@ -19,3 +19,6 @@ How do I modify this so that it loops through all dictionaries
     msg: "{{ cleaned_json | map('extract', 'EPOComputerProperties.ComputerName') | list }}"
 
 
+- name: Show Computer Names (json_query)
+  ansible.builtin.debug:
+    msg: "{{ cleaned_json | json_query('[].\"EPOComputerProperties.ComputerName\"') }}"
