@@ -8,3 +8,8 @@
   loop: "{{ cleaned_json.result.list.row | default([]) }}"
   loop_control:
     label: "{{ item.EPOComputerProperties.ComputerName }}"
+
+- name: Show keys in first row (sanity check)
+  ansible.builtin.debug:
+    var: cleaned_json.result.list.row[0].keys()
+  when: (cleaned_json.result.list.row | default([])) | length > 0
