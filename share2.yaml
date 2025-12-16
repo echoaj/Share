@@ -6,3 +6,8 @@ I have a task that prints out a property within the first dictionary
 
 How do I modify this so that it loops through all dictionaries
 
+- name: Show Computer Names (one list output)
+  ansible.builtin.debug:
+    msg: "{{ cleaned_json | map('extract', 'EPOComputerProperties.ComputerName') | list }}"
+
+
