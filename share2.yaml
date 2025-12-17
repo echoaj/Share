@@ -22,3 +22,8 @@ How do I modify this so that it loops through all dictionaries
 - name: Show Computer Names (json_query)
   ansible.builtin.debug:
     msg: "{{ cleaned_json | json_query('[].\"EPOComputerProperties.ComputerName\"') }}"
+
+- name: Fail if no systems were returned
+  ansible.builtin.fail:
+    msg: "ePO query returned no systems."
+  when: cleaned_json | length == 0
