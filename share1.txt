@@ -1,15 +1,6 @@
-- name: Display Agent Information
-  ansible.builtin.debug:
-    msg: >-
-      System: {{ item.EPOComputerProperties.ComputerName }}
-      | IP: {{ item.EPOComputerProperties.IPAddress | default('N/A') }}
-      | AgentGUID: {{ item.EPOAgentProperties.AgentGUID | default('NOT INSTALLED') }}
-      | AgentVersion: {{ item.EPOAgentProperties.AgentVersion | default('N/A') }}
-  loop: "{{ cleaned_json.result.list.row | default([]) }}"
-  loop_control:
-    label: "{{ item.EPOComputerProperties.ComputerName }}"
-
-- name: Show keys in first row (sanity check)
-  ansible.builtin.debug:
-    var: cleaned_json.result.list.row[0].keys()
-  when: (cleaned_json.result.list.row | default([])) | length > 0
+In terms of windows, what is the difference between LDAP server, Domain Controller, IAM, Active Directory, etc.. How do they relate, how are they different etc…
+Is Active Directory and LDAP server?
+Is Active Directory and IAM?
+Is Active Directory installed on a Domain Controller?
+What makes a windows machine a domain controller?
+If a windows machine has AD installed on it is it a DC?
