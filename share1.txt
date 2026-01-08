@@ -1,6 +1,73 @@
-In terms of windows, what is the difference between LDAP server, Domain Controller, IAM, Active Directory, etc.. How do they relate, how are they different etc…
-Is Active Directory and LDAP server?
-Is Active Directory and IAM?
-Is Active Directory installed on a Domain Controller?
-What makes a windows machine a domain controller?
-If a windows machine has AD installed on it is it a DC?
+Alex
+Sorry to bother you.  Idk what they want me to ask you but is there any Trellix implementation stuff outside of the build guides that I need to know?
+
+Bellal
+To allow ansible to work you have to disable ASMI or it will be blocked from running on the Windows hosts.
+Ansible works with windows by copying powershell scripts to the host and executing them, ASMI assume that it is Malware and treats it as a Threat
+ASMI has methods of allowing applications and scripts to run but I am unsure on what rule we need to create to ensure ansible can run, Im guessing they want you to figure it out since completely disabling ASMI isnt a good solution
+Also Happy new year!
+Everything else I did to Trellix, such as deploying the agents, configuring the server to sync with AD, etc is in the Build guide
+I would be surprised If no one remembers the ASMI thing since I documented it and discussed it with James Warren
+That is the only thing I can remember doing that wasn't already in the baseline for Trellix
+
+
+Alex
+Ah Interesting, I haven't heard of ASMI before, do you disable it for running ansible locally on the machine?  Cause usually I just enable WinRM and set a firewall rule to open the port and it works
+
+Bellal
+We use SSH for Ansible on Windows
+But it works the same, most ansible modules that interact with windows, like the ansible.windows.win_dns_record module just copy powershell scripts and run them on the remote host
+I created a policy in Trellix EPO that disables ASMI for any windows host by tag
+ASMI doesnt apply to Linux since its a different Trellix Module for script prevention so this only applies to the windows hosts
+Also its AMSI sorry not ASMI
+Yeah, I believe the agreement we had was to disable it for now, but that we had to have a plan to create a rule and reenable it in the futuere
+Also its just this one feature, the other standard Trellix Antivirus products are still enabled such as on-access scanning
+So its important to note that the antivirus is not disabled. Only a single feature. Heres some notes on what it does from Trellix:
+https://docs.trellix.com/bundle/endpoint-security-10.7.x-product-guide-windows/page/UUID-56552ad5-f370-05e3-da2d-cb9cea16a1e5.html
+ 
+
+Alex
+Sounds good, thanks for the info, I'll read through the trellix docs, thank you sir
+
+
+Bellal
+No problem, I hope that helps, aside from that your initial guess that everything I did was in the BG already is true. I just followed that in the SEL/SIL.
+The only caveat was that to install Trellix on the Servers after the system is built, I had to disable GPOs temporily, the problem with that is that if you do it all at once you WILL lock out the entire system from everyone, including yourself. So disabling gpos for one server at a time methodically is the key to ensure no one notices.
+If you install Trellix on everything before deploying the final GPOs, it wont be a problem and the BG says to do exactly that. We just missed the trellix install on the SIL/SEL so thats why it was screwed. 
+We added it as part of our checkout process and at M06 we didnt miss the trellix configuration so this shouldn't be an issue there
+
+
+Alex
+Gotcha, so just so I'm understanding you correctly, you're referring to the Trellix Agent, and you had to disable GPOs on each machine one by one to install the Agent.  Is it because the GPO's interfere with pushing the agents out from EPo?
+
+Bellal
+Yeah, I have no idea which one of the GPOs specifically was blocking the agent
+Once its installed, you can renable the GPOs and the agent will function as expected
+
+
+Alex
+Random question too, I was wondering do you know why the default port for Agent-server communication is changed from 80 to 82 and Agent-server communication secure port from 443 to 444 when setting up trellix
+
+
+Bellal
+Oh, my guess is since we have other services hosted from Admin01, theres a port conflict from port 443 and port 80
+Since those are well known ports I can definitely see there being a port conflict
+We had a similar issue with the Nexus server using port 8443 for a service preventing the trellix agent from running since it uses that port for another service
+
+
+
+Alex
+That's what I figured, James was asking me about it idk what to tell him
+
+
+Bellal
+I would just say there was likely a port conflict with other services running on admin01
+changing the ports from their default values is usually a recommended practice for security
+Practically it doesnt really do much though lol
+Hugo might be able to give an exact reason since he wrote those instructions
+ 
+
+
+ 
+
+ 
