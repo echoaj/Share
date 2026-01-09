@@ -1,11 +1,6 @@
-Ok so at our company we use vsphere/vcenter/esxi for out virtualization environment. 
-We have two domain controllers in a management cluster that are on VMXNET3 network adapter
 
-Then we have a ton of VMs on another cluster called SSB.
-We have two network adapters, one called virtual_22 and another called Trellix_NA
-We have 100 VMs 80 of them aare on virtual_22 the other 20 are on Trellix_NA
-I checked the configuration (properties, policies, nsx config, traffic filtering etc...), permissions, and both network adapters are essentially identically configured.
-The VMs on virtual_22 have access to our windows file share, my ansible scripts from my workstation can reach them
-However the VMs on Trellix_NA don't have access to the file share and my scripts can't be reached
+I am trying to connect a client machine to active directory but I am having problems
 
-What do you think is the problem, are the network adapters not configured correctly? Is it an issue with the Domain Controller.  How do I get Trellix_NA to also have access to everything virtual_22 does?
+both machines are on the same subnet mask, both have the same default gateway, both machines can ping eachother, both are on the same network adapter,
+On the client machine under advanced settings i set the Domain to cybrlab.local and it looks like the domain can not be contacted.
+What could be the issue?
