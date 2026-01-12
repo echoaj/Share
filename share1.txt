@@ -1,6 +1,38 @@
+curl -k -u "epouser:epopass" \
+"https://trellixcyber:8443/remote/core.executeQuery?\
+target=EPOLeafNode&\
+select=(select \
+EPOLeafNode.NodeName \
+EPOLeafNode.IPAddress \
+EPOLeafNode.MACAddress \
+EPOLeafNode.OperatingSystem \
+EPOLeafNode.AgentGUID \
+EPOLeafNode.AgentVersion \
+EPOLeafNode.LastUpdate \
+EPOLeafNode.ManagedState)&\
+:output=json"
 
-I am trying to connect a client machine to active directory but I am having problems
 
-both machines are on the same subnet mask, both have the same default gateway, both machines can ping eachother, both are on the same network adapter,
-On the client machine under advanced settings i set the Domain to cybrlab.local and it looks like the domain can not be contacted.
-What could be the issue?
+curl -k -u "epouser:epopass" \
+"https://trellixcyber:8443/remote/core.executeQuery?\
+target=EPOLeafNode&\
+select=(select \
+EPOLeafNode.NodeName \
+EPOLeafNode.AgentGUID \
+EPOLeafNode.AgentVersion \
+EPOLeafNode.LastUpdate)&\
+where=(where EPOLeafNode.NodeName='WIN10-001')&\
+:output=json"
+
+
+curl -k -u "epouser:epopass" \
+"https://trellixcyber:8443/remote/core.executeQuery?\
+target=EPOLeafNode&\
+select=(select \
+EPOLeafNode.NodeName \
+EPOLeafNode.AgentVersion \
+EPOLeafNode.LastUpdate)&\
+where=(where \
+EPOLeafNode.AgentGUID IS NOT NULL)&\
+:output=json"
+
