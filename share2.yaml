@@ -1,101 +1,43 @@
-Below is a clean, documentation-ready list of additional Trellix configuration and operational actions that Bellal performed outside of what is already captured in the official Build Guide, based strictly on your conversation. This is written in a form you can directly paste into internal documentation or a “delta from Build Guide” section.
+I have an ansible script that is suppose to check if a list of workstations has an Agent installed.  This is what I have.  Am I writting the task correctly?
 
-⸻
 
-Trellix Configuration and Implementation Items Performed Outside the Build Guide
+In my group vars I have
+windows_workstations:
+  - 192.168.5.11
+  - 192.168.4.118
 
-1. AMSI (Antimalware Scan Interface) Handling for Ansible on Windows
-	•	Identified that Trellix AMSI blocks Ansible execution on Windows hosts.
-	•	Root cause:
-	•	Ansible executes by copying PowerShell scripts to Windows hosts and executing them locally.
-	•	Trellix AMSI incorrectly identifies this behavior as malicious and blocks execution.
-	•	Implemented a temporary workaround:
-	•	Created a Trellix ePO policy that disables AMSI on Windows hosts via tag-based assignment.
-	•	This policy applies only to Windows systems; Linux systems are unaffected due to separate script-prevention modules.
-	•	Security posture clarification:
-	•	Only AMSI was disabled.
-	•	All other Trellix antivirus protections (e.g., on-access scanning) remain enabled.
-	•	Acknowledged limitation:
-	•	Disabling AMSI is not a long-term solution.
-	•	A future task exists to define an AMSI allow rule that permits Ansible PowerShell execution and re-enables AMSI.
 
-⸻
+Then in my task yaml I have
+---
 
-2. Ansible Communication Method on Windows
-	•	Confirmed that Ansible uses SSH on Windows rather than WinRM in this environment.
-	•	Reinforced that Ansible Windows modules (e.g., ansible.windows.*) operate by:
-	•	Transferring PowerShell scripts to the target host
-	•	Executing those scripts locally
-	•	This behavior is the trigger for AMSI blocking, not WinRM configuration.
+- tags:
+    - req2-SDSO-6699
+    - SDSO-6699
+  block:
+    - name: Initialize result tracker
+      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/init.yaml"
 
-⸻
+    - name: Verify Trellix Agent is installed
+      ansible.builtin.win_stat:
+        path: "C\\Program Files\\McAfee\\Agent"
+      delegate_to: "{{ item }}"
+      register: mcafee_check
+      failed_when: not mcafee_check.stat.exists
+      loop: "{{ windows_workstations }}"
+      loop_control:
+        label: "{{ item }}"
 
-3. Group Policy (GPO) Management During Trellix Agent Installation
-	•	Discovered that existing GPOs interfered with Trellix Agent installation on Windows servers.
-	•	Workaround implemented:
-	•	Temporarily disabled GPOs on one server at a time to allow Trellix Agent installation.
-	•	Re-enabled GPOs immediately after successful agent installation.
-	•	Operational warning:
-	•	Disabling GPOs globally or simultaneously can lock out all users, including administrators.
-	•	Installation must be done methodically, one system at a time.
-	•	Post-installation behavior:
-	•	Once the Trellix Agent is installed, GPOs can be safely re-enabled and the agent continues to function normally.
+    - name: Record result as passed
+      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/pass.yaml"
 
-⸻
+  rescue:
+    - name: Display error message
+      ansible.builtin.debug:
+        msg: "{{ ansible_failed_result }}"
 
-4. Installation Order Correction (Build Guide Gap)
-	•	Identified a deviation from the Build Guide in the SIL/SEL environments:
-	•	Trellix was installed after final GPO deployment, causing installation failures.
-	•	Corrective action:
-	•	Added Trellix installation and configuration to the system checkout process.
-	•	Outcome:
-	•	At M06, Trellix installation and configuration were completed correctly.
-	•	Issue should not recur in future builds if the documented order is followed.
-
-⸻
-
-5. Trellix Agent Communication Port Changes
-	•	Observed that Trellix Agent communication ports were changed from defaults:
-	•	Agent ↔ Server:
-	•	Port 80 → 82
-	•	Secure port 443 → 444
-	•	Likely rationale:
-	•	Port conflicts with other services hosted on Admin01.
-	•	Similar conflicts were previously observed with:
-	•	Nexus services using port 8443, interfering with Trellix services.
-	•	Security note:
-	•	Changing from well-known ports is often recommended as a hardening practice, though it provides minimal real-world security benefit.
-	•	Exact justification:
-	•	Final reasoning may be documented by Hugo, who authored the instructions.
-
-⸻
-
-6. Documentation and Knowledge Transfer
-	•	AMSI behavior and mitigation:
-	•	Documented internally
-	•	Previously discussed with James Warren
-	•	This information may not be widely remembered and should be explicitly re-documented as part of Trellix operational guidance.
-
-⸻
-
-Optional Documentation Placement Recommendation
-
-You may want to add a section titled:
-
-“Trellix Configuration Deviations and Operational Caveats”
-
-This would formally capture:
-	•	AMSI handling for Ansible
-	•	GPO sequencing risks
-	•	Installation order dependencies
-	•	Agent port changes
-
-⸻
-
-If you want, I can:
-	•	Rewrite this into formal SOP language
-	•	Convert it into a change log / deviation log
-	•	Map each item to NIST / STIG implications
-	•	Create a “Future Action Items” section (e.g., AMSI allow rules)
-
-Just tell me how polished or formal you need this to be.
+  always:
+    - name: Print check result
+      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/print.yaml"
+      vars:
+        requirement_text: "The HBSS Software shall implement approved network protocols."
+        jira_ticket: SDSO-6699
