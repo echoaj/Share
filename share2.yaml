@@ -1,43 +1,18 @@
-I have an ansible script that is suppose to check if a list of workstations has an Agent installed.  This is what I have.  Am I writting the task correctly?
+I am trying to figure out how to structure my ansible repository.
 
+In the top level I have my inventory.ini file that defines ip addresses for Windows 10, Windows Server, and Linux.
+In the top level I also have an hbss.yaml file that has this written in it:
+- name: Run the HBSS role
+  hosts:
+    - windows_workstation
+    - windows_server
+    - linux
+  roles:
+    - hbss
 
-In my group vars I have
-windows_workstations:
-  - 192.168.5.11
-  - 192.168.4.118
-
-
-Then in my task yaml I have
----
-
-- tags:
-    - req2-SDSO-6699
-    - SDSO-6699
-  block:
-    - name: Initialize result tracker
-      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/init.yaml"
-
-    - name: Verify Trellix Agent is installed
-      ansible.builtin.win_stat:
-        path: "C\\Program Files\\McAfee\\Agent"
-      delegate_to: "{{ item }}"
-      register: mcafee_check
-      failed_when: not mcafee_check.stat.exists
-      loop: "{{ windows_workstations }}"
-      loop_control:
-        label: "{{ item }}"
-
-    - name: Record result as passed
-      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/pass.yaml"
-
-  rescue:
-    - name: Display error message
-      ansible.builtin.debug:
-        msg: "{{ ansible_failed_result }}"
-
-  always:
-    - name: Print check result
-      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/print.yaml"
-      vars:
-        requirement_text: "The HBSS Software shall implement approved network protocols."
-        jira_ticket: SDSO-6699
+I am purposely passing in those hosts.
+Then I have a folder called hbss (that is the role hbss.yaml is calling) in the top level that contains a folder for defaults, handlers, tasks, tests, vars, README.md
+What I need help with is within the tasks files.  Let's say I want to create a create-directory.yaml for windows 10, windows server, and linux. obviously creating a directory for bash is different than for powershell.
+Would I need to create 3 different create-directory.yaml files one for each system?
+Would I need to create some kind of conditional that determines which create-directory.yaml file to execute based on the host type?
+How would you recommend I go about this?
