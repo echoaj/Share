@@ -1,24 +1,21 @@
-(ansible) [n29392@ssb-dso-rh8-10 cs2]$ ssh cyber@192.168.4.14
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
-Someone could be eavesdropping on you right now (man-in-the-middle attack)!
-It is also possible that a host key has just been changed.
-The fingerprint for the ECDSA key sent by the remote host is
-SHA256:hilV545VzPD9h9Fdh5NkiLULFzdlWL7GhyXdwWDq8ic.
-Please contact your system administrator.
-Add correct host key in /home/n29392/.ssh/known_hosts to get rid of this message.
-Offending ECDSA key in /home/n29392/.ssh/known_hosts:4
-ECDSA host key for 192.168.4.14 has changed and you have requested strict checking.
-Host key verification failed.
-(ansible) [n29392@ssb-dso-rh8-10 cs2]$ cat /home/n29392/.ssh/known_hosts 
-[10.10.21.21]:2025 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEWpu0XrnGeuJI6w9hheHOzjz+r6LzhQD7KOv78nI4vWuuPfTFstTshW9T423leROgWXPXFJRwrkZJ68oBy8kgo=
-192.168.4.17 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMTi9fVp3W+Kabo2EqBTB7M2UlxTmV0ILYKzDPohKA0f8366iEPPq61cTzelYjgdu739i+/UjcLF4IvQtnBpPq4=
-192.168.4.149 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBN/1EJUlWSnNxRrJTG5IjZavXSHIs86cMS1RUN9/m03jtr7zE7D8YmmrF5C213lGtc/ncWUjLWFtMgZJFbgIywE=
-192.168.4.14 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBO31leyBsLCAN+90MTkSuOGVWKiAK1kDMTryi+lMCtjYExDVRRnzonzX4xkhyDuiIqO76CopDec4mGM6BOHmc+U=
-(ansible) [n29392@ssb-dso-rh8-10 cs2]$ ssh-keygen -R 192.168.4.14
-# Host 192.168.4.14 found: line 4
-/home/n29392/.ssh/known_hosts updated.
-Original contents retained as /home/n29392/.ssh/known_hosts.old
-(ansible) [n29392@ssb-dso-rh8-10 cs2]$ ssh-keygen -R 192.168.4.14 -f ~/.ssh/known_hosts
+Step by Step how does ansible-playbook and tags work.  For example these commands:
+
+
+ansible-playbook -i inventory.ini hbss.yaml
+ansible-playbook -i inventory.ini hbss.yaml --tags SDSO-10
+
+
+Let's say this is the structure:
+
+hbss/
+├── tasks/
+│   ├── create-directory-folder/
+│         ├── other-task.yaml
+│   ├── create-directory-windows_server.yaml
+│   ├── create-directory-windows_workstation.yaml   <- has tag SDSO-10
+│   └── main.yml
+└── README.md
+hbss.yaml
+
+
+
