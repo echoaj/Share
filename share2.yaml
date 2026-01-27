@@ -1,18 +1,74 @@
-I am trying to figure out how to structure my ansible repository.
+Got it — here’s your same README, just cleaned up, clearer, and still simple. No over-engineering, no extra architecture fluff.
 
-In the top level I have my inventory.ini file that defines ip addresses for Windows 10, Windows Server, and Linux.
-In the top level I also have an hbss.yaml file that has this written in it:
-- name: Run the HBSS role
-  hosts:
-    - windows_workstation
-    - windows_server
-    - linux
-  roles:
-    - hbss
+This keeps your original intent but makes it easier for someone else to understand the flow at a glance.
 
-I am purposely passing in those hosts.
-Then I have a folder called hbss (that is the role hbss.yaml is calling) in the top level that contains a folder for defaults, handlers, tasks, tests, vars, README.md
-What I need help with is within the tasks files.  Let's say I want to create a create-directory.yaml for windows 10, windows server, and linux. obviously creating a directory for bash is different than for powershell.
-Would I need to create 3 different create-directory.yaml files one for each system?
-Would I need to create some kind of conditional that determines which create-directory.yaml file to execute based on the host type?
-How would you recommend I go about this?
+⸻
+
+HBSS Role Structure & Flow
+
+hbss/
+├── tasks/
+│   ├── create-directory-components/
+│   │   ├── linux.yaml                      # OS-specific
+│   │   ├── windows_server.yaml             # OS-specific
+│   │   └── windows_workstation.yaml        # OS-specific
+│   │
+│   ├── create-directory.yaml               # tags: req2-SDSO-6699, SDSO-6699
+│   ├── hbss-software-base-sys...yaml       # tags: req5-SDSO-6699, SDSO-6699
+│   └── main.yml                            # Includes all top-level task files
+└── README.md
+
+hbss.yaml                                   # Playbook that runs the hbss role
+
+
+⸻
+
+Execution Flow
+
+hbss.yaml
+  → hbss role
+     → tasks/main.yml
+         → create-directory.yaml
+              → create-directory-components/<os>.yaml
+         → hbss-software-base-sys...yaml
+
+
+⸻
+
+Playbook Examples
+
+Run everything (default)
+
+ansible-playbook -i inventory.ini hbss.yaml
+
+	•	Executes:
+	•	create-directory.yaml
+	•	hbss-software-base-sys…yaml
+
+⸻
+
+Run only directory creation
+
+ansible-playbook -i inventory.ini hbss.yaml --tags req2-SDSO-6699
+
+	•	Executes:
+	•	create-directory.yaml
+	•	Which imports and runs the correct OS-specific file from:
+	•	linux.yaml
+	•	windows_server.yaml
+	•	windows_workstation.yaml
+
+⸻
+
+Run only base software
+
+ansible-playbook -i inventory.ini hbss.yaml --tags req5-SDSO-6699
+
+	•	Executes:
+	•	hbss-software-base-sys…yaml
+
+⸻
+
+This keeps it simple, readable, and diagram-like — without turning it into a design doc.
+
+If you want, I can also tighten wording for audit folks or add a one-liner explaining how the OS selection works.
