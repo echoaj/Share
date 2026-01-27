@@ -1,21 +1,23 @@
-Step by Step how does ansible-playbook and tags work.  For example these commands:
+Is there a better way to write this in the README? my goal was to make like a diagram to show how it flows
 
-
-ansible-playbook -i inventory.ini hbss.yaml
-ansible-playbook -i inventory.ini hbss.yaml --tags SDSO-10
-
-
-Let's say this is the structure:
-
+```text
 hbss/
 ├── tasks/
-│   ├── create-directory-folder/
-│         ├── other-task.yaml
-│   ├── create-directory-windows_server.yaml
-│   ├── create-directory-windows_workstation.yaml   <- has tag SDSO-10
-│   └── main.yml
+│   ├── create-directory-components/
+│       ├── linux.yaml                      <-- tags: none
+│       ├── windows_server.yaml             <-- tags: none
+│       ├── windows_workstation.yaml        <-- tags: none
+│   ├── create-directory.yaml               <-- tags: req2-SDSO-6699, SDSO-6699
+│   ├── hbss-software-base-sys...yaml       <-- tags: req5-SDSO-6699, SDSO-6699
+│   └── main.yml                            <-- Loops through all top level yamls in tasks directory
 └── README.md
 hbss.yaml
+```
 
-
+### ansible-playbook -i inventory.ini hbss.yaml
+- Executes **create-directory.yaml** & **hbss-software-base-sys...**
+### ansible-playbook -i inventory.ini hbss.yaml --tags req2-SDSO-6699
+- Executes **create-directory** which imports and executes subcomponents
+### ansible-playbook -i inventory.ini hbss.yaml --tags req5-SDSO-6699
+- Executes **hbss-software-base-sys...**
 
