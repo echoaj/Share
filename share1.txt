@@ -21,3 +21,19 @@ hbss.yaml
 ### ansible-playbook -i inventory.ini hbss.yaml --tags req5-SDSO-6699
 - Executes **hbss-software-base-sys...**
 
+
+
+- name: Check Trellix Agent registry
+  ansible.windows.win_reg_stat:
+    path: 'HKLM:\SOFTWARE\McAfee\Agent'
+  register: trellix_agent_reg
+
+- name: Check Trellix Agent service
+  ansible.windows.win_service_info:
+    name: masvc
+  register: trellix_agent_service
+
+- name: Set Trellix Agent installed fact
+  set_fact:
+    trellix_agent_installed: >-
+      {{ trellix_agent_reg.exists and trellix_agent_service.exists }}
