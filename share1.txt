@@ -1,39 +1,11 @@
-Is there a better way to write this in the README? my goal was to make like a diagram to show how it flows
+Can you make this markdown look better
 
-```text
-hbss/
-├── tasks/
-│   ├── create-directory-components/
-│       ├── linux.yaml                      <-- tags: none
-│       ├── windows_server.yaml             <-- tags: none
-│       ├── windows_workstation.yaml        <-- tags: none
-│   ├── create-directory.yaml               <-- tags: req2-SDSO-6699, SDSO-6699
-│   ├── hbss-software-base-sys...yaml       <-- tags: req5-SDSO-6699, SDSO-6699
-│   └── main.yml                            <-- Loops through all top level yamls in tasks directory
-└── README.md
-hbss.yaml
-```
-
+## Playbook Execution Examples
 ### ansible-playbook -i inventory.ini hbss.yaml
 - Executes **create-directory.yaml** & **hbss-software-base-sys...**
 ### ansible-playbook -i inventory.ini hbss.yaml --tags req2-SDSO-6699
 - Executes **create-directory** which imports and executes subcomponents
 ### ansible-playbook -i inventory.ini hbss.yaml --tags req5-SDSO-6699
 - Executes **hbss-software-base-sys...**
-
-
-
-- name: Check Trellix Agent registry
-  ansible.windows.win_reg_stat:
-    path: 'HKLM:\SOFTWARE\McAfee\Agent'
-  register: trellix_agent_reg
-
-- name: Check Trellix Agent service
-  ansible.windows.win_service_info:
-    name: masvc
-  register: trellix_agent_service
-
-- name: Set Trellix Agent installed fact
-  set_fact:
-    trellix_agent_installed: >-
-      {{ trellix_agent_reg.exists and trellix_agent_service.exists }}
+### ansible-playbook -i inventory.ini hbss.yaml --tags req2-SDSO-6699-win10
+- Executes **windows_workstation.yaml**
