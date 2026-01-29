@@ -15,3 +15,35 @@
         name: masvc
       register: agent_service
       failed_when: agent_service.services[0].state != "started"
+
+
+
+- tags:
+    - req1-SDS
+  block:
+    - name: Initialize result tracker
+      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/init.yaml"
+
+    # --- "Installed" check (Linux equivalent to registry presence) ---
+    # Best-effort options:
+    # 1) check package installed (preferred if Trellix installed via RPM)
+    # 2) check common install paths / binaries
+    # 3) check systemd unit exists
+
+    - name: Check if Trellix (Agent) package is installed (RPM)
+      ansible.builtin.command: rpm -q mcafeeagent
+      register: trellix_rpm
+      changed_when: false
+      failed_when: trellix_rpm.rc != 0
+
+    # --- Service running check (Linux equivalent to win_service_info) ---
+    # Service name varies by install; "masvc" is common in McAfee/Trellix Agent.
+    - name: Verify Trellix agent service is running
+      ansible.builtin.service_facts:
+
+    - name: Fail if Trellix agent service is not started
+      ansible.builtin.fail:
+        msg: "Trellix Agent service (masvc) is not running (state={{ ansible_facts.services['masvc.service'].state | default('missing') }})"
+      when: >
+        ('masvc.service' not in ansible_facts.services) or
+        (ansible_facts.services['masvc.service'].state != 'running')
