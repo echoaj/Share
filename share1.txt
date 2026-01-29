@@ -9,3 +9,20 @@ Can you make this markdown look better
 - Executes **hbss-software-base-sys...**
 ### ansible-playbook -i inventory.ini hbss.yaml --tags req2-SDSO-6699-win10
 - Executes **windows_workstation.yaml**
+
+
+### ansible-playbook -i inventory.ini hbss.yaml
+- Executes:
+  - **create-directory.yaml**
+  - **hbss-software-base-sys...**
+
+### ansible-playbook -i inventory.ini hbss.yaml --tags req2-SDSO-6699
+- Executes:
+  - **create-directory.yaml**
+  - Imports and executes all subcomponents
+
+### ansible-playbook -i inventory.ini hbss.yaml --tags req5-SDSO-6699
+- Executes:
+  - **hbss-software-base-sys...**
+
+### ansible-playbook -i inventory.ini 
