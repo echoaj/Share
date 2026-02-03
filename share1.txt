@@ -1,28 +1,5 @@
-Can you make this markdown look better
+I have an ACAS server at 192.168.5.55 and I use NESSUS to scan a target windows machine at 192.168.5.77 to check for vulnerabilities.
+What I do is go to 192.168.5.55:8843 to the Nessus GUI sign in and perform the scan on 192.168.5.77 then I generate a Report that shows the complete list of vulnerabilities by host.
 
-## Playbook Execution Examples
-### ansible-playbook -i inventory.ini hbss.yaml
-- Executes **create-directory.yaml** & **hbss-software-base-sys...**
-### ansible-playbook -i inventory.ini hbss.yaml --tags req2-SDSO-6699
-- Executes **create-directory** which imports and executes subcomponents
-### ansible-playbook -i inventory.ini hbss.yaml --tags req5-SDSO-6699
-- Executes **hbss-software-base-sys...**
-### ansible-playbook -i inventory.ini hbss.yaml --tags req2-SDSO-6699-win10
-- Executes **windows_workstation.yaml**
+Now what I want to do is do this exact same thing but through the terminal.  Can I automate this?
 
-
-### ansible-playbook -i inventory.ini hbss.yaml
-- Executes:
-  - **create-directory.yaml**
-  - **hbss-software-base-sys...**
-
-### ansible-playbook -i inventory.ini hbss.yaml --tags req2-SDSO-6699
-- Executes:
-  - **create-directory.yaml**
-  - Imports and executes all subcomponents
-
-### ansible-playbook -i inventory.ini hbss.yaml --tags req5-SDSO-6699
-- Executes:
-  - **hbss-software-base-sys...**
-
-### ansible-playbook -i inventory.ini 
