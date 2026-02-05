@@ -6,3 +6,9 @@ curl -X GET -k --header "x-apikey: accesskey=4def6bc216f14c1ab86dfba8738ff4a5; s
 
 I get the error;
 {"type":"regular","response":"","error_code":74,"error_msg":"API Key login denied.\n","warnings":[],"timestamp":1770234339}
+
+
+{"type":"regular","response":"","error_code":74,"error_msg":"API Key login denied.\n","warnings":[],"timestamp":1770234339}
+
+{"type":"regular","response":"","error_code":10,"error_msg":"Resource is not supported.","warnings":[],"timestamp":1770251158}
+
