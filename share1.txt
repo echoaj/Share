@@ -1,14 +1,42 @@
-I have an ACAS server at 192.168.5.55 and I use NESSUS to scan a target windows machine at 192.168.5.77 to check for vulnerabilities.
+I need your help in writting an email about getting clarificaiton on cyber security requirement that are to be automated with ansible
 
-I am testing out the API.  I already generated API keys for my ISSO user, as admin I enabled API keys in the configuration settings.
-Now I am doing this command but it does not work:
-curl -X GET -k --header "x-apikey: accesskey=4def6bc216f14c1ab86dfba8738ff4a5; secretkey=a47d1d3a071443449a75821129526b96" https://192.168.5.55/rest/isso
+Email 1 from ALEX:
 
-I get the error;
-{"type":"regular","response":"","error_code":74,"error_msg":"API Key login denied.\n","warnings":[],"timestamp":1770234339}
+Hi Kristal,
+I am need help interpreting and understanding the following requirements:
+Req1.  The HBSS Software shall restrict user changing of rules governing access control.
+Req2.  The HBSS Software shall restrict user from changing security attributes on Ground Segment components.
+Req4: The HBSS Software must allow for vulnerability scanning.
+Req6: The HBSS Software must permit modifications to security configuration settings.
+Req7: The HBSS Software must implement security configuration settings in accordance with organizational policies and procedures.
+Req8: The Host Based Security System Server must operate in a predictable and documented manner when receiving invalid inputs.
+Req9: The Host Based Security System Server must perform real-time scans of files at external sources, endpoints, and network entry/exit points when files are downloaded, opened, or executed.
 
+I basically want to understand how these requirements break down on a technical level.
 
-{"type":"regular","response":"","error_code":74,"error_msg":"API Key login denied.\n","warnings":[],"timestamp":1770234339}
+For example, the requirement The HBSS Software shall restrict user from changing security attributes on Ground Segment components. 
+If my task as an engineer is to automate the verification of this requirement I need to understand what Ground Segment components refers to. (e.g: VM's, requirements, servers, software ...etc).   Many of these requirements have terms that are very broad/generic and it makes it incredibly difficult to write software to perform these checks. 
 
-{"type":"regular","response":"","error_code":10,"error_msg":"Resource is not supported.","warnings":[],"timestamp":1770251158}
+Some requirements I've encountered map out clearly on a technical level but others like these ones I definitely need help interpreting/understanding. 
 
+Thank you Kristal🙂
+
+Email 1 response from KRISTAL:
+
+Ah ok, that makes sense.  For HBSS those components would be the server hosting the HBSS solution and the agents deployed across the system. So can the server and agents be reached by ACAS, are the servers and agent locations access controlled on each system (this can be configured via GPO), who has permissions to make any changes to the server and agents in the HBSS management console; those are the types of attributes these requirements are looking for. Req 9 is more specific to the function on the HBSS and does it work as intended and does the real time scanning, so this would also have to be configured in the management console.
+Kristal
+
+Email 2 FROM ALEX:
+Awesome, that is very helpful. Thank you for the link as well, I will definitely watch some of those videos.
+
+I saw you mentioned ACAS are you referring to req4 for that?
+
+Also what is your take on these two requirements specifically:
+Req7: The HBSS Software must implement security configuration settings in accordance with organizational policies and procedures.
+Req8: The Host Based Security System Server must operate in a predictable and documented manner when receiving invalid inputs.
+
+Does there exist an organizational policies / procedure document specific to HBSS configuration?  I'm not sure how to interpret that part.
+I don't know either what it means to send HBSS invalid inputs nor how to write code that checks if it is operating in a predictable manner.
+Are there any requirements here you believe can be skipped from an automation perspective? 
+
+ 
