@@ -1,42 +1,377 @@
-I need your help in writting an email about getting clarificaiton on cyber security requirement that are to be automated with ansible
+################################################################################
+CONFIGURATION PARAMETERS:
 
-Email 1 from ALEX:
+ Below are the parameters available for installing content and
+ configuring application options. All of the following options must
+ be used individually, and are not compatible with any other parameter.
 
-Hi Kristal,
-I am need help interpreting and understanding the following requirements:
-Req1.  The HBSS Software shall restrict user changing of rules governing access control.
-Req2.  The HBSS Software shall restrict user from changing security attributes on Ground Segment components.
-Req4: The HBSS Software must allow for vulnerability scanning.
-Req6: The HBSS Software must permit modifications to security configuration settings.
-Req7: The HBSS Software must implement security configuration settings in accordance with organizational policies and procedures.
-Req8: The Host Based Security System Server must operate in a predictable and documented manner when receiving invalid inputs.
-Req9: The Host Based Security System Server must perform real-time scans of files at external sources, endpoints, and network entry/exit points when files are downloaded, opened, or executed.
+ -lc, --listConfigProfiles
+   Prints a list of all available SCC configuration profiles
 
-I basically want to understand how these requirements break down on a technical level.
+ -nc, --newConfigProfile
+   Creates and enables a new configuration profile for all future usage
+   based on the current configuration.  This only supports letters and numbers
+   all other characters will be removed
+   Example:  cscc.exe --newConfigProfile myProfile2
+   See --listConfigProfiles for a list of config profiles
 
-For example, the requirement The HBSS Software shall restrict user from changing security attributes on Ground Segment components. 
-If my task as an engineer is to automate the verification of this requirement I need to understand what Ground Segment components refers to. (e.g: VM's, requirements, servers, software ...etc).   Many of these requirements have terms that are very broad/generic and it makes it incredibly difficult to write software to perform these checks. 
+ -sc, --selectConfigProfile
+   Selects a configuration profile for all future usage
+   Example:  cscc.exe --selectConfigProfile myProfile
+   See --listConfigProfiles for a list of config profiles
 
-Some requirements I've encountered map out clearly on a technical level but others like these ones I definitely need help interpreting/understanding. 
+ --config
+   Open a command line menu which displays several configuration options
 
-Thank you Kristal🙂
+ -eb, --enableBenchmark BENCHMARK_ID [version]
+   Enable a benchmark based on its ID, with optional benchmark version.
+   Example:  cscc.exe --enableBenchmark Windows_10_STIG
+   Example:  cscc.exe --enableBenchmark Windows_10_STIG 001.002
+   See --listAllBenchmarks for a list of benchmarks.
 
-Email 1 response from KRISTAL:
+ -db, --disableBenchmark BENCHMARK_ID [version]
+   Disable a benchmark based on its ID, with optional benchmark version.
+   Example:  cscc.exe --disableBenchmark Windows_10_STIG
+   Example:  cscc.exe --disableBenchmark Windows_10_STIG 001.002
+   See --listAllBenchmarks for a list of benchmarks.
 
-Ah ok, that makes sense.  For HBSS those components would be the server hosting the HBSS solution and the agents deployed across the system. So can the server and agents be reached by ACAS, are the servers and agent locations access controlled on each system (this can be configured via GPO), who has permissions to make any changes to the server and agents in the HBSS management console; those are the types of attributes these requirements are looking for. Req 9 is more specific to the function on the HBSS and does it work as intended and does the real time scanning, so this would also have to be configured in the management console.
-Kristal
+ -ct, --createTailoringFile BENCHMARK_ID [version]
+   Create a XCCDF Tailoring file which allows for manual edits if
+   user does not have access to SCC GUI for tailoring.
+   This feature creates the file, and selects that newly created
+   tailored profile for use
+   Example:  cscc.exe --createTailoringFile Windows_10_STIG
+   Example:  cscc.exe --createTailoringFile Windows_10_STIG 001.002
+   See --listAllBenchmarks for a list of benchmarks.
 
-Email 2 FROM ALEX:
-Awesome, that is very helpful. Thank you for the link as well, I will definitely watch some of those videos.
+ -aa, --applicableToAll BENCHMARK_ID [version]
+   Set a benchmark applicable to all targets based on its ID, with optional benchmark version.
+   Example:  cscc.exe --applicableToAll Windows_10_STIG
+   Example:  cscc.exe --applicableToAll Windows_10_STIG 001.002
 
-I saw you mentioned ACAS are you referring to req4 for that?
+ -na, --notApplicableToAll BENCHMARK_ID [version]
+   Remove the appliableToAll setting based on its ID, with optional benchmark version.
+   Example:  cscc.exe --notApplicableToAll Windows_10_STIG
+   Example:  cscc.exe --notApplicableToAll Windows_10_STIG 001.002
 
-Also what is your take on these two requirements specifically:
-Req7: The HBSS Software must implement security configuration settings in accordance with organizational policies and procedures.
-Req8: The Host Based Security System Server must operate in a predictable and documented manner when receiving invalid inputs.
+ -ea, --enableAll
+   Enable all SCAP and OVAL content.
 
-Does there exist an organizational policies / procedure document specific to HBSS configuration?  I'm not sure how to interpret that part.
-I don't know either what it means to send HBSS invalid inputs nor how to write code that checks if it is operating in a predictable manner.
-Are there any requirements here you believe can be skipped from an automation perspective? 
+ -da, --disableAll
+   Disable all SCAP and OVAL content.
 
- 
+ -ub, --uninstallBenchmark BENCHMARK_ID [version]
+   Uninstall a benchmark based on its ID, with optional benchmark version.
+   Example:  cscc.exe --uninstallBenchmark Windows_10_STIG
+   Example:  cscc.exe --uninstallBenchmark Windows_10_STIG 001.002
+   See --listAllBenchmarks for a list of benchmarks.
+
+ -ua, --uninstallAll
+   Uninstall all SCAP and OVAL content.
+
+ --setProfile PROFILE BENCHMARK_ID
+   Set a profile to be applied to a specified content stream.
+   See --listAllProfiles for a list of profiles.
+   See --listAllBenchmarks for a list of benchmarks.
+   Example: cscc.exe --setProfile MAC-3_Sensitive Windows_10_STIG
+
+ --setProfileAll PROFILE
+   Set a profile to be applied to all content installed in SCC, if
+   applicable. If a profile cannot be applied to a content stream it is
+   not applicable.  See --listAllProfiles to obtain a list of profiles.
+   Example: cscc.exe --setProfileAll MAC-3_Sensitive
+
+ --setOpt OPTION VALUE
+   Advanced user setting which allows command line configuration of any SCC
+   option to a user specified value.
+   --setOpt can be called multiple times in a single command if needed,
+   see second example.
+   Available options can be found in --listOpt, and need to be specified
+   exactly. To set a value to an empty string, enter the value as all caps
+   NULL
+   Example: cscc.exe --setOpt dirSessionEnabled 0
+   Example: cscc.exe --setOpt dirSessionEnabled 0 --setOpt debugEnabled 1
+
+ --generateOptionsFile
+   Delete the options file, restore default settings, and reinstall
+   all content.  Note that this may take a few minutes.
+
+ --generateAutoAnswerTemplates
+   Delete and regenerarate all of the Manual Question auto-answer template files found in 
+   Resources/Content/Manual_Questions/Templates
+
+ --restoreDefault
+   Restore all options to installation default.
+
+ -is FILE PROFILE [--force], --installScap FILE PROFILE [--force]
+   Install one or more SCAP content streams from an XML file or ZIP archive.
+   Specifying an XCCDF benchmark profile name after the filepath will enable
+   that profile for the given SCAP stream. Use the optional --force switch to reinstall
+   Example: cscc.exe -is C:\Users\User1\SampleScapContent.zip
+   Example: cscc.exe --installScap C:\Users\User1\SampleScapContent.zip
+   Example: cscc.exe -is C:\Users\User1\SampleScapContent.zip MAC-3_Sensitive
+   Example: cscc.exe -is --force C:\Users\User1\SampleScapContent.zip
+   Example: cscc.exe --installScap --force C:\Users\User1\SampleScapContent.zip MAC-3_Sensitive
+
+ -isr FILE PROFILE [--force], --installScapRun FILE PROFILE [--force]
+   Install, enable, and conduct an analysis with a SCAP Content
+   stream from a zip file. Specifying an XCCDF benchmark profile name
+   after the filepath will enable that profile for the given SCAP stream.
+   Use the optional --force switch to reinstall.
+   Example: cscc.exe -isr C:\Users\User1\SampleScapContent.zip
+   Example: cscc.exe --installScapRun C:\Users\User1\SampleScapContent.zip MAC-3_Sensitive
+   Example: cscc.exe -isr --force C:\Users\User1\SampleScapContent.zip
+   Example: cscc.exe --installScapRun --force C:\Users\User1\SampleScapContent.zip MAC-3_Sensitive
+
+ -iv FILE [--force], --installOval FILE [--force]
+   Install OVAL Content from a single xml file or a zip file containing
+   multiple xml files. Use the optional --force switch to reinstall.
+   Example: cscc.exe --installOval C:\Users\User1\sampleOval.xml
+   Example: cscc.exe -iv --force C:\Users\User1\sampleOval.xml
+
+ -ivr FILE [--force], --installOvalRun FILE [--force]
+   Install, enable, and conduct an analysis with OVAL Content from
+   a single xml file or a zip file containing multiple xml files.
+   Use the optional --force switch to reinstall.
+   Example: cscc.exe --installOvalRun C:\Users\User1\sampleOval.xml
+   Example: cscc.exe -ivr --force C:\Users\User1\sampleOval.xml
+
+ --installTailoringProfile FILE
+   Install an existing XCCDF Tailoring Profile file from another
+   installation of SCC, created by the SCC GUI Tailoring interface.
+   Installing a tailoring profile will set the selected profile for the matching content
+   to be the tailored profile in the selected tailoring file
+   Example: cscc.exe --installTailoringProfile <filepath to tailoring xml>
+
+ --checkForContentUpdates [--installUpdates | --installAll]
+   Check for SCAP content updates from an online content repository.
+   Additional settings may need to be pre-configured before usage.
+   refer to: cscc.exe --config -> Options -> Update Options
+   Example: cscc.exe --checkForContentUpdates
+   Example: cscc.exe --checkForContentUpdates --installUpdates
+   Example: cscc.exe --checkForContentUpdates --installAll
+
+ --installUnixPlugin FILE
+   Install the UNIX Plugin file, to allow SSH based scanning of remote UNIX hosts
+   The file below can be obtained from the same location you downloaded SCC
+   SCC_5.8_UNIX_Remote_Scanning_Plugin.scc
+   Example:  cscc.exe --installUnixPlugin C:\Users\User1\SCC_5.8_UNIX_Remote_Scanning_Plugin.scc
+
+   Refer to --installCredentialDB if this computer does not have the ability to open
+   the SCC GUI to update/maintain the hosts/credentials
+
+ --installCredentialDB FILE
+   If this computer is not able to open the SCC GUI to create/maintain the SCC
+   Host Credential Database, which is used to enter hosts and credentials for SSH
+   based remote scanning of UNIX and Cisco devices, this feature allows you to install
+   a previously created Host Credential Database and use it for scanning.
+   *** NOTE 1:  You will not be able to create new hosts, or edit credentials, just perform
+   scans using the Master Password for the existing set of hosts/credentials.  When
+   host passwords expire, or the Master Password exires, you'll need to obtain an updated
+   Host Credential DB and reinstall it via this command.
+   *** NOTE 2:  This feature will always overwrite the existing host credential db (if found)
+   You will need to manually copy the hostCredentials.db from another installation, by default
+   it's found in <your home directory>\SCC\Config
+
+ --register EMAIL REGISTRATION_CODE
+   This command line argument is used to register your email address with a code
+   provided from the SCC team, obtained by emailing scc.fct@navy.mil, indicating
+   that your team/group/agency is planning to send some level of funding in the future.
+   Registering your email address makes the funding notice go away.
+
+ --upgrade FILE
+   Upgrade the configuration options from a previous installation of SCC.
+   SCC will load the current settings, and overlay the configuration settings from the selected
+   option file, excluding content, appUpdateURL and contentRepository.
+   Example: cscc.exe --upgrade <filepath to existing SCC options xml>
+
+################################################################################
+SCANNING PARAMETERS:
+
+ Below are the parameters available for performing scans. Many of the
+ options can be used in combination, unless indicated below.
+
+ Any configuration change from a Scanning Parameter is temporary, and does
+ not get saved for future use.
+
+ no parameters
+   Review the local computer based on the configuration settings found
+   in options.xml.  If options.xml does not exist in the installation
+   directory, it will be created based on application defaults
+
+ -d, --debug
+   Create a verbose debug log file in the Logs directory for
+   troubleshooting purposes.
+
+ -ds, --debugToScreen
+   Debug to the Screen.
+   This option will print a very large amount of data to the terminal,
+   which can be captured and shared with our team, and should only be
+   used to help diagnose crash type issues.
+
+ -dn, --doNotSaveChanges
+   Do not save changes back to SCC's options file.
+   This option prevent SCC from updating the option XML file being used,
+   and is primarily for usage with automation such as cron.
+
+ -ear, --enableAllRun
+   Enable all SCAP and OVAL content and run content.
+
+ -u DIRECTORY, --userDir DIRECTORY
+   Temporarily configure SCC to save user results and logs to the specified
+   directory path.
+   Example: cscc.exe -u C:\Users\User1\
+
+ -cd DIRECTORY, --configDir DIRECTORY
+   Temporarily configure SCC to save application configuration files to the
+   specified directory path.
+   Example: cscc.exe -cd C:\Users\User1\
+
+ -f FILE, --file FILE
+   Review all computers specified in the new line delimited host file.
+   Example: cscc.exe -f C:\Users\User1\sampleHosts.txt
+
+ -h HOSTNAME, --host HOSTNAME
+   Review the specified computer.
+   Example: cscc.exe  -h testcomputer1
+
+ --wmi --file FILE | --domain | --ou "OU=OU Name"
+   Review all computers specified with WMI method.
+   Note 1: Many command line parameters such as -d, -q, -r, -mr, -ear
+   are not compatible with --wmi and should be configured via --setOpt or
+    --config prior to calling cscc.exe --wmi
+
+   Note 2: If the WMI alternate credentials feature is enabled, you will be prompted for
+   the master password.  For any automated scripting, the alternate credentials
+   mode will need to be disabled, which is the default.
+
+   Note 3: If using the --ou method, make sure to use the following format
+   (including quotes) "OU=Your Ou Name"
+
+   If the OU is a child of another OU, use the LDAP comma separated format of
+   "OU=OU Child,OU=OU Parent"
+
+   To scan multiple OU's, separate OU declarations with a semicolon ; (no spaces)
+   "OU=OU Child1,OU=OU Parent1;OU=OU Child2,OU=OU Parent2"
+   Example: cscc.exe --wmi --file C:\Users\User1\sampleHosts.txt
+   Example: cscc.exe --wmi --domain
+   Example: --wmi --ou "OU=Test Computers,OU=Lab"
+   Example: cscc.exe --wmi --ou "OU=Test Computers1,OU=Lab;OU=Test Computers2,OU=Lab"
+
+ --scanDomain [nslookup ping]
+   Review the entire active directory domain using 'classic' mode.
+   Optionally verifying via nslookup and/or ping
+
+ --force32
+   Open the 32 bit version of SCC on 64 bit Windows
+
+ --ssh [cisco|unix]
+   Review all Cisco IOS/IOS-XE OR UNIX computers enabled in the Host
+   Credential Manager, which is only available via the SCC GUI.
+   You will be prompted to enter the SCC Host Credential Master Password in
+   order to perform a remote command line SSH based scan.
+   Note that many command line parameters such as -d, -q, -r, -mr, -ear
+   are not compatible with --ssh and should be configured via --setOpt or
+    --config prior to calling cscc.exe --ssh
+   '--ssh unix' can be used in combination with --wmi to scan both UNIX
+   and Windows remotely at the same time.
+   Refer to --installCredentialDB for installing an existing SCC Host Credential
+   Database from another system which is able to use the SCC GUI
+
+ --cisco FILE
+   Conduct an offline review against a Cisco IOS/IOS XE configuration file or
+   ZIP archive of multiple configuration files located at the given file path.
+
+   **** Configuration files should be created with the 'show tech' command
+   Example: cscc.exe --cisco C:\Users\User1\sampleConfigFile.txt
+
+ -o FILE, --options FILE
+   Review using the specified options file.
+   Example: cscc.exe -o options.xml
+   Example: cscc.exe --options C:\Users\User1\myOptions.xml
+
+ -q, --quiet
+   Review in quiet mode. No output will be displayed on the screen.
+
+ -r XCCDF_RULE_OR_OVAL_DEF, --rule XCCDF_RULE_OR_OVAL_DEF
+   Review a single Rule using the Rule ID from the XCCDF file
+   or review a single definition from an OVAL document.
+   Example1: cscc.exe -r account_lockout_duration
+   Example2: cscc.exe -r oval:mil.disa.stig.adobe.reader:def:1
+
+ -mr RULE_COUNT RULE_ID RULE_ID .., --multipleRules RULE_COUNT RULE_ID...
+   Review multiple rules using the Rule ID from the XCCDF file
+   or review X definitions from an OVAL document.
+   Example1: cscc.exe -mr 2 account_lockout_duration logon_as_service 
+   Example2: cscc.exe --multipleRules 3 oval:mil.disa.stig.adobe.reader:def:1 oval:mil.disa.stig.adobe.reader:def:2 oval:mil.disa.stig.adobe.reader:def:3
+
+ -rr XCCDF_RULE_ID_REGULAR_EXPRESSION --ruleRegex XCCDF_RULE_ID_REGULAR_EXPRESSION
+   Review all rule IDs in the selected profile that match the regular expression
+   Example1: cscc.exe -rr rule_SV-213143r55.*
+   Example2: cscc.exe -ruleRegex mscp.content_rule_sysprefs_.*
+
+################################################################################
+POST SCAN REPORT GENERATION PARAMETERS:
+
+ Below are the parameters available for creating reports after XML
+ results have been created. All of the following options must be used
+ individually, and are not compatible with any other parameter.
+
+ -s OPTIONS_FILEPATH, --summaryReports OPTIONS_FILEPATH
+   Generate SCAP summary reports using the specified options file.
+   Example: cscc.exe -s options.xml
+   Example: cscc.exe --summaryReports myOptions.xml
+
+ -ts OPTIONS_FILEPATH, --detailedSCAP OPTIONS_FILEPATH
+   Generate detailed reports for SCAP using the specified options file.
+   Example: cscc.exe -ts options.xml
+   Example: cscc.exe --detailedSCAP myOptions.xml
+
+ -tv OPTIONS_FILEPATH, --detailedOVAL OPTIONS_FILEPATH
+   Generate detailed reports for OVAL results using the specified options file.
+   Example: cscc.exe -tv options.xml
+   Example: cscc.exe --detailedOVAL options.xml
+
+################################################################################
+INFORMATIONAL PARAMETERS:
+
+ Below are the parameters available for information purposes only.
+ No configuration changes or scanning occur.  All of the following options must
+ be used individually, and are not compatible with any other parameter.
+
+ --checkForSCCUpdates
+   Check to see if newer SCC releases exist via online query.
+   Additional settings may need to be pre-configured before usage.
+   refer to: cscc.exe --config -> Options -> Update Options
+   This does not download or update/install SCC, it just verifies it's current.
+
+ --getOpt OPTION
+   Advanced user setting to retrieve the value of any SCC option.
+   Available options can be found with --listOpt, and need to be
+   specified exactly.
+   Example: cscc.exe --getOpt debugEnabled
+   debugEnabled = 0
+
+ --listOpt
+   Advanced user setting to retrieve the configurable values for use with
+   --getOpt and --setOpt
+
+ -lp, --listAllProfiles
+   List all profiles according to the installed content. Note that not all 
+   profiles are available to all content streams.
+
+ -lb, --listAllBenchmarks
+   List all benchmarks according to the content installed on the system. 
+   Useful when setting a profile for specific content.
+
+ -v, --version
+   Display one liner version information.
+
+ -V, --verboseVersion
+   Display version information.
+
+ -?, --help [config scan post-scan info]
+   Display this help page, by default all sections will be displayed.
+   With optional parameter(s) of config, scan, post-scan or info
+   specific section(s) can be displayed.
+
