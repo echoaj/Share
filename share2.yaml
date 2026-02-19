@@ -20,3 +20,23 @@
       - secure_http_port in ['443', '8443']
     fail_msg: "SecureHttpPort is set to {{ secure_http_port | default('NOT SET') }}, expected 443 or 8443"
     success_msg: "SecureHttpPort correctly set to {{ secure_http_port }}"
+
+
+
+
+- name: Read server.ini
+  ansible.windows.slurp:
+    src: 'C:\Program Files (x86)\Trellix\ePolicy Orchestrator\DB\server.ini'
+  register: server_conf
+
+- name: Decode and Extract Port
+  ansible.builtin.set_fact:
+    # This regex finds "SecureHttpPort=", ignores spaces, and captures the digits
+    secure_port: "{{ (server_conf.content | b64decode | regex_search('SecureHttpPort\\s*=\\s*(\\d+)', '\\1')) | first }}"
+
+- name: Validate SecureHttpPort
+  ansible.builtin.assert:
+    that:
+      - secure_port in ['443', '8443']
+    fail_msg: "Validation FAILED: SecureHttpPort is set to '{{ secure_port | default('NOT FOUND') }}'. Expected 443 or 8443."
+    success_msg: "Validation PASSED: SecureHttpPort is {{ secure_port }}."
