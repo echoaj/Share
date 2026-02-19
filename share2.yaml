@@ -1,100 +1,22 @@
-You are a cyberseucirty expert and I need help understanding, Trellix and cyber requirements that I must verify.
+- name: Read server.ini
+  ansible.windows.slurp:
+    src: C:\Program Files (x86)\Trellix\ePolicy Orchestrator\DB\server.ini
+  register: server_conf
 
-I have a Trellix account and these are the products I have:
+- name: Decode content
+  ansible.builtin.set_fact:
+    server_info: "{{ server_conf.content | b64decode }}"
 
-Data Security
-Trellix Data Loss Prevention Extension 11.13 
-Trellix Device Control 11.14 
+- name: Extract SecureHttpPort value
+  ansible.builtin.set_fact:
+    secure_http_port: >-
+      {{ server_info
+         | regex_search('SecureHttpPort=(\\d+)', '\\1')
+         | default('') }}
 
-Endpoint Security
-Command Line Scanner 7.0 
-Endpoint Security for Mac - Adaptive Threat Protection 10.6 
-GetClean 3.0 
-MVISION Endpoint 2311 
-Trellix Endpoint Security 10.7 
-Trellix Endpoint Security for Linux Firewall 10.7 
-Trellix Endpoint Security for Linux Threat Prevention 10.7 
-Trellix Endpoint Security for Mac 10.7 
-Trellix Endpoint Security for Mac - Threat Prevention 10.7 
-
-Management Solutions
-Rogue System Detection 5.0 
-Trellix Agent  5.8 
-Trellix Data Exchange Layer 6.1 
-Trellix ePolicy Orchestrator 5.10 
-
-Utilities & Connectors
-Endpoint Product Removal 26.2 New!
-Endpoint Upgrade Assistant and Package Creator 2.13 
-ENS Profiler 2.1 
-ePO Endpoint Deployment Kit (EEDK) 9.6 
-ePO-MER 4.7 
-MER (Minimum Escalation Requirement) 4.7 New!
-Self Service Supportability Orchestrator 25.7 
-Skyhigh Client Proxy 5.00 
-System Information Reporter 1.0 
-Trellix SysPrep Utility 1.0 
-
-
-We have a Trellix ePO environemnet set up with a few managed client machines that have Trellix Agent installed.
-We also have over 50 requirements that I must figure out if the they make sense, or don't make sense in the context of Trellix.
-"HBSS Software" in this case is Trellix.  If they don't make sense, I need to justify why.  
-It may also be the case the requirement is poorly written and needs further clarification
-If the requirement does make sense I need to know how.
-For example I need to know what Trellix product the requirement that makese sense pertains to.  
-For example, a requirement that is about anti virus would likely pertain to Trellix endpoint securtiy.
-
-Here are the list of requirments:
-The HBSS Software shall monitor user account activities.
-The HBSS Software shall allow for analyzing of user account activities.
-The HBSS Software shall forward its logs to the centralized log collection location.
-The HBSS Software shall allow for security compliance.
-The HBSS Software shall allow for different levels of security logging.
-The HBSS Software shall be installed on all end user hosts.
-The HBSS Software module Host Intrusion Prevention System (HIPS) shall be installed on all end user hosts.
-The HBSS Software module Policy Auditor (PA) shall be installed on all end user hosts.
-The HBSS Software module Assets Baseline (AB) shall be installed on all end user hosts.
-The HBSS Software module Rogue System Detection (RSD) shall be installed on all end user hosts.
-The HBSS Software module Device Control Module (DCM) shall be installed on all end user hosts.
-The HBSS Software module Asset Publishing Service (APS) shall be installed on all end user hosts.
-The HBSS Software shall implement security configuration settings in accordance with organizational policies and procedures.
-The HBSS Software shall monitor for modifications of any security configuration settings.
-The HBSS Software shall allow for modifications of security configuration settings.
-The HBSS Software shall employ automated mechanisms to centrally managed configuration settings.
-The HBSS Software shall employ automated mechanisms to centrally apply configuration settings.
-The HBSS Software shall employ automated mechanisms to centrally verify configuration settings.
-The HBSS Software shall allow scanning for vulnerabilities.
-The HBSS Software shall generate an event log when scanning is initiated.
-The HBSS Software shall generate an event log when scanning is finished.
-The HBSS Software shall generate a report of scan findings.
-The HBSS Software shall allow for definitions updates.
-The HBSS Software shall implement approved network protocols.
-The HBSS Software shall implement on end user devices.
-The HBSS Software shall monitor user account activities for misuse.
-The HBSS Software shall generate an event log for user account activities for misuse.
-The HBSS Software shall restrict user from changing security attributes on Ground Segment components.
-The HBSS Software shall restrict user changing of rules governing access control.
-The HBSS Software shall perform an analysis of the vulnerability report to determine risk mitigations.
-The HBSS Software shall perform an analysis of the vulnerability report to determine the potential of exploitation.
-The HBSS Software shall allow for local audit logs to be processed by specific events of interests.
-The HBSS Software shall allow for manual HBSS updates.
-The HBSS Software shall employ automated tools to support near real-time analysis of security related events.
-The Host Based Security System Server shall lock the session upon 15 minutes of user inactivity.
-The Host Based Security System Server shall retain session lock until the user re-establishes access using established identification and authentication procedures.
-The Host Based Security System Server shall quarantine unacceptable mobile code.
-The Host Based Security System Server shall generate an event log upon detection of an unacceptable mobile code.
-The Host Based Security System Server shall generate an event log upon quarantining an unacceptable mobile code.
-The Host Based Security System Server shall prohibit the download of unacceptable mobile code.
-The Host Based Security System Server shall prohibit the execution of unacceptable mobile code.
-The Host Based Security System Server shall allow for privilege user-initiated updates to malicious code protection mechanisms.
-The Host Based Security System Server shall generate an event log when malicious code is detected.
-The Host Based Security System Server shall perform periodic scans of the information system for malicious code at least weekly.
-The Host Based Security System Server shall perform real time scans of files from external sources and endpoints and network entry/exit points as files are downloaded, opened, or executed.
-The Host Based Security System Server shall allow for malicious code protection mechanisms to block and quarantine malicious code.
-The Host Based Security System Server shall implement malicious code protection software.
-The Host Based Security System Server shall allow for updates to malicious code protection mechanisms.
-The Host Based Security System Server shall push the updates to malicious code protection mechanisms to the HBSS clients.
-The Host Based Security System Server shall allow malicious code protection mechanisms at information system entry and exit points to detect and eradicate malicious code.
-The Host Based Security System Server shall behave in a predictable and documented manner when invalid inputs are received.
-
-Figure this out for me
+- name: Validate SecureHttpPort
+  ansible.builtin.assert:
+    that:
+      - secure_http_port in ['443', '8443']
+    fail_msg: "SecureHttpPort is set to {{ secure_http_port | default('NOT SET') }}, expected 443 or 8443"
+    success_msg: "SecureHttpPort correctly set to {{ secure_http_port }}"
