@@ -1,4 +1,27 @@
-Create an ansible task that verifies on a windows server that the GPO "Interactive Logo: Machine inactivity limit" is set to 900 seconds.
-If it is set to 900 seconds, the ansible task passes.  
+Need permit, ID, proof of insurance
 
-Side question: is the task create differently if the GPO is set at the domain level or the local level or is it the same either way?
+Headlights
+Left turn signal
+Right turn signal
+Parking Break
+Highbeems
+Hazard lights
+Horn
+How do you adjust your side mirrors
+defroster
+windshield wipers
+Hand Signal Left
+Hand Signal Right
+Hand Signal Stop
+Turn on car without engine
+
+START TEST
+Right Turn: Signal, check mirrors, look over shoulder
+Right Turn: shoulder check
+Left Turn: Signal, Yield to on-comming traffic
+Stop at a stop sign
+Right-on-red: stop fully look left, look right
+Yield Sign
+U-turn
+Park on curve, backup in a straight line look behind
+
