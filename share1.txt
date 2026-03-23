@@ -1,27 +1,55 @@
-Need permit, ID, proof of insurance
+Check what is wrong with my code.  I am getting his ansible lint error:
 
-Headlights
-Left turn signal
-Right turn signal
-Parking Break
-Highbeems
-Hazard lights
-Horn
-How do you adjust your side mirrors
-defroster
-windshield wipers
-Hand Signal Left
-Hand Signal Right
-Hand Signal Stop
-Turn on car without engine
 
-START TEST
-Right Turn: Signal, check mirrors, look over shoulder
-Right Turn: shoulder check
-Left Turn: Signal, Yield to on-comming traffic
-Stop at a stop sign
-Right-on-red: stop fully look left, look right
-Yield Sign
-U-turn
-Park on curve, backup in a straight line look behind
+key-order[task]: You can improve the task key order to: tags, when, block, rescue, always
+hbss/tasks/components/hbss-software-base-system-configuration--implement-on-end-user-devices/linux.yaml:8 Task/Handler: block/always/rescue 
+
+Read documentation for instructions on how to ignore specific rule violations.
+
+# Rule Violation Summary
+
+  1 key-order profile:basic tags:formatting
+
+
+
+And my code is the following:
+
+
+---
+
+- tags:
+    - req2
+  block:
+    - name: Initialize result tracker
+      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/init.yaml"
+
+    - name: Verify Trellix agent is installed
+      ansible.builtin.stat:
+        path: "{{ linux_agent_path }}"
+      register: agent_bin
+      failed_when: not agent_bin.stat.exists
+
+    - name: Get ansible service facts
+      ansible.builtin.service_facts:
+
+    - name: Verify Trellix agent service is running
+      ansible.builtin.fail:
+        msg: Trellix agent not active
+      when: ansible_facts.services['mcafee.ma.service']['status'] != 'enabled'
+
+    - name: Record result as passed
+      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/pass.yaml"
+  when: "'linux' in group_names"
+
+  rescue:
+    - name: Display error message
+      ansible.builtin.debug:
+        msg: "{{ ansible_failed_result }}"
+
+  always:
+    - name: Print check result
+      ansible.builtin.include_tasks: "{{ common_tasks_dir }}/result/print.yaml"
+      vars:
+        requirement_text: "The HBSS Software shall implement on end user devices."
+        jira_ticket: SDSO-6699
 
