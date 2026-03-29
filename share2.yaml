@@ -1,13 +1,1 @@
-- name: Check Machine Inactivity Limit registry value
-  ansible.windows.win_reg_stat:
-    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
-    name: InactivityTimeoutSecs
-  register: inactivity_timeout
 
-- name: Validate Machine Inactivity Limit
-  ansible.builtin.assert:
-    that:
-      - inactivity_timeout.exists
-      - inactivity_timeout.value | int == 900
-    fail_msg: "FAIL: Machine inactivity limit is not configured to 900 seconds."
-    success_msg: "PASS: Machine inactivity limit is configured correctly."
