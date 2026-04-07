@@ -1,1 +1,11 @@
 
+I have a rhel machine hosting splunk at ip: 192.168.4.180
+I successfully downloaded splunkforwarder on a windows machine to test if it can receieved logs and I was able to do that.
+I can see windows logs coming to it.
+
+Now I am I trying to do something similiar. Now I have another windows machine that has Trellix ePo on it.
+I went into the Configuration -> Registered Servers to register a syslog server.
+I entered the Name, Notes, ip address - (192.168.4.180), TCP port number - (9997), Enable event forwarding checkmark is on.
+Then I click Test connection and it says Syslog connection failed.
+
+I am not sure why.  The other windows machine can send logs via the splunk forwarder but on this windows machine Trellix test connection to splunk fails
